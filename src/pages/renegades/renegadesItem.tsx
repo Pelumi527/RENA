@@ -22,7 +22,7 @@ const RenegadesItem = ({ avatar, name, rank, level, onClick }: Props) => {
 
   return (
     <div onClick={onClick} className="w-[194px] h-[261px] cursor-pointer">
-      <img src={avatar} className="w-[194px] h-[194px]" alt={name} />
+      <img src={avatar} className="w-[194px] h-[194px] rounded-[8px]" alt={name} />
       <p className="text-[22px] font-semibold text-center mt-4">{name}</p>
       <div className={`text-[15px] font-bold flex items-center justify-center ${levelClass()}`}>
         <Icon icon={'ph:medal-fill'} fontSize={16} color={levelClass()} className="mr-1" />

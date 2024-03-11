@@ -47,7 +47,7 @@ const ItemModal = () => {
               <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
             </div>
             <div className="flex my-12 items-center justify-center">
-              <img src={data?.avatar} className="w-[150px] h-[150px]" />
+              <img src={data?.avatar} className="w-[150px] h-[150px] rounded-[8px]" />
               <Icon icon={'solar:arrow-right-bold-duotone'} fontSize={34} className="text-primary ml-9 mr-[22px]" />
               <img src='/renegades/rena.svg' className="w-[88px] h-[88pxpx]" />
             </div>
@@ -70,7 +70,7 @@ const ItemModal = () => {
       {liquify == 0 &&
         < div className="relative w-[965px] h-[545px] bg-[#222] border-gray-light-3 rounded-[8px] p-6">
           <div className="flex w-full justify-between">
-            <img src={data?.avatar} className="w-[497px] h-[497px]" />
+            <img src={data?.avatar} className="w-[497px] h-[497px] rounded-[8px]" />
             <div className="flex flex-col w-[388px]">
               <div className="flex justify-between h-[62px]">
                 <div className="flex flex-col items-start">

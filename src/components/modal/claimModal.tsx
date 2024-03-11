@@ -86,9 +86,9 @@ const ClaimModal = () => {
           <div className={`flex flex-col items-center justify-between mt-10`} >
             <div className="flex flex-col items-center">
               {proceed ?
-                <img src="/renegades/item1.svg" className="w-[194px] h-[194px]" />
+                <img src="/renegades/item1.svg" className="w-[194px] h-[194px] rounded-[8px]" />
                 :
-                <img src="/renegades/item2.svg" className="w-[194px] h-[194px]" />
+                <img src="/renegades/item2.svg" className="w-[194px] h-[194px] rounded-[8px]" />
               }
               <p className="text-[26px] font-semibold mt-1" >Renegade #299</p>
               <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center] ${levelClass(5)}`}>

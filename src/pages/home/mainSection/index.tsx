@@ -3,20 +3,20 @@ import PrimaryButton from "../../../components/primaryButton";
 
 const MainSection = () => {
   return (
-    <div className="w-full h-[406px] flex flex-col items-center justify-center">
-      <div className="w-[860px] h-[255px]">
-        <p className="text-[77px] font-bold z-20 relative flex justify-center">
-          Pioneering <span className="text-primary ml-2">Liquid NFT</span>
-        </p>
-        <p className="text-[26px] text-center font-semibold z-20 relative text-gray-light">Liquid NFT is an experimental fractionalized liquidity standard for NFTs via a mix of fungible & non-fungible tokens, based on Aptos Token</p>
+    <div className="w-full h-[406px] flex flex-col items-center mt-[96px] md:mt-[128px]">
+      <div className="flex flex-col items-center w-[95%] md:w-[556px] lg:w-[860px] h-[255px]">
+        <div className="flex leading-[58px] items-center flex-col md:flex-row w-[300px] md:w-full text-[56px] md:text-[58px] lg:text-[77px] font-bold z-20 relative justify-center">
+          <p>Pioneering</p><span className="text-primary ml-2 ">LiquidNFT</span>
+        </div>
+        <p className="text-[22px] mt-6 md:text-[26px] text-center font-semibold z-20 relative text-gray-light">Liquid NFT is an experimental fractionalized liquidity standard for NFTs via a mix of fungible & non-fungible tokens, based on Aptos Token</p>
         <div className="flex w-full justify-center mt-10">
-          <PrimaryButton className="z-20 relative w-[209px]">
+          <PrimaryButton className="z-20 relative w-[200px]">
             <p className="text-[18px] h-5 font-bold">Get $RENA</p>
             <p className="text-[16px] font-semibold">Coming soon</p>
           </PrimaryButton>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

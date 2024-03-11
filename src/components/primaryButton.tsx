@@ -6,7 +6,7 @@ interface Props {
 const PrimaryButton: React.FC<Props> = ({ className, onClick: onChange, children }) => {
   return (
     <button
-      className={`text-[#000] font-semibold bg-primary hover:bg-primary-hover active:bg-primary-active rounded-[4px] px-6 py-2 ${className}`}
+      className={`text-[#000] font-semibold bg-primary hover:bg-primary-hover active:bg-primary-active rounded-[4px] px-6 py-1 ${className}`}
       onClick={onChange}
     >
       {children}

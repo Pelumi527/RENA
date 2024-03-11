@@ -39,7 +39,7 @@ const FifthSection = () => {
             Frequently asked questions
           </p>
         </div>
-        <div className="w-[1100px] flex flex-col mt-[56px] border-y border-[#666]">
+        <div className="w-[95%] lg:w-[1100px] flex flex-col mt-[56px] border-y border-[#666]">
           {faqs.map((faq, index) => (
             <div key={index} className='px-6 border-b border-[#666]'>
               <button

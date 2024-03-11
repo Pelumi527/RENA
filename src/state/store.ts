@@ -1,9 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import globalSlice from "./global";
+import dialogState from "./dialog";
+import renegadesState from "./renegades";
 
 export const store = configureStore({
   reducer: {
-    globalState: globalSlice
+    globalState: globalSlice,
+    dialogState: dialogState,
+    renegadesState: renegadesState,
   },
 });
 

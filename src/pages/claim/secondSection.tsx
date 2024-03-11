@@ -16,7 +16,7 @@ const SecondSection = () => {
                         Connect wallet to claim NFTsCool
                     </p>
                     <div className="flex w-full justify-start">
-                        <PrimaryButton className="z-20 relative w-[209px]">
+                        <PrimaryButton className="z-20 relative w-[200px]">
                             <p className="text-[18px] h-5 font-bold">Connect Wallet</p>
                             <p className="text-[16px] font-semibold">Coming soon</p>
                         </PrimaryButton>

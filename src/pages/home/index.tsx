@@ -1,5 +1,5 @@
 import "./index.css";
-import Footer from "./footer";
+import Footer from "../../components/footer";
 import Header from "../../components/header";
 import GridPanel from "../../components/gridPanel";
 import MainSection from "./mainSection";

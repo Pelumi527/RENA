@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ActivedItem from "./activedItem";
 import InactivedItem from "./inactivedItem";
 
 const GridPanel = () => {
-  const items = Array.from({ length: 300 }, () => Math.random() < 0.7); // Randomly decides if an item is active or inactive
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [items, setItems] = useState<Array<boolean>>([]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function to remove the event listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const length = windowWidth < 760 ? 80 : 300;
+    setItems(Array.from({ length }, () => Math.random() < 0.7));
+  }, [windowWidth]);
 
   return (
     <div className="w-[150vw] -ml-14 -mt-20">

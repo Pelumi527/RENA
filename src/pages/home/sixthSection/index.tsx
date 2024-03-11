@@ -11,7 +11,7 @@ const SixthSection = () => {
           />
           <p className="text-[26px] font-semibold text-center w-[899px] leading-7 my-8">Be apart of the first Liquid NFT collection on Aptos!<br /> Get $RENA and liquify your NFTs in a brand new way!</p>
           <div className="">
-            <SecondaryButton className="z-20 relative w-[209px]">
+            <SecondaryButton className="z-20 relative w-[200px]">
               <p className="text-[18px] h-5 font-bold">Get $RENA</p>
               <p className="text-[16px] font-semibold">Coming soon</p>
             </SecondaryButton>

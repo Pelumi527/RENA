@@ -9,7 +9,7 @@ const JoinUs = () => {
         <img src="/header/x.svg" alt="X" className="w-12 h-12" />
       </a>
       <a
-        href={`#`}
+        href={`https://twitter.com/0xrenegades`}
         target="_blank"
         className="w-12"
       >

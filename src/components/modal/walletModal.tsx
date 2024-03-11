@@ -12,7 +12,7 @@ const WalletModal = () => {
   return (
     <div
       className={`${isOpen ? "block" : "hidden"
-        } absolute z-[100] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
+        } fixed z-[200] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
     >
       <div className="relative w-[400px]  bg-[#121212] border-gray-light-3 rounded-[20px]">
         <div className="bg-[#1C1C1C] rounded-t-[20px] p-4 flex justify-between">

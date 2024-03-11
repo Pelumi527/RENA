@@ -37,7 +37,7 @@ const ItemModal = () => {
   return (
     <div
       className={`${data ? "block" : "hidden"
-        } absolute z-[100] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
+        } fixed z-[100] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
     >
       {liquify == 1 &&
         <div className="relative w-[566px] h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-6">

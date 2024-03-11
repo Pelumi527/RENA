@@ -75,7 +75,7 @@ const ClaimModal = () => {
   return (
     <div
       className={`${isOpen ? "block" : "hidden"
-        } absolute z-[100] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
+        } fixed z-[100] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
     >
       <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="relative w-[566px] h-[469px] bg-[#222] border-gray-light-3 rounded-[8px] p-6">
         <div className="flex flex-col w-full">

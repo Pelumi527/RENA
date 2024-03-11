@@ -21,8 +21,10 @@ const RenegadesItem = ({ avatar, name, rank, level, onClick }: Props) => {
   }
 
   return (
-    <div onClick={onClick} className="w-[194px] h-[261px] cursor-pointer">
-      <img src={avatar} className="w-[194px] h-[194px] rounded-[8px]" alt={name} />
+    <div onClick={onClick} className="w-[194px] h-[261px] cursor-pointer ">
+      <div className="overflow-hidden rounded-[8px]">
+        <img src={avatar} className="w-full h-[194px] rounded-[8px] object-cover transition-transform duration-300 ease-in-out hover:scale-[120%]" alt={name} />
+      </div>
       <p className="text-[22px] font-semibold text-center mt-4">{name}</p>
       <div className={`text-[15px] font-bold flex items-center justify-center ${levelClass()}`}>
         <Icon icon={'ph:medal-fill'} fontSize={16} color={levelClass()} className="mr-1" />

@@ -18,7 +18,7 @@ const Renegades = () => {
   
   return (
     <div className="parallax relative" id="cred-point">
-      <img src="/renegades/vector.png" className="absolute left-20" />
+      <img src="/renegades/vector.png" className="absolute sm:left-20" />
       <Header className="" active={1} />
       <div className="w-full flex flex-col z-20 relative items-center">
         <div className="flex flex-col w-[90%] sm:w-[1100px]">

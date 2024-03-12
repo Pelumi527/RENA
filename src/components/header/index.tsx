@@ -28,8 +28,8 @@ const Header: React.FC<Props> = ({ className, active }) => {
           />
         </div>
         <div className="hidden xl:flex items-center justify-end">
-          <p onClick={() => navigate('/claim')} className={`text-[22px] font-white font-semibold cursor-pointer ${active == 0 && 'text-primary'}`} style={{ zIndex: 100 }}>Liquify or Claim</p>
-          <p onClick={() => { connected ? navigate('/renegades') : dispatch(toggleWalletPanel(true)) }} className={`${active == 1 && 'text-primary'} text-[22px] font-white font-semibold cursor-pointer ml-12`} style={{ zIndex: 100 }}>My Renegades</p>
+          <p onClick={() => navigate('/claim')} className={` w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 text-[22px] font-white font-semibold cursor-pointer ${active == 0 && 'text-primary'}`} style={{ zIndex: 100 }}>Liquify or Claim</p>
+          <p onClick={() => { connected ? navigate('/renegades') : dispatch(toggleWalletPanel(true)) }} className={`w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active == 1 && 'text-primary'} text-[22px] font-white font-semibold cursor-pointer ml-2`} style={{ zIndex: 100 }}>My Renegades</p>
           <div className="ml-12 mr-6 flex h-12">
             <ConnectButton />
             <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">

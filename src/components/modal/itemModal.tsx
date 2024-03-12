@@ -83,7 +83,9 @@ const ItemModal = () => {
                     <p className="text-[#666] font-semibold">/5000</p>
                   </div>
                 </div>
-                <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+                <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
+                  <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+                </div>
               </div>
               <div className="flex justify-center">
                 <img src={data?.avatar} className="block sm:hidden w-[328px] h-[328px] sm:w-[497px] sm:h-[497px] rounded-[8px] mt-8" />
@@ -117,7 +119,9 @@ const ItemModal = () => {
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">Success!</p>
-              <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+              <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
+                <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+              </div>
             </div>
             <div className={`flex flex-col items-center justify-between mt-[83px] sm:mt-10`} >
               <div className="flex flex-col items-center">

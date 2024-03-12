@@ -82,7 +82,9 @@ const ClaimModal = () => {
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center">
             <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">You’ve got a new Renegade!</p>
-            <Icon onClick={() => { dispatch(toggleClaimModal(false)); }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+            <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
+              <Icon onClick={() => { dispatch(toggleClaimModal(false)); }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+            </div>
           </div>
           <div className={`flex flex-col items-center justify-between mt-10`} >
             <div className="flex flex-col items-center">

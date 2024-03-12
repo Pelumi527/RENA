@@ -27,7 +27,7 @@ const Renegades = () => {
             <div className="flex items-center">
               <p className="text-[26px] font-semibold">$RENA Balance:</p>
               <p className="text-[26px] text-primary font-bold ml-3 mr-2">{connected ? 2 : 0}</p>
-              <img src="/renegades/rena.svg" className="" />
+              <img src="/renegades/rena.svg" className="mr-1" />
             </div>
           </div>
           <div onClick={() => dispatch(toggleClaimModal(true))} className={`flex h-[110px] items-center cursor-pointer justify-center ${connected ? 'bg-primary hover:bg-primary-hover' : 'bg-[#222]'} border-2 rounded-[8px] mt-10`} style={{ backgroundImage: `url("/renegades/second.png")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'left 80px center', backgroundSize: 'contain' }}>

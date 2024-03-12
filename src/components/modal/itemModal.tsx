@@ -9,7 +9,7 @@ import SecondaryButton from "../secondaryButton";
 const ItemModal = () => {
   const data = useAppSelector((state) => state.dialogState.bItemModal);
   const [liquify, setLiquify] = useState(0);
-  const [isChecked, setIsChecked] = useState(true); // State to track checkbox status
+  const [isChecked, setIsChecked] = useState(false); // State to track checkbox status
   const dispatch = useAppDispatch();
 
   // Toggle function for checkbox
@@ -60,11 +60,11 @@ const ItemModal = () => {
             </div>
             <div className="flex items-center justify-center">
               {isChecked ? (
-                <Icon icon={'carbon:checkbox'} fontSize={32} className="text-[#FFF] mr-2" onClick={toggleCheckbox} />
+                <img src="/component/checkbox-active.svg" className="w-[32px] h-[32px] cursor-pointer" onClick={toggleCheckbox} />
               ) : (
-                <Icon icon={'radix-icons:checkbox'} fontSize={32} className="text-[#FFF] mr-2" onClick={toggleCheckbox} />
+                <img src="/component/checkbox-inactive.svg" className="w-[32px] h-[32px] cursor-pointer" onClick={toggleCheckbox} />
               )}
-              <p className="text-lg font-semibold">Don’t show this dialog again</p>
+              <p className="text-lg h-[25px] ml-1 font-semibold">Don’t show this dialog again</p>
             </div>
           </div>
         </div>

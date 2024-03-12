@@ -30,7 +30,7 @@ const Renegades = () => {
               <img src="/renegades/rena.svg" className="" />
             </div>
           </div>
-          <div onClick={() => dispatch(toggleClaimModal(true))} className={`flex h-[110px] items-center cursor-pointer justify-center ${connected ? 'bg-primary' : 'bg-[#222]'} border-2 rounded-[8px] mt-10`} style={{ backgroundImage: `url("/renegades/second.png")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'left 80px center', backgroundSize: 'contain' }}>
+          <div onClick={() => dispatch(toggleClaimModal(true))} className={`flex h-[110px] items-center cursor-pointer justify-center ${connected ? 'bg-primary hover:bg-primary-hover' : 'bg-[#222]'} border-2 rounded-[8px] mt-10`} style={{ backgroundImage: `url("/renegades/second.png")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'left 80px center', backgroundSize: 'contain' }}>
             <div className="flex items-center">
               <p className="font-medium text-[22px] sm:text-[26px]">You can claim  <span className="font-bold ">2 NFTs</span></p>
               <Icon icon={'mingcute:right-line'} fontSize={25} />

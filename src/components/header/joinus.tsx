@@ -6,14 +6,18 @@ const JoinUs = () => {
         target="_blank"
         className="w-12"
       >
-        <img src="/header/x.svg" alt="X" className="w-12 h-12" />
+        <div className="flex justify-center items-center rounded-full w-12 h-12 bg-[#000] hover:bg-[#222]">
+          <img src="/header/x.svg" alt="X" className="" />
+        </div>
       </a>
       <a
         href={`https://twitter.com/0xrenegades`}
         target="_blank"
         className="w-12"
       >
-        <img src="/header/github.svg" alt="discord" className="w-12 h-12" />
+        <div className="flex justify-center items-center rounded-full w-12 h-12 bg-[#000] hover:bg-[#222]">
+          <img src="/header/github.svg" alt="discord" className="" />
+        </div>
       </a>
     </div>
   );

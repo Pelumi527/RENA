@@ -13,6 +13,12 @@
   }
 }
 
+@media (max-width: 499px) {
+  .custom-background-position {
+    background-position: top 100px center !important;
+  }
+}
+
 .custom-toast {
   background-color: #222222 !important;
   color: white !important;

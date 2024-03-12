@@ -72,12 +72,13 @@ const ClaimModal = () => {
     }
   }
 
+  const animationClass = isOpen ? 'animate-slideInUp' : 'animate-slideInDown';
+
   return (
     <div
-      className={`${isOpen ? "block" : "hidden"
-        } fixed z-[100] inset-0 h-full flex justify-center items-center bg-gray-dark-1`}
+      className={`${isOpen && "block"} ${animationClass} fixed z-[100] inset-0 h-full flex justify-center sm:items-center items-end bg-gray-dark-1`}
     >
-      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="relative w-[566px] h-[469px] bg-[#222] border-gray-light-3 rounded-[8px] p-6">
+      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-[622px] sm:h-[469px] bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] p-6">
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center">
             <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">You’ve got a new Renegade!</p>
@@ -97,13 +98,14 @@ const ClaimModal = () => {
                 <p className="text-[#666] font-semibold">/5000</p>
               </div>
             </div>
-            <div className="flex justify-center gap-6 mt-10">
+            <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-10 w-full">
+              {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
               {proceed == 0 ?
-                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-[203px] h-12">Close </SecondaryButton>
+                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
                 :
-                <SecondaryButton onClick={handleAddItem} className="!font-bold w-[203px] h-12">Great!</SecondaryButton>
+                <SecondaryButton onClick={handleAddItem} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
               }
-              {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="!font-bold w-[203px] h-12">Claim another NFT</PrimaryButton>}
+              {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
             </div>
           </div>
         </div>

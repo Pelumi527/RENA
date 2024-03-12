@@ -3,7 +3,7 @@ import PrimaryButton from "../../../components/primaryButton";
 
 const MainSection = () => {
   return (
-    <div className="w-full h-[406px] flex flex-col items-center mt-[96px] md:mt-[128px]">
+    <div className="w-full h-[572px] sm:h-[306px] flex flex-col items-center mt-[96px] md:mt-[128px]">
       <div className="flex flex-col items-center w-[95%] md:w-[556px] lg:w-[860px] h-[255px]">
         <div className="flex leading-[58px] items-center flex-col md:flex-row w-[300px] md:w-full text-[56px] md:text-[58px] lg:text-[77px] font-bold z-20 relative justify-center">
           <p>Pioneering</p><span className="text-primary ml-2 ">LiquidNFT</span>

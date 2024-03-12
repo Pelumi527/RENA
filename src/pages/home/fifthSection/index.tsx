@@ -31,11 +31,12 @@ const FifthSection = () => {
       answer: 'We are bullish on Liquid NFTs, Composable NFTs, and all other native innovations only possible on Aptos.',
     },
   ];
+
   return (
     <div className="w-full h-fit z-20 relative">
       <div className="w-full h-full flex flex-col items-center justify-center">
-        <div className="flex flex-col mt-[190px] w-[901px] items-center">
-          <p className="text-[42px] font-bold z-20 relative flex justify-center">
+        <div className="flex flex-col mt-[120px] sm:mt-[190px] md:w-[901px] items-center">
+          <p className="text-[32px] sm:text-[42px] w-[95%] text-center leading-9 font-bold z-20 relative flex justify-center">
             Frequently asked questions
           </p>
         </div>
@@ -46,7 +47,7 @@ const FifthSection = () => {
                 className="flex justify-between items-center w-full py-6 font-semibold"
                 onClick={() => toggleSection(index)}
               >
-                <p className='text-[26px]'>{faq.question}</p>
+                <p className='text-[22px] sm:text-[26px]'>{faq.question}</p>
                 {openSection === index ?
                   <Icon icon={'uil:multiply'} fontSize={28} color='#FFF' />
                   :
@@ -58,7 +59,7 @@ const FifthSection = () => {
                 className={`${openSection === index ? 'block' : 'hidden'
                   } overflow-hidden`}
               >
-                <p className="text-[18px] pb-6 font-semibold text-gray-light">{faq.answer}</p>
+                <p className="text-[17px] sm:text-[18px] pb-6 font-semibold text-gray-light">{faq.answer}</p>
               </div>
             </div>
           ))}

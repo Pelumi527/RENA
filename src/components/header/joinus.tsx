@@ -2,7 +2,7 @@ const JoinUs = () => {
   return (
     <div className="flex gap-[16px] items-center">
       <a
-        href={`#`}
+        href={`https://twitter.com/0xrenegades`}
         target="_blank"
         className="w-12"
       >
@@ -11,7 +11,7 @@ const JoinUs = () => {
         </div>
       </a>
       <a
-        href={`https://twitter.com/0xrenegades`}
+        href={`#`}
         target="_blank"
         className="w-12"
       >

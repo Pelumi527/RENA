@@ -72,9 +72,9 @@ const ItemModal = () => {
         </div>
       }
       {liquify == 0 &&
-        < div className="relative w-full sm:w-[965px] h-[95%] sm:h-[545px] bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 overflow-y-scroll">
+        < div className="relative w-full sm:w-[965px] h-[95%] sm:h-[545px] bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
           <div className="flex w-full justify-between">
-            <img src={data?.avatar} className="hidden sm:block w-[328px] h-[328px] sm:w-[497px] sm:h-[497px] rounded-[8px]" />
+            <img src={data?.avatar} className="hidden sm:block w-[328px] h-[328px] sm:w-[497px] sm:h-[497px] rounded-lg" />
             <div className="flex flex-col w-[388px]">
               <div className="flex justify-between h-[62px]">
                 <div className="flex flex-col items-start">
@@ -90,7 +90,7 @@ const ItemModal = () => {
                 </div>
               </div>
               <div className="flex justify-center">
-                <img src={data?.avatar} className="block sm:hidden w-[328px] h-[328px] sm:w-[497px] sm:h-[497px] rounded-[8px] mt-8" />
+                <img src={data?.avatar} className="block sm:hidden w-full sm:w-[497px] sm:h-[497px] rounded-lg mt-8" />
               </div>
               <div className="flex flex-wrap mt-[30px] justify-between gap-y-2 border-b border-[#666] pb-4">
                 {dataItems.map((item, index) => (

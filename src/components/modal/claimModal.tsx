@@ -15,43 +15,43 @@ const ClaimModal = () => {
   const handleAddItem = () => {
     dispatch(updateRenegadesData([
       {
-        avatar: "/renegades/item1.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #211",
         rank: "42",
         level: 1
       },
       {
-        avatar: "/renegades/item2.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #4999",
         rank: "142",
         level: 2
       },
       {
-        avatar: "/renegades/item3.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #629",
         rank: "1442",
         level: 3
       },
       {
-        avatar: "/renegades/item4.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #5",
         rank: "242",
         level: 3
       },
       {
-        avatar: "/renegades/item5.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #981",
         rank: "4412",
         level: 4
       },
       {
-        avatar: "/renegades/item2.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #4999",
         rank: "142",
         level: 2
       },
       {
-        avatar: "/renegades/item3.svg",
+        avatar: "/renegades/avatar-default.svg",
         name: "Renegade #629",
         rank: "1442",
         level: 3
@@ -89,9 +89,9 @@ const ClaimModal = () => {
           <div className={`flex flex-col items-center justify-between mt-10`} >
             <div className="flex flex-col items-center">
               {proceed ?
-                <img src="/renegades/item1.svg" className="w-[194px] h-[194px] rounded-[8px]" />
+                <img src="/renegades/avatar-default.svg" className="w-[194px] h-[194px] rounded-[8px]" />
                 :
-                <img src="/renegades/item2.svg" className="w-[194px] h-[194px] rounded-[8px]" />
+                <img src="/renegades/avatar-default.svg" className="w-[194px] h-[194px] rounded-[8px]" />
               }
               <p className="text-[26px] font-semibold mt-1" >Renegade #299</p>
               <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center] ${levelClass(5)}`}>

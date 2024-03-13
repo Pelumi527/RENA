@@ -46,14 +46,14 @@ const Renegades = () => {
             </div>
           </div>
           {connected ?
-            <div className="flex mt-[48px] sm:mt-[58px] gap-4 flex-wrap mb-[104px] sm:mb-[297px]">
+            <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
               {renegadesData.map((item, index) => (
                 <RenegadesItem onClick={() => dispatch(toggleItemModal(item))} key={index} avatar={item.avatar} name={item.name} rank={item.rank} level={item.level} />
               ))}
             </div>
             :
             <div className="flex flex-col mt-[120px] mb-[219px] items-center w-full">
-              <img src="/renegades/avatar-default.png" className="w-[140px] h-[140px]" />
+              <img src="/renegades/avatar-default.png" className="w-[140px] h-[140px] rounded-lg" />
               <p className="text-[26px] my-[24px] text-center">You don’t have any Renegades in your wallet</p>
               <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">Get $RENA to get NFTs</p>
               <p className="text-[26px]">or</p>

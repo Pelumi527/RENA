@@ -8,31 +8,31 @@ interface dialogStates {
 const initialState: dialogStates = {
   renegadesData: [
     {
-      avatar: "/renegades/item1.svg",
+      avatar: "/renegades/avatar-default.svg",
       name: "Renegade #211",
       rank: "42",
       level: 1
     },
     {
-      avatar: "/renegades/item2.svg",
+      avatar: "/renegades/avatar-default.svg",
       name: "Renegade #4999",
       rank: "142",
       level: 2
     },
     {
-      avatar: "/renegades/item3.svg",
+      avatar: "/renegades/avatar-default.svg",
       name: "Renegade #629",
       rank: "1442",
       level: 3
     },
     {
-      avatar: "/renegades/item4.svg",
+      avatar: "/renegades/avatar-default.svg",
       name: "Renegade #5",
       rank: "242",
       level: 3
     },
     {
-      avatar: "/renegades/item5.svg",
+      avatar: "/renegades/avatar-default.svg",
       name: "Renegade #981",
       rank: "4412",
       level: 4

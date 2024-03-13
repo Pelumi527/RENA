@@ -57,7 +57,7 @@ const ItemModal = () => {
             <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">If you proceed you will lose the NFT, send it back to the NFT pool and get 1 $RENA. Are you sure you want to proceed?</p>
             <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
               <PrimaryButton onClick={() => setLiquify(2)} className="block sm:hidden !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
-              <SecondaryButton className="!font-bold w-full sm:w-[203px] h-12">Cancel</SecondaryButton>
+              <SecondaryButton onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} className="!font-bold w-full sm:w-[203px] h-12">Cancel</SecondaryButton>
               <PrimaryButton onClick={() => setLiquify(2)} className="hidden sm:block !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
             </div>
             <div className="flex items-center justify-center">

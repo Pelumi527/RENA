@@ -55,7 +55,7 @@ const FifthSection = () => {
                 }
               </button>
               <div
-                className={`overflow-hidden transition-max-height duration-1000 ease-in-out ${openSection === index ? 'max-h-[1000px]' : 'max-h-0'
+                className={`overflow-hidden transition-max-height duration-1000 ease-in-out ${openSection === index ? 'max-h-[500px]' : 'max-h-0'
                   }`}
               >
                 <p className="text-[17px] sm:text-[18px] pb-6 font-semibold text-gray-light">{faq.answer}</p>

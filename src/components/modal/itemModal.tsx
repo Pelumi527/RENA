@@ -41,18 +41,20 @@ const ItemModal = () => {
       className={`${data && "block"} ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
     >
       {liquify == 1 &&
-        <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[625px] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] px-4 py-6">
+        <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[625px] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">Proceed and liquify {data?.name}?</p>
-              <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+              <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
+                <Icon onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+              </div>
             </div>
             <div className="flex my-8 sm:my-12 items-center justify-center">
               <img src={data?.avatar} className="w-[150px] h-[150px] rounded-[8px]" />
               <Icon icon={'solar:arrow-right-bold-duotone'} fontSize={34} className="text-primary ml-9 mr-[22px]" />
               <img src='/renegades/rena.svg' className="w-[88px] h-[88pxpx]" />
             </div>
-            <p className="text-[18px] font-semibold text-[#FFF] mt-4 leading-[130%] text-center">If you proceed you will lose the NFT, send it back to the NFT pool and get 1 $RENA. Are you sure you want to proceed?</p>
+            <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">If you proceed you will lose the NFT, send it back to the NFT pool and get 1 $RENA. Are you sure you want to proceed?</p>
             <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
               <PrimaryButton onClick={() => setLiquify(2)} className="block sm:hidden !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
               <SecondaryButton className="!font-bold w-full sm:w-[203px] h-12">Cancel</SecondaryButton>
@@ -64,7 +66,7 @@ const ItemModal = () => {
               ) : (
                 <img src="/component/checkbox-inactive.svg" className="w-[32px] h-[32px] cursor-pointer" onClick={toggleCheckbox} />
               )}
-              <p className="text-lg h-[25px] ml-1 font-semibold">Don’t show this dialog again</p>
+              <p className="text-lg h-[25px] ml-1 font-semibold cursor-pointer" onClick={toggleCheckbox} >Don’t show this dialog again</p>
             </div>
           </div>
         </div>

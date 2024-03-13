@@ -78,10 +78,10 @@ const ClaimModal = () => {
     <div
       className={`${isOpen && "block"} ${animationClass} fixed z-[100] inset-0 h-full flex justify-center sm:items-center items-end bg-gray-dark-1`}
     >
-      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-[622px] sm:h-[469px] bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] p-6">
+      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-[622px] sm:h-[469px] bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] py-4 px-6">
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center">
-            <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">You’ve got a new Renegade!</p>
+            <p className="text-[26px] font-semibold text-[#FFF] leading-[130%]">You’ve got a new Renegade!</p>
             <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
               <Icon onClick={() => { dispatch(toggleClaimModal(false)); }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
             </div>
@@ -100,7 +100,7 @@ const ClaimModal = () => {
                 <p className="text-[#666] font-semibold">/5000</p>
               </div>
             </div>
-            <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-10 w-full">
+            <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-9 w-full">
               {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
               {proceed == 0 ?
                 <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>

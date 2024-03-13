@@ -117,7 +117,7 @@ const ItemModal = () => {
         </div>
       } */}
       {liquify == 2 &&
-        < div style={{ backgroundImage: `url("/renegades/bg-modal-success.png")`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} className="relative w-full sm:w-[566px] h-[622px] sm:h-[425px] bg-[#222] border-gray-light-3 rounded-[8px] p-6 overflow-y-scroll">
+        < div style={{ backgroundImage: `url("/renegades/bg-modal-success.png")`, backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }} className="relative w-full sm:w-[566px] h-[622px] sm:h-[425px] bg-[#222] border-gray-light-3 rounded-[8px] px-6 py-4 overflow-y-scroll">
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">Success!</p>

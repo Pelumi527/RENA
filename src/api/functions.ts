@@ -9,6 +9,7 @@ import {
     Aptos,
 } from "@aptos-labs/ts-sdk";
 import { RENA_MODULE_TESTNET } from "../util/module-endpoints";
+import { HexString, Provider } from "aptos";
 
 // Setup the client
 const APTOS_NETWORK: Network = process.env.APTOS_NETWORK

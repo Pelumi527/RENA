@@ -21,8 +21,7 @@ export class Events {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
         const collectionCreatedEvent = 
-            await this.aptos.getAccountEventsByEventType({
-                accountAddress: args.account_address,
+            await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::CollectionCreated`,
                 minimumLedgerVersion: 0,
             });
@@ -38,8 +37,7 @@ export class Events {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
         const liquidTokensCreatedEvent = 
-            await this.aptos.getAccountEventsByEventType({
-                accountAddress: args.account_address,
+            await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidTokensCreated`,
                 minimumLedgerVersion: 0,
             });
@@ -55,8 +53,7 @@ export class Events {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
         const liquidCoinCreatedEvent = 
-            await this.aptos.getAccountEventsByEventType({
-                accountAddress: args.account_address,
+            await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidCoinCreated`,
                 minimumLedgerVersion: 0,
             });
@@ -72,12 +69,12 @@ export class Events {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
         const feeUpdatedEvent = 
-            await this.aptos.getAccountEventsByEventType({
-                accountAddress: args.account_address,
+            await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::FeeUpdated`,
                 minimumLedgerVersion: 0,
             });
 
         return feeUpdatedEvent;
     }
+
 }

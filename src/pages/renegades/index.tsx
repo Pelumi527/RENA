@@ -9,12 +9,30 @@ import RenegadesItem from "./renegadesItem";
 import { useDispatch } from "react-redux";
 import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { Events } from "../../api/events";
+import { AccountAddress, AptosConfig } from "@aptos-labs/ts-sdk";
+import { Network } from "aptos";
 
 const Renegades = () => {
   const { connected, account } = useWallet();
   const dispatch = useDispatch();
-
   const renegadesData = useAppSelector(state => state.renegadesState.renegadesData);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      if (account) {
+        try {
+          const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+          const event = new Events(aptosConfig);
+          const events = await event.getLiquidTokensCreatedEvents({ account_address: AccountAddress.fromString("0xda49117bbf154c8b59223a03885abe480e615b24ee7e92daf3ac7bd6e4e04535") });
+          console.log(events);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    fetchEvents();
+  }, [connected, account]);
 
   return (
     <div className="parallax relative" id="cred-point">

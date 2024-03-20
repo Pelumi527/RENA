@@ -60,6 +60,7 @@ const ClaimModal = () => {
           sender: account.address,
           data: {
             function: `${RENA_MODULE_TESTNET}::${CLAIM}`,
+            typeArguments: [RENA_COIN_TYPE_TESTNET],
             functionArguments: [LIQUID_COIN_OBJECT_TESTNET, "1"],
           }
         })

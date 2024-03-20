@@ -24,8 +24,8 @@ const Renegades = () => {
         try {
           const aptosConfig = new AptosConfig({ network: Network.TESTNET });
           const event = new Events(aptosConfig);
-          const events = await event.getLiquidTokensCreatedEvents({ account_address: AccountAddress.fromString("0xda49117bbf154c8b59223a03885abe480e615b24ee7e92daf3ac7bd6e4e04535") });
-          console.log(events);
+          const events = await event.getCollectionCreatedEvents({ account_address: AccountAddress.fromString("0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd") });
+          console.log("events", events);
         } catch (error) {
           console.error(error);
         }

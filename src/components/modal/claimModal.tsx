@@ -6,11 +6,17 @@ import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { updateRenegadesData } from "../../state/renegades";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { AptosConfig } from "@aptos-labs/ts-sdk";
+import { Network } from "aptos";
+import { Functions } from "../../api";
+import { RENA_MODULE_TESTNET } from "../../util/module-endpoints";
 
 const ClaimModal = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
   const [proceed, setProceed] = useState(0);
   const dispatch = useAppDispatch();
+  const { connected, account, signAndSubmitTransaction } = useWallet();
 
   const handleAddItem = () => {
     dispatch(updateRenegadesData([
@@ -71,6 +77,54 @@ const ClaimModal = () => {
       default: return 'text-gray-500';
     }
   }
+
+  const liquify = async () => {
+    if (account) {
+      try {
+        const func = new Functions();
+        const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
+        const coin_metadata = {};
+        const tokens = 100;
+
+        const res = await signAndSubmitTransaction({
+          sender: account.address,
+          data: {
+            function: `${RENA_MODULE_TESTNET}::${"liquify"}`,
+            typeArguments: [coin_metadata_type],
+            functionArguments: [],
+          }
+        })
+        // const res = await func.liquify(account, coin_metadata_type, coin_metadata, tokens);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const claim = async () => {
+    if (account) {
+      try {
+        const func = new Functions();
+        const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
+        const coin_metadata = {};
+        const tokens = 100;
+
+        const res = await signAndSubmitTransaction({
+          sender: account.address,
+          data: {
+            function: `${RENA_MODULE_TESTNET}::${"claim"}`,
+            typeArguments: [coin_metadata_type],
+            functionArguments: [],
+          }
+        })
+        // const res = await func.liquify(account, coin_metadata_type, coin_metadata, tokens);
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const animationClass = isOpen ? 'animate-slideInUp' : 'animate-slideInDown';
 

@@ -18,54 +18,7 @@ const ClaimModal = () => {
   const dispatch = useAppDispatch();
   const { connected, account, signAndSubmitTransaction } = useWallet();
 
-  const handleAddItem = () => {
-    dispatch(updateRenegadesData([
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #211",
-        rank: "42",
-        level: 1
-      },
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #4999",
-        rank: "142",
-        level: 2
-      },
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #629",
-        rank: "1442",
-        level: 3
-      },
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #5",
-        rank: "242",
-        level: 3
-      },
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #981",
-        rank: "4412",
-        level: 4
-      },
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #4999",
-        rank: "142",
-        level: 2
-      },
-      {
-        avatar: "/renegades/avatar-default.svg",
-        name: "Renegade #629",
-        rank: "1442",
-        level: 3
-      }
-    ]))
-    dispatch(toggleClaimModal(false));
-    setProceed(0)
-  }
+  const handleAddItem = () => { }
 
   const levelClass = (level: number) => {
     switch (level) {
@@ -105,20 +58,13 @@ const ClaimModal = () => {
   const claim = async () => {
     if (account) {
       try {
-        const func = new Functions();
-        const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
-        const coin_metadata = {};
-        const tokens = 100;
-
         const res = await signAndSubmitTransaction({
           sender: account.address,
           data: {
             function: `${RENA_MODULE_TESTNET}::${"claim"}`,
-            typeArguments: [coin_metadata_type],
-            functionArguments: [],
+            functionArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd::core::RenegadeCoin", "1"],
           }
         })
-        // const res = await func.liquify(account, coin_metadata_type, coin_metadata, tokens);
         console.log(res);
       } catch (error) {
         console.error(error);
@@ -148,11 +94,11 @@ const ClaimModal = () => {
                 <img src="/renegades/avatar-default.svg" className="w-[194px] h-[194px] rounded-[8px]" />
               }
               <p className="text-[26px] font-semibold mt-1" >Renegade #299</p>
-              <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center] ${levelClass(5)}`}>
+              {/* <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center] ${levelClass(5)}`}>
                 <Icon icon={'ph:medal-fill'} fontSize={20} color={levelClass(5)} className="mr-1" />
                 Rank {240}
                 <p className="text-[#666] font-semibold">/5000</p>
-              </div>
+              </div> */}
             </div>
             <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-9 w-full">
               {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}

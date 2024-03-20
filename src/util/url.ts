@@ -5,4 +5,4 @@ export const getImageURL = (ipfsLink: string) => {
   } else {
     return ipfsLink;
   }
-};
+}

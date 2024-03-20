@@ -10,8 +10,9 @@ import { useDispatch } from "react-redux";
 import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { Events } from "../../api/events";
-import { AccountAddress, AptosConfig } from "@aptos-labs/ts-sdk";
+import { AccountAddress, Aptos, AptosConfig, ViewRequest } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
+import { updateRenegadesData } from "../../state/renegades";
 
 const Renegades = () => {
   const { connected, account } = useWallet();
@@ -23,13 +24,36 @@ const Renegades = () => {
       if (account) {
         try {
           const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+          const aptos = new Aptos(aptosConfig);
+
           const event = new Events(aptosConfig);
-          const events = await event.getCollectionCreatedEvents({ account_address: AccountAddress.fromString("0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd") });
+          const events = await event.getCollectionCreatedEvents({
+            account_address: AccountAddress.fromString(account.address),
+          });
           console.log("events", events);
+          const tokenList = events[0].data.tokens_addr;
+          const limitedTokenList = tokenList.slice(0, 10);
+
+          const collectionPromises = limitedTokenList.map((tokenAddress: string) =>
+            aptos.getDigitalAssetData({ digitalAssetAddress: tokenAddress })
+          );
+          const collections = await Promise.all(collectionPromises);
+          dispatch(updateRenegadesData(collections))
+          console.log(collections);
         } catch (error) {
           console.error(error);
         }
       }
+      const aptos = new Aptos()
+      const payload: ViewRequest = {
+        function: "0x1::coin::balance",
+        typeArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd::core::RenegadeCoin"],
+        functionArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd"],
+      };
+      const res = await aptos.view({
+        payload
+      });
+      console.log("balance", res)
     };
     fetchEvents();
   }, [connected, account]);
@@ -66,7 +90,7 @@ const Renegades = () => {
           {connected ?
             <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
               {renegadesData.map((item, index) => (
-                <RenegadesItem onClick={() => dispatch(toggleItemModal(item))} key={index} avatar={item.avatar} name={item.name} rank={item.rank} level={item.level} />
+                <RenegadesItem onClick={() => dispatch(toggleItemModal(item))} key={index} avatar={item.token_uri} name={item.token_name} rank={""} level={1} />
               ))}
             </div>
             :

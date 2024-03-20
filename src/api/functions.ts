@@ -1,15 +1,14 @@
 import {
     Account,
     AnyNumber,
-    MoveObjectType,
-    MoveAddressType,
     Network,
     NetworkToNetworkName,
     AptosConfig,
     Aptos,
+    MoveAddressType
 } from "@aptos-labs/ts-sdk";
 import { RENA_MODULE_TESTNET } from "../util/module-endpoints";
-import { HexString, Provider } from "aptos";
+import { LIQUID_COIN_OBJECT_TESTNET, RENA_COIN_TYPE_TESTNET } from "../util/rena-coin-endpoints";
 
 // Setup the client
 const APTOS_NETWORK: Network = process.env.APTOS_NETWORK
@@ -60,15 +59,13 @@ export class Functions {
   // :!:claim
   async claim(
     sender: Account,
-    coin_metadata_type: MoveAddressType,
-    coin_metadata: MoveObjectType,
     count: AnyNumber,
   ) {
     return this.submitTransaction(
       sender,
       "claim",
-      [coin_metadata_type],
-      [coin_metadata, count],
+      [RENA_COIN_TYPE_TESTNET],
+      [LIQUID_COIN_OBJECT_TESTNET, count],
     );
   }
 
@@ -82,15 +79,13 @@ export class Functions {
   // :!:liquify
   async liquify(
     sender: Account,
-    coin_metadata_type: MoveAddressType,
-    coin_metadata: MoveObjectType,
-    tokens: AnyNumber,
+    tokens: MoveAddressType[]
   ) {
     return this.submitTransaction(
       sender,
       "liquify",
-      [coin_metadata_type],
-      [coin_metadata, tokens],
+      [RENA_COIN_TYPE_TESTNET],
+      [LIQUID_COIN_OBJECT_TESTNET, tokens],
     );
   }
 

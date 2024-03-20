@@ -18,8 +18,6 @@ const ClaimModal = () => {
   const dispatch = useAppDispatch();
   const { connected, account, signAndSubmitTransaction } = useWallet();
 
-  const handleAddItem = () => { }
-
   const levelClass = (level: number) => {
     switch (level) {
       case 1: return 'text-[#B83032]';
@@ -55,6 +53,7 @@ const ClaimModal = () => {
     }
   };
 
+  //claim function
   const claim = async () => {
     if (account) {
       try {
@@ -105,7 +104,7 @@ const ClaimModal = () => {
               {proceed == 0 ?
                 <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
                 :
-                <SecondaryButton onClick={handleAddItem} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
+                <SecondaryButton onClick={claim} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
               }
               {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
             </div>

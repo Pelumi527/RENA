@@ -44,16 +44,16 @@ const Renegades = () => {
           console.error(error);
         }
       }
-      const aptos = new Aptos()
-      const payload: ViewRequest = {
-        function: "0x1::coin::balance",
-        typeArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd::core::RenegadeCoin"],
-        functionArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd"],
-      };
-      const res = await aptos.view({
-        payload
-      });
-      console.log("balance", res)
+      // const aptos = new Aptos()
+      // const payload: ViewRequest = {
+      //   function: "0x1::coin::balance",
+      //   typeArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd::core::RenegadeCoin"],
+      //   functionArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd"],
+      // };
+      // const res = await aptos.view({
+      //   payload
+      // });
+      // console.log("balance", res)
     };
     fetchEvents();
   }, [connected, account]);

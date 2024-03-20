@@ -5,9 +5,10 @@ import {
 import { RENA_MODULE_TESTNET } from "../util/module-endpoints";
 import { LIQUID_COIN_OBJECT_TESTNET, RENA_COIN_TYPE_TESTNET } from "../util/rena-coin-endpoints";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { AccountInfo } from "@aptos-labs/wallet-adapter-core";
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
-const { account, signAndSubmitTransaction } = useWallet();
+const { signAndSubmitTransaction } = useWallet();
 
 /**
  * Class for interracting with entry functions from core.move
@@ -24,6 +25,7 @@ export class Functions {
    */
   // :!:claim
   async claim(
+    account: AccountInfo,
     count: AnyNumber,
   ) {
     if (account) {
@@ -51,6 +53,7 @@ export class Functions {
    */
   // :!:liquify
   async liquify(
+    account: AccountInfo,
     tokens: MoveAddressType[]
   ) {
     if (account) {

@@ -9,8 +9,7 @@ import { updateRenegadesData } from "../../state/renegades";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { AptosConfig } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
-import { Functions } from "../../api";
-import { RENA_MODULE_TESTNET } from "../../util/module-endpoints";
+import { CLAIM, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../../util/module-endpoints";
 
 const ClaimModal = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
@@ -32,16 +31,16 @@ const ClaimModal = () => {
   const liquify = async () => {
     if (account) {
       try {
-        const func = new Functions();
-        const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
-        const coin_metadata = {};
-        const tokens = 100;
+        // const func = new Functions();
+        // const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
+        // const coin_metadata = {};
+        const tokens = 100; // TODO: this should be an array of token addresses, not a number
 
         const res = await signAndSubmitTransaction({
           sender: account.address,
           data: {
-            function: `${RENA_MODULE_TESTNET}::${"liquify"}`,
-            typeArguments: [coin_metadata_type],
+            function: `${RENA_MODULE_TESTNET}::${LIQUIFY}`,
+            typeArguments: [RENA_COIN_TYPE_TESTNET],
             functionArguments: [],
           }
         })
@@ -53,15 +52,15 @@ const ClaimModal = () => {
     }
   };
 
-  //claim function
+  // claim function
   const claim = async () => {
     if (account) {
       try {
         const res = await signAndSubmitTransaction({
           sender: account.address,
           data: {
-            function: `${RENA_MODULE_TESTNET}::${"claim"}`,
-            functionArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd::core::RenegadeCoin", "1"],
+            function: `${RENA_MODULE_TESTNET}::${CLAIM}`,
+            functionArguments: [LIQUID_COIN_OBJECT_TESTNET, "1"],
           }
         })
         console.log(res);

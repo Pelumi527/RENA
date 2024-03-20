@@ -34,14 +34,14 @@ const ClaimModal = () => {
         // const func = new Functions();
         // const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
         // const coin_metadata = {};
-        const tokens = 100; // TODO: this should be an array of token addresses, not a number
+        const tokens = "<at-least-one-rena-nft>"; // TODO: this should be an array of token addresses, not a number
 
         const res = await signAndSubmitTransaction({
           sender: account.address,
           data: {
             function: `${RENA_MODULE_TESTNET}::${LIQUIFY}`,
             typeArguments: [RENA_COIN_TYPE_TESTNET],
-            functionArguments: [],
+            functionArguments: [LIQUID_COIN_OBJECT_TESTNET, tokens],
           }
         })
         // const res = await func.liquify(account, coin_metadata_type, coin_metadata, tokens);

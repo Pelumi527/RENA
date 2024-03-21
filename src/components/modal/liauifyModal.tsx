@@ -6,7 +6,11 @@ import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../../util/module-endpoints";
+import { COLLECTION_ID, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, ONE_RENEGADES, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET, aptos } from "../../util/module-endpoints";
+import { fetchGraphQL } from "../../util/url";
+import { updateRenaBalance, updateRenegadesData } from "../../state/renegades";
+import { operationsDoc } from "../../util/quary";
+import { ViewRequest } from "@aptos-labs/ts-sdk";
 
 const LiauifyModal = () => {
   const data = useAppSelector((state) => state.dialogState.bItemModal);
@@ -26,10 +30,41 @@ const LiauifyModal = () => {
     { title: "OUTFIT", description: "Tattoo", percentage: "15.2%" },
   ];
 
+  const fetchEvents = async () => {
+    if (account) {
+      try {
+        const res = await fetchGraphQL(operationsDoc, "MyQuery", {
+          collectionId: COLLECTION_ID,
+          ownerAddress: account.address,
+        });
+        console.log("collections", res);
+        const collections = res.data.current_token_datas_v2;
+        dispatch(updateRenegadesData(collections))
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const payload: ViewRequest = {
+      function: "0x1::coin::balance",
+      typeArguments: [RENA_COIN_TYPE_TESTNET],
+      functionArguments: [account?.address],
+    };
+    try {
+      const res = await aptos.view({
+        payload
+      });
+      dispatch(updateRenaBalance((parseInt(res[0] as any) / ONE_RENEGADES)))
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   const handleLiquify = async () => {
     if (account) {
       try {
-        const tokens = "<at-least-one-rena-nft>"; 
+        const tokens = [data?.token_data_id];
+        console.log(tokens)
         const res = await signAndSubmitTransaction({
           sender: account.address,
           data: {
@@ -39,6 +74,10 @@ const LiauifyModal = () => {
           }
         })
         console.log(res);
+        if (res.output.success) {
+          fetchEvents()
+          dispatch(toggleItemModal(false))
+        }
       } catch (error) {
         console.error(error);
       }
@@ -77,9 +116,9 @@ const LiauifyModal = () => {
             </div>
             <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">If you proceed you will lose the NFT, send it back to the NFT pool and get 1 $RENA. Are you sure you want to proceed?</p>
             <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
-              <PrimaryButton onClick={() => setLiquify(2)} className="block sm:hidden !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
+              <PrimaryButton onClick={handleLiquify} className="block sm:hidden !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
               <SecondaryButton onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} className="!font-bold w-full sm:w-[203px] h-12">Cancel</SecondaryButton>
-              <PrimaryButton onClick={() => setLiquify(2)} className="hidden sm:block !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
+              <PrimaryButton onClick={handleLiquify} className="hidden sm:block !font-bold w-full sm:w-[253px] h-12">Liquify NFT and get 1 $RENA</PrimaryButton>
             </div>
             <div className="flex items-center justify-center">
               {isChecked ? (

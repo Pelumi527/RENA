@@ -5,31 +5,51 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
-import { updateRenegadesData } from "../../state/renegades";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { AccountAddress, Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
-import { Network } from "aptos";
-import { CLAIM, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../../util/module-endpoints";
-import { Events } from "../../api";
+import { CLAIM, COLLECTION_ID, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, ONE_RENEGADES, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET, aptos } from "../../util/module-endpoints";
+import { fetchGraphQL } from "../../util/url";
+import { updateRenaBalance, updateRenegadesData } from "../../state/renegades";
+import { ViewRequest } from "@aptos-labs/ts-sdk";
+import { operationsDoc } from "../../util/quary";
 
 const ClaimModal = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
+  const lastRenegadesData = useAppSelector((state) => state.renegadesState.lastRenegadesData);
   const [proceed, setProceed] = useState(0);
   const dispatch = useAppDispatch();
   const { connected, account, signAndSubmitTransaction } = useWallet();
+  const renaBalance = useAppSelector(state => state.renegadesState.renaBalance);
 
-  const levelClass = (level: number) => {
-    switch (level) {
-      case 1: return 'text-[#B83032]';
-      case 2: return 'text-[#FFC539]';
-      case 3: return 'text-[#218380]';
-      case 4: return 'text-[#FFF]';
-      case 5: return 'text-[#FFC539]';
-      default: return 'text-gray-500';
+  const fetchEvents = async () => {
+    if (account) {
+      try {
+        const res = await fetchGraphQL(operationsDoc, "MyQuery", {
+          collectionId: COLLECTION_ID,
+          ownerAddress: account.address,
+        });
+        console.log("collections", res);
+        const collections = res.data.current_token_datas_v2;
+        dispatch(updateRenegadesData(collections))
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
 
-  // claim function
+    const payload: ViewRequest = {
+      function: "0x1::coin::balance",
+      typeArguments: [RENA_COIN_TYPE_TESTNET],
+      functionArguments: [account?.address],
+    };
+    try {
+      const res = await aptos.view({
+        payload
+      });
+      dispatch(updateRenaBalance((parseInt(res[0] as any) / ONE_RENEGADES)))
+    } catch (e) {
+      console.log(e)
+    }
+  };
+
   const claim = async () => {
     if (account) {
       try {
@@ -43,20 +63,7 @@ const ClaimModal = () => {
         })
         console.log(res);
         if (res.output.success) {
-          if (account) {
-            try {
-              const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-              const aptos = new Aptos(aptosConfig);
-
-              const event = new Events(aptosConfig);
-              const events = await event.getLiquidTokensCreatedEvents({
-                account_address: AccountAddress.fromString(account.address),
-              });
-              console.log("events", events);
-            } catch (error) {
-              console.error(error);
-            }
-          }
+          fetchEvents()
         }
       } catch (error) {
         console.error(error);
@@ -80,12 +87,8 @@ const ClaimModal = () => {
           </div>
           <div className={`flex flex-col items-center justify-between mt-10`} >
             <div className="flex flex-col items-center">
-              {proceed ?
-                <img src="/renegades/avatar-default.svg" className="w-[194px] h-[194px] rounded-[8px]" />
-                :
-                <img src="/renegades/avatar-default.svg" className="w-[194px] h-[194px] rounded-[8px]" />
-              }
-              <p className="text-[26px] font-semibold mt-1" >Renegade #299</p>
+              <img src={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px]" />
+              <p className="text-[26px] font-semibold mt-1" >{lastRenegadesData?.token_name}</p>
               {/* <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center] ${levelClass(5)}`}>
                 <Icon icon={'ph:medal-fill'} fontSize={20} color={levelClass(5)} className="mr-1" />
                 Rank {240}
@@ -93,18 +96,17 @@ const ClaimModal = () => {
               </div> */}
             </div>
             <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-9 w-full">
-              {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
-              {proceed == 0 ?
+              {renaBalance > 0 && <PrimaryButton onClick={claim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
+              {renaBalance > 0 ?
                 <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
                 :
-                <SecondaryButton onClick={claim} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
+                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
               }
-              {proceed == 0 && <PrimaryButton onClick={() => { setProceed(1) }} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
+              {renaBalance > 0 && <PrimaryButton onClick={claim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
             </div>
           </div>
         </div>
       </div>
-
     </div >
   );
 };

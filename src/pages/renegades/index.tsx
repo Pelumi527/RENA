@@ -27,19 +27,19 @@ const Renegades = () => {
           const aptos = new Aptos(aptosConfig);
 
           const event = new Events(aptosConfig);
-          const events = await event.getCollectionCreatedEvents({
+          const events = await event.getLiquidCoinCreatedEvents({
             account_address: AccountAddress.fromString(account.address),
           });
-          console.log("events", events);
-          const tokenList = events[0].data.tokens_addr;
-          const limitedTokenList = tokenList.slice(0, 10);
+          console.log("events", events, account.address);
+          // const tokenList = events[0].data.tokens_addr;
+          // const limitedTokenList = tokenList.slice(0, 10);
 
-          const collectionPromises = limitedTokenList.map((tokenAddress: string) =>
-            aptos.getDigitalAssetData({ digitalAssetAddress: tokenAddress })
-          );
-          const collections = await Promise.all(collectionPromises);
-          dispatch(updateRenegadesData(collections))
-          console.log(collections);
+          // const collectionPromises = limitedTokenList.map((tokenAddress: string) =>
+          //   aptos.getDigitalAssetData({ digitalAssetAddress: tokenAddress })
+          // );
+          // const collections = await Promise.all(collectionPromises);
+          // dispatch(updateRenegadesData(collections))
+          // console.log(collections);
         } catch (error) {
           console.error(error);
         }

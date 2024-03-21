@@ -7,9 +7,10 @@ import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { updateRenegadesData } from "../../state/renegades";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { AptosConfig } from "@aptos-labs/ts-sdk";
+import { AccountAddress, Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
 import { CLAIM, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../../util/module-endpoints";
+import { Events } from "../../api";
 
 const ClaimModal = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
@@ -28,30 +29,6 @@ const ClaimModal = () => {
     }
   }
 
-  const liquify = async () => {
-    if (account) {
-      try {
-        // const func = new Functions();
-        // const coin_metadata_type = "0x1::aptos_coin::AptosCoin";
-        // const coin_metadata = {};
-        const tokens = "<at-least-one-rena-nft>"; // TODO: this should be an array of token addresses, not a number
-
-        const res = await signAndSubmitTransaction({
-          sender: account.address,
-          data: {
-            function: `${RENA_MODULE_TESTNET}::${LIQUIFY}`,
-            typeArguments: [RENA_COIN_TYPE_TESTNET],
-            functionArguments: [LIQUID_COIN_OBJECT_TESTNET, tokens],
-          }
-        })
-        // const res = await func.liquify(account, coin_metadata_type, coin_metadata, tokens);
-        console.log(res);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
   // claim function
   const claim = async () => {
     if (account) {
@@ -65,6 +42,22 @@ const ClaimModal = () => {
           }
         })
         console.log(res);
+        if (res.output.success) {
+          if (account) {
+            try {
+              const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+              const aptos = new Aptos(aptosConfig);
+
+              const event = new Events(aptosConfig);
+              const events = await event.getLiquidTokensCreatedEvents({
+                account_address: AccountAddress.fromString(account.address),
+              });
+              console.log("events", events);
+            } catch (error) {
+              console.error(error);
+            }
+          }
+        }
       } catch (error) {
         console.error(error);
       }

@@ -1,6 +1,6 @@
 // Purpose: Contains the module endpoints, function names and coin endpoints for the Renegade Network
 
-import { Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
+import { AccountAddressInput, Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
 
 // module endpoints
@@ -16,7 +16,7 @@ export const RENA_COIN_TYPE_TESTNET = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6
 export const LIQUID_COIN_OBJECT_TESTNET = "0x3ff43e3d26d8db230c2f2cbc8770bac9e5b9f0dae123d793e98bf526dd09f1e8"
 
 export const COLLECTION_ID = "0x5c46c8d140591dcf70e282386c481f63af6e7385bd7ceabcbf02d40db3843c84"
-
+export const COLLECTION_ADDRESS: AccountAddressInput = "0x5c46c8d140591dcf70e282386c481f63af6e7385bd7ceabcbf02d40db3843c84"
 const aptosConfig = new AptosConfig({ network: Network.TESTNET });
 export const aptos = new Aptos(aptosConfig); 
 

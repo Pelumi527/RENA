@@ -8,7 +8,7 @@ import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { CLAIM, COLLECTION_ID, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, ONE_RENEGADES, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET, aptos } from "../../util/module-endpoints";
 import { fetchGraphQL } from "../../util/url";
-import { updateRenaBalance, updateRenegadesData } from "../../state/renegades";
+import { updateLastRenegadesData, updateRenaBalance, updateRenegadesData } from "../../state/renegades";
 import { ViewRequest } from "@aptos-labs/ts-sdk";
 import { operationsDoc } from "../../util/quary";
 
@@ -63,6 +63,16 @@ const ClaimModal = () => {
         })
         console.log(res);
         if (res.output.success) {
+          const tokenObject = res.output.changes.filter((change: { data?: { type: string } | null }) => change.data && change.data.type === "0x4::token::Token")[0];
+          const tokenObjectForName = res.output.changes.filter((change: { data?: { type: string } | null }) => change.data && change.data.type === "0x4::token::TokenIdentifiers")[0];
+          const address = tokenObject.address;
+          const uri = tokenObject.data.data.uri;
+          const value = tokenObjectForName.data.data.name.value;
+          dispatch(updateLastRenegadesData({
+            token_data_id: address,
+            token_name: value,
+            token_uri: uri
+          }))
           fetchEvents()
         }
       } catch (error) {

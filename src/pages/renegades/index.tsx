@@ -74,8 +74,8 @@ const Renegades = () => {
           const value = tokenObjectForName.data.data.name.value;
           dispatch(updateLastRenegadesData({
             token_data_id: address,
-            token_name: uri,
-            token_uri: value
+            token_name: value,
+            token_uri: uri
           }))
           dispatch(toggleClaimModal(true))
         }

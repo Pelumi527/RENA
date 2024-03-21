@@ -33,9 +33,7 @@ export class Events {
      * Get the event for a liquid tokens created
      */
     // :!:LiquidTokensCreated
-    async getLiquidTokensCreatedEvents(args: {
-        account_address: AccountAddress;
-    }): Promise<GetEventsResponse> {
+    async getLiquidTokensCreatedEvents(): Promise<GetEventsResponse> {
         const liquidTokensCreatedEvent = 
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidTokensCreated`,
@@ -49,9 +47,7 @@ export class Events {
      * Get the event for a liquid coin created
      */
     // :!:LiquidCoinCreated
-    async getLiquidCoinCreatedEvents(args: {
-        account_address: AccountAddress;
-    }): Promise<GetEventsResponse> {
+    async getLiquidCoinCreatedEvents(): Promise<GetEventsResponse> {
         const liquidCoinCreatedEvent = 
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidCoinCreated`,

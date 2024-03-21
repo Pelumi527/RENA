@@ -11,6 +11,7 @@ import { AccountAddress, Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
 import { CLAIM, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../../util/module-endpoints";
 import { Events } from "../../api";
+import { Queries } from "../../api/queries";
 
 const ClaimModal = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
@@ -51,6 +52,11 @@ const ClaimModal = () => {
               const event = new Events(aptosConfig);
               const events = await event.getAllClaimEvents();
               console.log("events", events);
+
+              const quries = new Queries(aptosConfig);
+              const owned_tokens = await quries.getRenegadesNFTs(account.address);
+              console.log("owned_tokens", owned_tokens);
+              
             } catch (error) {
               console.error(error);
             }

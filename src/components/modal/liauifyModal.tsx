@@ -5,14 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../../util/module-endpoints";
 
 const LiauifyModal = () => {
   const data = useAppSelector((state) => state.dialogState.bItemModal);
   const [liquify, setLiquify] = useState(0);
   const [isChecked, setIsChecked] = useState(false); // State to track checkbox status
   const dispatch = useAppDispatch();
+  const { connected, account, signAndSubmitTransaction } = useWallet();
 
-  // Toggle function for checkbox
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
   };
@@ -23,6 +25,25 @@ const LiauifyModal = () => {
     { title: "HAIR", description: "Short Pointy", percentage: "15.2%" },
     { title: "OUTFIT", description: "Tattoo", percentage: "15.2%" },
   ];
+
+  const handleLiquify = async () => {
+    if (account) {
+      try {
+        const tokens = "<at-least-one-rena-nft>"; 
+        const res = await signAndSubmitTransaction({
+          sender: account.address,
+          data: {
+            function: `${RENA_MODULE_TESTNET}::${LIQUIFY}`,
+            typeArguments: [RENA_COIN_TYPE_TESTNET],
+            functionArguments: [LIQUID_COIN_OBJECT_TESTNET, tokens],
+          }
+        })
+        console.log(res);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   const levelClass = (level: number) => {
     switch (level) {

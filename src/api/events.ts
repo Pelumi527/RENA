@@ -33,7 +33,9 @@ export class Events {
      * Get the event for a liquid tokens created
      */
     // :!:LiquidTokensCreated
-    async getLiquidTokensCreatedEvents(): Promise<GetEventsResponse> {
+    async getLiquidTokensCreatedEvents(args: {
+        account_address: AccountAddress;
+    }): Promise<GetEventsResponse> {
         const liquidTokensCreatedEvent = 
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidTokensCreated`,
@@ -47,7 +49,9 @@ export class Events {
      * Get the event for a liquid coin created
      */
     // :!:LiquidCoinCreated
-    async getLiquidCoinCreatedEvents(): Promise<GetEventsResponse> {
+    async getLiquidCoinCreatedEvents(args: {
+        account_address: AccountAddress;
+    }): Promise<GetEventsResponse> {
         const liquidCoinCreatedEvent = 
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidCoinCreated`,
@@ -72,5 +76,70 @@ export class Events {
 
         return feeUpdatedEvent;
     }
+
+    /**
+     * Get all claim events
+     */
+    // :!:AllClaim
+    async getAllClaimEvents(): Promise<GetEventsResponse> {
+        const allClaimsEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_MODULE_TESTNET}::Claimed`,
+                minimumLedgerVersion: 0,
+            });
+
+        return allClaimsEvent;
+    }
+
+    /**
+     * Get all liquify events
+     */
+    // :!:AllLiquify
+    async getAllLiquifyEvents(): Promise<GetEventsResponse> {
+        const allLiquifyEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_MODULE_TESTNET}::Liquified`,
+                minimumLedgerVersion: 0,
+            });
+
+        return allLiquifyEvent;
+    }
+    
+
+    /**
+     * Get the events for claim for an account
+     */
+    // :!:Claim
+    async getClaimEventsForAccountAddress(args: {
+        account_address: AccountAddress;
+    }): Promise<GetEventsResponse> {
+        const claimEvent = 
+            await this.aptos.getAccountEventsByEventType({
+                eventType: `${RENA_MODULE_TESTNET}::Claimed`,
+                minimumLedgerVersion: 0,
+                accountAddress: args.account_address,
+            });
+
+        return claimEvent;
+    }
+
+    /**
+     * Get the events for liquify for an account
+     */
+    // :!:Liquify
+    async getLiquifyEventsForAccountAddress(args: {
+        account_address: AccountAddress;
+    }): Promise<GetEventsResponse> {
+        const liquifyEvent = 
+            await this.aptos.getAccountEventsByEventType({
+                eventType: `${RENA_MODULE_TESTNET}::Liquified`,
+                minimumLedgerVersion: 0,
+                accountAddress: args.account_address,
+            });
+
+        return liquifyEvent;
+    }
+
+
 
 }

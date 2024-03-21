@@ -49,9 +49,7 @@ const ClaimModal = () => {
               const aptos = new Aptos(aptosConfig);
 
               const event = new Events(aptosConfig);
-              const events = await event.getLiquidTokensCreatedEvents({
-                account_address: AccountAddress.fromString(account.address),
-              });
+              const events = await event.getAllClaimEvents();
               console.log("events", events);
             } catch (error) {
               console.error(error);

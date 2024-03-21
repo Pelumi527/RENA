@@ -1,7 +1,7 @@
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import PrimaryButton from "../../components/primaryButton";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
@@ -10,50 +10,61 @@ import { useDispatch } from "react-redux";
 import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { Events } from "../../api/events";
-import { AccountAddress, Aptos, AptosConfig, ViewRequest } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
 import { updateRenegadesData } from "../../state/renegades";
+import { fetchGraphQL } from "../../util/url";
+import { COLLECTION_ID, ONE_RENEGADES, RENA_COIN_TYPE_TESTNET, aptos } from "../../util/module-endpoints";
+import { Aptos, AptosConfig, ViewRequest } from "@aptos-labs/ts-sdk";
 
 const Renegades = () => {
   const { connected, account } = useWallet();
   const dispatch = useDispatch();
   const renegadesData = useAppSelector(state => state.renegadesState.renegadesData);
+  const [renaBalance, setRenaBalance] = useState(0);
 
   useEffect(() => {
     const fetchEvents = async () => {
       if (account) {
         try {
-          const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-          const aptos = new Aptos(aptosConfig);
-
-          const event = new Events(aptosConfig);
-          const events = await event.getLiquidCoinCreatedEvents({
-            account_address: AccountAddress.fromString(account.address),
+          const operationsDoc = `
+              query MyQuery($collectionId: String!, $ownerAddress: String!) {
+                current_token_datas_v2(
+                  where: {
+                    current_collection: {
+                      collection_id: {_eq: $collectionId}
+                    },
+                    current_token_ownership: {
+                      owner_address: {_eq: $ownerAddress}
+                    }
+                  }
+                ) {
+                  token_name
+                  token_standard
+                  token_uri
+                }
+              }
+            `;
+          const res = await fetchGraphQL(operationsDoc, "MyQuery", {
+            collectionId: COLLECTION_ID,
+            ownerAddress: account.address,
           });
-          console.log("events", events, account.address);
-          // const tokenList = events[0].data.tokens_addr;
-          // const limitedTokenList = tokenList.slice(0, 10);
-
-          // const collectionPromises = limitedTokenList.map((tokenAddress: string) =>
-          //   aptos.getDigitalAssetData({ digitalAssetAddress: tokenAddress })
-          // );
-          // const collections = await Promise.all(collectionPromises);
-          // dispatch(updateRenegadesData(collections))
-          // console.log(collections);
+          console.log("collections", res);
+          const collections = res.data.current_token_datas_v2;
+          dispatch(updateRenegadesData(collections))
         } catch (error) {
           console.error(error);
         }
       }
-      // const aptos = new Aptos()
-      // const payload: ViewRequest = {
-      //   function: "0x1::coin::balance",
-      //   typeArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd::core::RenegadeCoin"],
-      //   functionArguments: ["0x91c62bc900d7ab1d4c699b293d82c754a68369af278f7422ef5eadcbfed8efbd"],
-      // };
-      // const res = await aptos.view({
-      //   payload
-      // });
-      // console.log("balance", res)
+
+      const payload: ViewRequest = {
+        function: "0x1::coin::balance",
+        typeArguments: [RENA_COIN_TYPE_TESTNET],
+        functionArguments: [account?.address],
+      };
+      const res = await aptos.view({
+        payload
+      });
+      setRenaBalance(parseInt(res[0] as any) / ONE_RENEGADES)
     };
     fetchEvents();
   }, [connected, account]);
@@ -68,7 +79,7 @@ const Renegades = () => {
             <p className="font-bold text-[42px]">My Renegades</p>
             <div className="flex items-center">
               <p className="text-[26px] font-semibold">$RENA Balance:</p>
-              <p className="text-[26px] text-primary font-bold ml-3 mr-2">{connected ? 2 : 0}</p>
+              <p className="text-[26px] text-primary font-bold ml-3 mr-2">{connected ? renaBalance : 0}</p>
               <img src="/renegades/rena.svg" className="mr-1" />
             </div>
           </div>

@@ -33,8 +33,7 @@ const Header: React.FC<Props> = ({ className, active }) => {
           <div className="ml-12 mr-6 flex h-12">
             <ConnectButton />
             <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">
-              <p className="text-[18px] h-5 font-bold">Get $RENA</p>
-              <p className="text-[16px] font-semibold">Coming soon</p>
+              <p className="text-[18px] h-6 font-bold">Get $RENA</p>
             </SecondaryButton>
           </div>
           <div style={{ zIndex: 100 }} className="flex">

@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { toggleClaimModal } from "../../state/dialog";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -21,6 +21,20 @@ const ClaimModal = () => {
   const { account } = useWallet();
   const renaBalance = useAppSelector(state => state.renegadesState.renaBalance);
 
+  const [count, setCount] = useState(1);
+
+  const incrementValue = () => {
+    if (renaBalance > count) {
+      setCount((prevValue) => prevValue + 1);
+    }
+  };
+
+  const decrementValue = () => {
+    if (1 < count) {
+      setCount((prevValue) => (prevValue > 1 ? prevValue - 1 : 1));
+    }
+  };
+
   const fetchEvents = async () => {
     if (account) {
       try {
@@ -35,8 +49,9 @@ const ClaimModal = () => {
   const onClaim = async () => {
     if (account) {
       try {
-        await claim(account.address);
+        await claim(account.address, count);
         fetchEvents();
+        setProceed(1);
       } catch (error) {
         console.error(error);
       }
@@ -49,32 +64,62 @@ const ClaimModal = () => {
     <div
       className={`${isOpen && "block"} ${animationClass} fixed z-[100] inset-0 h-full flex justify-center sm:items-center items-end bg-gray-dark-1`}
     >
-      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-[622px] sm:h-[469px] bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] py-4 px-6">
+      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-fit bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] py-4 px-6">
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center">
-            <p className="text-[26px] font-semibold text-[#FFF] leading-[130%]">You’ve got a new Renegade!</p>
+            <p className="text-[26px] font-semibold text-[#FFF] leading-[130%]">{proceed == 0 ? 'Claim a Renegade' : 'You’ve got a new Renegade!'}</p>
             <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
-              <Icon onClick={() => { dispatch(toggleClaimModal(false)); }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+              <Icon onClick={() => { dispatch(toggleClaimModal(false)); setCount(0); setProceed(0); }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
             </div>
           </div>
-          <div className={`flex flex-col items-center justify-between mt-10`} >
-            <div className="flex flex-col items-center">
-              <img src={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px]" />
-              <p className="text-[26px] font-semibold mt-1" >{lastRenegadesData?.token_name}</p>
-              {/* <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center] ${levelClass(5)}`}>
-                <Icon icon={'ph:medal-fill'} fontSize={20} color={levelClass(5)} className="mr-1" />
-                Rank {240}
-                <p className="text-[#666] font-semibold">/5000</p>
-              </div> */}
-            </div>
-            <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-9 w-full">
-              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
-              {renaBalance > 0 ?
-                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
+          <div className={`flex flex-col items-center justify-between mt-8`} >
+            <div className="flex flex-col items-center relative">
+              {proceed != 0 ?
+                <>
+                  <img src={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px] mt-2" />
+                  <p className="text-[26px] font-semibold mt-1" >{lastRenegadesData?.token_name}</p>
+                  {lastRenegadesData?.token_count &&
+                    <div className="absolute -right-[60px] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {lastRenegadesData?.token_count} more</div>
+                  }
+                </>
                 :
-                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
+                <img src='/renegades/avatar-default.svg' className="w-[194px] h-[194px] rounded-[8px]" />
               }
-              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
+            </div>
+            {renaBalance > 0 &&
+              <div className="flex h-12 justify-center gap-4 items-center mt-9">
+                <div
+                  className={`w-[72px] h-full ${count <= 1 ? 'bg-primary-disable' : 'bg-primary'}  rounded-[4px] flex items-center justify-center cursor-pointer`}
+                  onClick={decrementValue}
+                >
+                  <Icon icon={'fa6-solid:minus'} fontSize={24} color="black" />
+                </div>
+                <input
+                  type="text"
+                  value={count}
+                  onChange={(e) => { renaBalance < count ? setCount(renaBalance) : setCount(Number(e.target.value)) }}
+                  className="w-[95px] h-full text-center rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
+                />
+
+                <div
+                  className={`w-[72px] h-full ${renaBalance <= count ? 'bg-primary-disable' : 'bg-primary'} rounded-[4px] flex items-center justify-center cursor-pointer`}
+                  onClick={incrementValue}
+                >
+                  <Icon icon={'fa6-solid:plus'} fontSize={24} color="black" />
+                </div>
+              </div>
+            }
+            <div className="flex items-center justify-center text-[18px] font-semibold gap-1 mt-3">
+              <p>You can claim max</p><span onClick={() => setCount(renaBalance)} className="text-primary cursor-pointer">{renaBalance} Renegades</span>
+            </div>
+            <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-8 mb-2 w-full">
+              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
+              {renaBalance > 0 ?
+                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0); setCount(0); }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
+                :
+                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0); setCount(0); }} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
+              }
+              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] !h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
             </div>
           </div>
         </div>

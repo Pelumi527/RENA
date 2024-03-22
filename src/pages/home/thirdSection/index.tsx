@@ -58,8 +58,7 @@ const ThirdSection = () => {
           </div>
           <div className="sm:flex w-full justify-center mt-14 hidden">
             <PrimaryButton className="z-20 relative w-[200px]">
-              <p className="text-[18px] h-5 font-bold">Get $RENA</p>
-              <p className="text-[16px] font-semibold">Coming soon</p>
+              <p className="text-[18px] h-6 font-bold">Get $RENA</p>
             </PrimaryButton>
           </div>
         </div>

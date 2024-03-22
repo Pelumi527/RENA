@@ -13,8 +13,7 @@ const SixthSection = () => {
           <p className=" text-[22px] sm:text-[26px] font-semibold text-center w-[95%] md:w-[899px] leading-7 mb-8">Get $RENA and liquify your NFTs in a brand new way!</p>
           <div className="">
             <SecondaryButton className="z-20 h-12 relative w-[200px]">
-              <p className="text-[18px] h-5 font-bold">Get $RENA</p>
-              <p className="text-[16px] font-semibold">Coming soon</p>
+              <p className="text-[18px] h-6 font-bold">Get $RENA</p>
             </SecondaryButton>
           </div>
         </div>

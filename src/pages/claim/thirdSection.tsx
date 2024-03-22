@@ -20,8 +20,7 @@ const ThirdSection = () => {
           </p>
           <div className="flex w-full justify-center sm:justify-start">
             <PrimaryButton className="z-20 relative w-[200px]">
-              <p className="text-[18px] h-5 font-bold">Liquify NFTs</p>
-              <p className="text-[16px] font-semibold">Coming soon</p>
+              <p className="text-[18px] h-6 font-bold">Liquify NFTs</p>
             </PrimaryButton>
           </div>
         </div>

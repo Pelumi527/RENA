@@ -11,8 +11,7 @@ const MainSection = () => {
         <p className="text-[22px] mt-6 md:text-[26px] text-center font-semibold z-20 relative text-gray-light">Liquid NFT is an experimental fractionalized liquidity standard for NFTs via a mix of fungible & non-fungible tokens, based on Aptos Token</p>
         <div className="flex w-full justify-center mt-10">
           <PrimaryButton className="z-20 relative w-[200px]">
-            <p className="text-[18px] h-5 font-bold">Get $RENA</p>
-            <p className="text-[16px] font-semibold">Coming soon</p>
+            <p className="text-[18px] h-6 font-bold">Get $RENA</p>
           </PrimaryButton>
         </div>
       </div>

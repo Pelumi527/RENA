@@ -40,18 +40,6 @@ const Renegades = () => {
     fetchEvents();
   }, [connected, account]);
 
-  const onClaim = async () => {
-    if (account) {
-      try {
-        await claim(account.address);
-        fetchEvents();
-        dispatch(toggleClaimModal(true));
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
-
   return (
     <div className="parallax relative" id="cred-point">
       <img src="/renegades/vector.png" className="absolute sm:left-20" />
@@ -69,12 +57,11 @@ const Renegades = () => {
             </div>
           </div>
           <div
-            onClick={onClaim}
-            className={`flex h-[110px] items-center cursor-pointer justify-center ${
-              renaBalance != 0
-                ? "bg-primary hover:bg-primary-hover"
-                : "bg-[#222]"
-            } border-2 rounded-[8px] mt-10`}
+            onClick={() => { renaBalance != 0 && dispatch(toggleClaimModal(true)) }}
+            className={`flex h-[110px] items-center cursor-pointer justify-center ${renaBalance != 0
+              ? "bg-primary hover:bg-primary-hover"
+              : "bg-[#222]"
+              } border-2 rounded-[8px] mt-10`}
             style={{
               backgroundImage: `url("/renegades/second.png")`,
               backgroundRepeat: "no-repeat",

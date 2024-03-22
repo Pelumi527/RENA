@@ -8,6 +8,7 @@ module.exports = {
       'primary-hover': '#FF903E',
       'primary': '#FF7C2A',
       'primary-active': '#F57220',
+      'primary-disable': '#AF4000',
       'secondary-hover': '#E1E1E1',
       'secondary': '#FFF',
       'secondary-active': '#C3C3C3',

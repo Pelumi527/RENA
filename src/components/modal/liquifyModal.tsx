@@ -46,6 +46,7 @@ const LiquifyModal = () => {
       try {
         await liquify(account.address, [data?.token_data_id]);
         fetchEvents();
+        dispatch(toggleItemModal(false));
       } catch (error) {
         console.error(error);
       }

@@ -7,13 +7,13 @@ const useClaim = () => {
   const { signAndSubmitTransaction } = useWallet();
   const dispatch = useDispatch();
 
-  const claim = async (accountAddress: string) => {
+  const claim = async (accountAddress: string, count: number) => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
         function: `${RENA_MODULE_TESTNET}::${CLAIM}`,
         typeArguments: [RENA_COIN_TYPE_TESTNET],
-        functionArguments: [LIQUID_COIN_OBJECT_TESTNET, "1"],
+        functionArguments: [LIQUID_COIN_OBJECT_TESTNET, count],
       },
     });
     console.log(res);
@@ -39,6 +39,7 @@ const useClaim = () => {
           token_data_id: address,
           token_name: value,
           token_uri: uri,
+          token_count: count,
         })
       );
     }

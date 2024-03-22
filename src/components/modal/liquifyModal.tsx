@@ -5,13 +5,7 @@ import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import {
-  LIQUID_COIN_OBJECT_TESTNET,
-  LIQUIFY,
-  RENA_COIN_TYPE_TESTNET,
-  RENA_MODULE_TESTNET,
-  APTOS,
-} from "../../util/module-endpoints";
+import useLiquify from "../../hook/useLiquify";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 
@@ -19,10 +13,11 @@ const LiquifyModal = () => {
   const updateTokenList = useTokenList();
   const updateTokenBalance = useTokenBalance();
   const data = useAppSelector((state) => state.dialogState.bItemModal);
-  const [liquify, setLiquify] = useState(0);
-  const [isChecked, setIsChecked] = useState(false); // State to track checkbox status
+  const [isChecked, setIsChecked] = useState(false);
+  const [proceed, setProceed] = useState(0);
   const dispatch = useAppDispatch();
-  const { connected, account, signAndSubmitTransaction } = useWallet();
+  const { account } = useWallet();
+  const liquify = useLiquify();
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
@@ -46,27 +41,11 @@ const LiquifyModal = () => {
     }
   };
 
-  const handleLiquify = async () => {
+  const onLiqify = async () => {
     if (account) {
       try {
-        const tokens = [data?.token_data_id];
-        console.log(tokens);
-        const res = await signAndSubmitTransaction({
-          sender: account.address,
-          data: {
-            function: `${RENA_MODULE_TESTNET}::${LIQUIFY}`,
-            typeArguments: [RENA_COIN_TYPE_TESTNET],
-            functionArguments: [LIQUID_COIN_OBJECT_TESTNET, tokens],
-          },
-        });
-        console.log(res);
-        if (res.hash) {
-          await APTOS.waitForTransaction({
-            transactionHash: res.hash,
-          });
-          fetchEvents();
-          dispatch(toggleItemModal(false));
-        }
+        await liquify(account.address, [data?.token_data_id]);
+        fetchEvents();
       } catch (error) {
         console.error(error);
       }
@@ -92,11 +71,10 @@ const LiquifyModal = () => {
 
   return (
     <div
-      className={`${
-        data && "block"
-      } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
+      className={`${data && "block"
+        } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
     >
-      {liquify == 1 && (
+      {proceed == 1 && (
         <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[625px] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
@@ -107,7 +85,7 @@ const LiquifyModal = () => {
                 <Icon
                   onClick={() => {
                     dispatch(toggleItemModal(false));
-                    setLiquify(0);
+                    setProceed(0);
                   }}
                   icon={"iconoir:cancel"}
                   fontSize={34}
@@ -133,7 +111,7 @@ const LiquifyModal = () => {
             </p>
             <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
               <PrimaryButton
-                onClick={handleLiquify}
+                onClick={onLiqify}
                 className="block sm:hidden !font-bold w-full sm:w-[253px] h-12"
               >
                 Liquify NFT and get 1 $RENA
@@ -141,14 +119,14 @@ const LiquifyModal = () => {
               <SecondaryButton
                 onClick={() => {
                   dispatch(toggleItemModal(false));
-                  setLiquify(0);
+                  setProceed(0);
                 }}
                 className="!font-bold w-full sm:w-[203px] h-12"
               >
                 Cancel
               </SecondaryButton>
               <PrimaryButton
-                onClick={handleLiquify}
+                onClick={onLiqify}
                 className="hidden sm:block !font-bold w-full sm:w-[253px] h-12"
               >
                 Liquify NFT and get 1 $RENA
@@ -178,7 +156,7 @@ const LiquifyModal = () => {
           </div>
         </div>
       )}
-      {liquify == 0 && (
+      {proceed == 0 && (
         <div className="relative w-full sm:w-[965px] h-[95%] sm:h-[545px] bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
           <div className="flex w-full justify-between">
             <img
@@ -201,7 +179,7 @@ const LiquifyModal = () => {
                   <Icon
                     onClick={() => {
                       dispatch(toggleItemModal(false));
-                      setLiquify(0);
+                      setProceed(0);
                     }}
                     icon={"iconoir:cancel"}
                     fontSize={34}
@@ -237,7 +215,7 @@ const LiquifyModal = () => {
                 Liquify NFT to retrieve your 1 $RENA
               </p>
               <button
-                onClick={() => setLiquify(1)}
+                onClick={() => setProceed(1)}
                 className="mt-3 rounded-[4px] w-full sm:w-[200px] h-12 text-[17px] sm:text-[18px] text-[#121221] bg-[#FFF] font-bold"
               >
                 Liquify NFT
@@ -246,7 +224,7 @@ const LiquifyModal = () => {
           </div>
         </div>
       )}
-      {/* {liquify == 2 &&
+      {/* {proceed == 2 &&
         < div className="relative w-[566px] h-[221px] bg-[#222] border-gray-light-3 rounded-[8px] p-6">
           <div className="flex flex-col w-full items-center">
             <p className="text-[26px] font-semibold leading-[130%]">Sign transaction in wallet</p>
@@ -255,7 +233,7 @@ const LiquifyModal = () => {
           </div>
         </div>
       } */}
-      {liquify == 2 && (
+      {proceed == 2 && (
         <div
           style={{
             backgroundImage: `url("/renegades/bg-modal-success.png")`,
@@ -273,7 +251,7 @@ const LiquifyModal = () => {
                 <Icon
                   onClick={() => {
                     dispatch(toggleItemModal(false));
-                    setLiquify(0);
+                    setProceed(1);
                   }}
                   icon={"iconoir:cancel"}
                   fontSize={34}
@@ -297,7 +275,7 @@ const LiquifyModal = () => {
               <SecondaryButton
                 onClick={() => {
                   dispatch(toggleItemModal(false));
-                  setLiquify(0);
+                  setProceed(1);;
                 }}
                 className="!font-bold w-[203px] h-12 mt-14"
               >

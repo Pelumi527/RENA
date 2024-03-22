@@ -5,8 +5,6 @@ import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { CLAIM, LIQUID_COIN_OBJECT_TESTNET, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET, APTOS } from "../../util/module-endpoints";
-import { updateLastRenegadesData} from "../../state/renegades";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import useClaim from "../../hook/useClaim";

@@ -5,7 +5,7 @@ import Home from "./pages/home";
 import Claim from "./pages/claim";
 import WalletModal from "./components/modal/walletModal";
 import Renegades from "./pages/renegades";
-import LiauifyModal from "./components/modal/liauifyModal";
+import LiquifyModal from "./components/modal/liquifyModal";
 import ClaimModal from "./components/modal/claimModal";
 import SideBar from "./components/header/sideBar";
 
@@ -18,7 +18,7 @@ function App() {
         <Route path="/renegades" element={<Renegades />} />
       </Routes>
       <WalletModal />
-      <LiauifyModal />
+      <LiquifyModal />
       <ClaimModal />
       <SideBar />
     </div>

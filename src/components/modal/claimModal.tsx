@@ -1,80 +1,44 @@
 import { Icon } from "@iconify/react";
 import { toggleClaimModal } from "../../state/dialog";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { CLAIM, COLLECTION_ID, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, ONE_RENEGADES, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET, aptos } from "../../util/module-endpoints";
-import { fetchGraphQL } from "../../util/url";
-import { updateLastRenegadesData, updateRenaBalance, updateRenegadesData } from "../../state/renegades";
-import { ViewRequest } from "@aptos-labs/ts-sdk";
-import { operationsDoc } from "../../util/quary";
+import { CLAIM, LIQUID_COIN_OBJECT_TESTNET, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET, APTOS } from "../../util/module-endpoints";
+import { updateLastRenegadesData} from "../../state/renegades";
+import useTokenList from "../../hook/useTokenList";
+import useTokenBalance from "../../hook/useTokenBalance";
+import useClaim from "../../hook/useClaim";
 
 const ClaimModal = () => {
+  const updateTokenList = useTokenList();
+  const updateTokenBalance = useTokenBalance();
+  const claim = useClaim();
+
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
   const lastRenegadesData = useAppSelector((state) => state.renegadesState.lastRenegadesData);
   const [proceed, setProceed] = useState(0);
   const dispatch = useAppDispatch();
-  const { connected, account, signAndSubmitTransaction } = useWallet();
+  const { account } = useWallet();
   const renaBalance = useAppSelector(state => state.renegadesState.renaBalance);
 
   const fetchEvents = async () => {
     if (account) {
       try {
-        const res = await fetchGraphQL(operationsDoc, "MyQuery", {
-          collectionId: COLLECTION_ID,
-          ownerAddress: account.address,
-        });
-        console.log("collections", res);
-        const collections = res.data.current_token_datas_v2;
-        dispatch(updateRenegadesData(collections))
+        updateTokenList(account.address);
+        updateTokenBalance(account.address);
       } catch (error) {
         console.error(error);
       }
     }
-
-    const payload: ViewRequest = {
-      function: "0x1::coin::balance",
-      typeArguments: [RENA_COIN_TYPE_TESTNET],
-      functionArguments: [account?.address],
-    };
-    try {
-      const res = await aptos.view({
-        payload
-      });
-      dispatch(updateRenaBalance((parseInt(res[0] as any) / ONE_RENEGADES)))
-    } catch (e) {
-      console.log(e)
-    }
   };
 
-  const claim = async () => {
+  const onClaim = async () => {
     if (account) {
       try {
-        const res = await signAndSubmitTransaction({
-          sender: account.address,
-          data: {
-            function: `${RENA_MODULE_TESTNET}::${CLAIM}`,
-            typeArguments: [RENA_COIN_TYPE_TESTNET],
-            functionArguments: [LIQUID_COIN_OBJECT_TESTNET, "1"],
-          }
-        })
-        console.log(res);
-        if (res.output.success) {
-          const tokenObject = res.output.changes.filter((change: { data?: { type: string } | null }) => change.data && change.data.type === "0x4::token::Token")[0];
-          const tokenObjectForName = res.output.changes.filter((change: { data?: { type: string } | null }) => change.data && change.data.type === "0x4::token::TokenIdentifiers")[0];
-          const address = tokenObject.address;
-          const uri = tokenObject.data.data.uri;
-          const value = tokenObjectForName.data.data.name.value;
-          dispatch(updateLastRenegadesData({
-            token_data_id: address,
-            token_name: value,
-            token_uri: uri
-          }))
-          fetchEvents()
-        }
+        await claim(account.address);
+        fetchEvents();
       } catch (error) {
         console.error(error);
       }
@@ -106,13 +70,13 @@ const ClaimModal = () => {
               </div> */}
             </div>
             <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-9 w-full">
-              {renaBalance > 0 && <PrimaryButton onClick={claim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
+              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
               {renaBalance > 0 ?
                 <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
                 :
                 <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0) }} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
               }
-              {renaBalance > 0 && <PrimaryButton onClick={claim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
+              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim another NFT</PrimaryButton>}
             </div>
           </div>
         </div>

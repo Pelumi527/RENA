@@ -18,6 +18,6 @@ export const LIQUID_COIN_OBJECT_TESTNET = "0x3ff43e3d26d8db230c2f2cbc8770bac9e5b
 export const COLLECTION_ID = "0x5c46c8d140591dcf70e282386c481f63af6e7385bd7ceabcbf02d40db3843c84"
 export const COLLECTION_ADDRESS: AccountAddressInput = "0x5c46c8d140591dcf70e282386c481f63af6e7385bd7ceabcbf02d40db3843c84"
 const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-export const aptos = new Aptos(aptosConfig); 
+export const APTOS = new Aptos(aptosConfig); 
 
 export const ONE_RENEGADES = 100_000_000;

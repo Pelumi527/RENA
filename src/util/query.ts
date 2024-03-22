@@ -10,6 +10,9 @@ export const operationsDoc = `
         }
       }
     ) {
+      current_token_ownership {
+        owner_address
+      }
       token_name
       token_uri
       token_data_id

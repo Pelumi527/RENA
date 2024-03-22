@@ -87,31 +87,33 @@ const ClaimModal = () => {
               }
             </div>
             {renaBalance > 0 &&
-              <div className="flex h-12 justify-center gap-4 items-center mt-9">
-                <div
-                  className={`w-[72px] h-full ${count <= 1 ? 'bg-primary-disable' : 'bg-primary'}  rounded-[4px] flex items-center justify-center cursor-pointer`}
-                  onClick={decrementValue}
-                >
-                  <Icon icon={'fa6-solid:minus'} fontSize={24} color="black" />
-                </div>
-                <input
-                  type="text"
-                  value={count}
-                  onChange={(e) => { renaBalance < count ? setCount(renaBalance) : setCount(Number(e.target.value)) }}
-                  className="w-[95px] h-full text-center rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
-                />
+              <>
+                <div className="flex h-12 justify-center gap-4 items-center mt-9">
+                  <div
+                    className={`w-[72px] h-full ${count <= 1 ? 'bg-primary-disable' : 'bg-primary'}  rounded-[4px] flex items-center justify-center cursor-pointer`}
+                    onClick={decrementValue}
+                  >
+                    <Icon icon={'fa6-solid:minus'} fontSize={24} color="black" />
+                  </div>
+                  <input
+                    type="text"
+                    value={count}
+                    onChange={(e) => { renaBalance < count ? setCount(renaBalance) : setCount(Number(e.target.value)) }}
+                    className="w-[95px] h-full text-center rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
+                  />
 
-                <div
-                  className={`w-[72px] h-full ${renaBalance <= count ? 'bg-primary-disable' : 'bg-primary'} rounded-[4px] flex items-center justify-center cursor-pointer`}
-                  onClick={incrementValue}
-                >
-                  <Icon icon={'fa6-solid:plus'} fontSize={24} color="black" />
+                  <div
+                    className={`w-[72px] h-full ${renaBalance <= count ? 'bg-primary-disable' : 'bg-primary'} rounded-[4px] flex items-center justify-center cursor-pointer`}
+                    onClick={incrementValue}
+                  >
+                    <Icon icon={'fa6-solid:plus'} fontSize={24} color="black" />
+                  </div>
                 </div>
-              </div>
+                <div className="flex items-center justify-center text-[18px] font-semibold gap-1 mt-3">
+                  <p>You can claim max</p><span onClick={() => setCount(renaBalance)} className="text-primary cursor-pointer">{renaBalance} Renegades</span>
+                </div>
+              </>
             }
-            <div className="flex items-center justify-center text-[18px] font-semibold gap-1 mt-3">
-              <p>You can claim max</p><span onClick={() => setCount(renaBalance)} className="text-primary cursor-pointer">{renaBalance} Renegades</span>
-            </div>
             <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-8 mb-2 w-full">
               {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
               {renaBalance > 0 ?

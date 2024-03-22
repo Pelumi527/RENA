@@ -8,11 +8,11 @@ const SceondSection = () => {
             className="w-[295px] h-[170px] md:w-[431px] md:h-[248px] cursor-pointer mb-4"
           />
           <img
-            src="/home/tripleAvatar.svg"
+            src="/home/avatar-home.svg"
             className="hidden md:block w-[490px] h-[244px] cursor-pointer mb-4"
           />
           <img
-            src="/renegades/avatar-default.svg"
+            src="/home/avatar-home-mobile.svg"
             className="block md:hidden w-[194px] h-[194px] cursor-pointer mb-12 rounded-lg"
           />
           <p className="text-[26px] md:text-[32px] font-bold text-center w-[85%]">The First Liquid NFT collection on Aptos</p>

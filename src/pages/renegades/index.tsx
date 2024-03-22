@@ -80,7 +80,7 @@ const Renegades = () => {
                 </>
               ) : (
                 <div className="flex flex-col items-center">
-                  <p className="font-medium text-[22px] sm:text-[26px]">
+                  <p className="font-medium text-[22px] sm:text-[26px] text-center">
                     You don’t have any Renegades to claim
                   </p>
                   <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">

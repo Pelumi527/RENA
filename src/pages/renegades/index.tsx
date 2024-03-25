@@ -74,7 +74,7 @@ const Renegades = () => {
                 <>
                   <p className="font-medium text-[22px] sm:text-[26px]">
                     You can claim{" "}
-                    <span className="font-bold ">{renaBalance} NFTs</span>
+                    <span className="font-bold ">{renaBalance} NFT {renaBalance > 1 && "s"}</span>
                   </p>
                   <Icon icon={"mingcute:right-line"} fontSize={25} />
                 </>

@@ -41,7 +41,7 @@ const Header: React.FC<Props> = ({ className, active }) => {
           </div>
         </div>
         <div className="block xl:hidden relative z-20">
-          <Icon onClick={() => { dispatch(toggleSidebar(true)) }} icon={'grommet-icons:menu'} className="text-[32px] cursor-pointer" />
+          <Icon onClick={() => { dispatch(toggleSidebar(1)) }} icon={'grommet-icons:menu'} className="text-[32px] cursor-pointer" />
         </div>
       </div>
     </>

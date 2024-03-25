@@ -98,7 +98,7 @@ const ClaimModal = () => {
                   <input
                     type="text"
                     value={count}
-                    onChange={(e) => { renaBalance < count ? setCount(renaBalance) : setCount(Number(e.target.value)) }}
+                    onChange={(e) => { renaBalance < Number(e.target.value) ? setCount(renaBalance) : setCount(Number(e.target.value)) }}
                     className="w-[95px] h-full text-center rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
                   />
 

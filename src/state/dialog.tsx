@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface dialogStates {
-  bSidebar: boolean;
+  bSidebar: number;
   bWalletHold: boolean;
   bWalletPanel: boolean;
   bItemModal: any;
@@ -9,7 +9,7 @@ interface dialogStates {
 }
 
 const initialState: dialogStates = {
-  bSidebar: false,
+  bSidebar: 0,
   bWalletPanel: false,
   bWalletHold: false,
   bClaimModal: false,
@@ -20,7 +20,7 @@ export const dialogSlice = createSlice({
   name: "dialog",
   initialState,
   reducers: {
-    toggleSidebar: (state, action: PayloadAction<boolean>) => {
+    toggleSidebar: (state, action: PayloadAction<number>) => {
       console.log(action.payload)
       state.bSidebar = action.payload;
     },

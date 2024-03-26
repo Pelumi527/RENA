@@ -1,6 +1,8 @@
+import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton"
 
 const ThirdSection = () => {
+  const navigate = useNavigate();
   return (
     <div className="flex flex-col w-full mt-[206px] items-center px-4">
       <div className="flex sm:flex-row flex-col items-center sm:items-start gap-20 sm:gap-[100px]" >
@@ -19,7 +21,7 @@ const ThirdSection = () => {
             Connect wallet to Liquify NFTs and get $RENA
           </p>
           <div className="flex w-full justify-center sm:justify-start">
-            <PrimaryButton className="z-20 relative w-[200px]">
+            <PrimaryButton onClick={() => navigate('/renegades')} className="z-20 relative w-[200px]">
               <p className="text-[18px] h-6 font-bold">Liquify NFTs</p>
             </PrimaryButton>
           </div>

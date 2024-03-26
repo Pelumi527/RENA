@@ -24,6 +24,12 @@ const Renegades = () => {
   const renaBalance = useAppSelector(
     (state) => state.renegadesState.renaBalance
   );
+  const isBalanceLoading = useAppSelector(
+    (state) => state.renegadesState.isBalanceLoading
+  );
+  const isLoading = useAppSelector(
+    (state) => state.renegadesState.isLoading
+  );
 
   const fetchEvents = async () => {
     if (account) {
@@ -48,48 +54,56 @@ const Renegades = () => {
         <div className="flex flex-col w-[90%] sm:w-[1100px]">
           <div className="mt-12 flex sm:flex-row flex-col justify-between sm:h-[47px] sm:items-end">
             <p className="font-bold text-[42px]">My Renegades</p>
-            <div className="flex items-center">
-              <p className="text-[26px] font-semibold">$RENA Balance:</p>
-              <p className="text-[26px] text-primary font-bold ml-3 mr-2">
-                {renaBalance != 0 ? renaBalance : 0}
-              </p>
-              <img src="/renegades/rena.svg" className="mr-1" />
-            </div>
+            {!isBalanceLoading && connected ?
+              <div className="bg-gray-loading w-[228px] h-[30px]" />
+              :
+              <div className="flex items-center">
+                <p className="text-[26px] font-semibold">$RENA Balance:</p>
+                <p className="text-[26px] text-primary font-bold ml-3 mr-2">
+                  {renaBalance != 0 ? renaBalance : 0}
+                </p>
+                <img src="/renegades/rena.svg" className="mr-1" />
+              </div>
+            }
           </div>
-          <div
-            onClick={() => { renaBalance != 0 && dispatch(toggleClaimModal(true)) }}
-            className={`flex h-[110px] items-center cursor-pointer justify-center ${renaBalance != 0
-              ? "bg-primary hover:bg-primary-hover"
-              : "bg-[#222]"
-              } border-2 rounded-[8px] mt-10`}
-            style={{
-              backgroundImage: `url("/renegades/second.png")`,
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "left 80px center",
-              backgroundSize: "contain",
-            }}
-          >
-            <div className="flex items-center">
-              {renaBalance != 0 ? (
-                <>
-                  <p className="font-medium text-[22px] sm:text-[26px]">
-                    You can claim{" "}
-                    <span className="font-bold ">{renaBalance} NFT {renaBalance > 1 && "s"}</span>
-                  </p>
-                  <Icon icon={"mingcute:right-line"} fontSize={25} />
-                </>
-              ) : (
-                <div className="flex flex-col items-center">
-                  <p className="font-medium text-[22px] sm:text-[26px] text-center">
-                    You don’t have any Renegades to claim
-                  </p>
-                  <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                    Get $RENA to claim NFTs
-                  </p>
-                </div>
-              )}
+          {!isBalanceLoading && connected ?
+            <div className="h-[110px] w-full bg-gray-loading mt-10 rounded-[8px]" />
+            :
+            <div
+              onClick={() => { renaBalance != 0 && dispatch(toggleClaimModal(true)) }}
+              className={`flex w-full h-[110px] items-center cursor-pointer justify-center ${renaBalance != 0
+                ? "bg-primary hover:bg-primary-hover"
+                : "bg-[#222]"
+                } border-2 rounded-[8px] mt-10`}
+              style={{
+                backgroundImage: `url("/renegades/second.png")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "left 80px center",
+                backgroundSize: "contain",
+              }}
+            >
+              <div className="flex items-center">
+                {renaBalance != 0 ? (
+                  <>
+                    <p className="font-medium text-[22px] sm:text-[26px]">
+                      You can claim{" "}
+                      <span className="font-bold ">{renaBalance} NFT {renaBalance > 1 && "s"}</span>
+                    </p>
+                    <Icon icon={"mingcute:right-line"} fontSize={25} />
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <p className="font-medium text-[22px] sm:text-[26px] text-center">
+                      You don’t have any Renegades to claim
+                    </p>
+                    <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                      Get $RENA to claim NFTs
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          }
           {connected ? (
             <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
               {renegadesData.map((item, index) => (

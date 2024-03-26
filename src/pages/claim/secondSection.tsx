@@ -1,8 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton"
 
 const SecondSection = () => {
+    const navigate = useNavigate();
     return (
-
         <div className="flex flex-col w-full mt-[238px] items-center px-4">
             <div className="flex items-start gap-8" >
                 <div className="flex flex-col h-[566px] sm:h-[420px] sm:justify-end ">
@@ -20,8 +21,8 @@ const SecondSection = () => {
                         Connect wallet to claim NFTsCool
                     </p>
                     <div className="flex w-full justify-center sm:justify-start">
-                        <PrimaryButton className="z-20 relative w-[200px]">
-                            <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
+                        <PrimaryButton onClick={()=> navigate('/renegades')} className="z-20 relative w-[200px]">
+                            <p className="text-[18px] h-6 font-bold">Claim NFTs</p>
                         </PrimaryButton>
                     </div>
                 </div>

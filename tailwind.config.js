@@ -14,6 +14,7 @@ module.exports = {
       'secondary-active': '#C3C3C3',
       'gray-light': '#CCC',
       'gray-dark-1': '#00000090',
+      'gray-loading': '#333',
     },
     extend: {
       keyframes: {

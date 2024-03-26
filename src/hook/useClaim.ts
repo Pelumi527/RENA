@@ -1,7 +1,7 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { APTOS, CLAIM, LIQUID_COIN_OBJECT_TESTNET, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../util/module-endpoints";
 import { useDispatch } from "react-redux";
-import { updateLastRenegadesData } from "../state/renegades";
+import { updateLRDLoading, updateLastRenegadesData } from "../state/renegades";
 
 const useClaim = () => {
   const { signAndSubmitTransaction } = useWallet();
@@ -17,7 +17,9 @@ const useClaim = () => {
       },
     });
     console.log(res);
+
     if (res.hash) {
+      dispatch(updateLRDLoading(false));
       const result = await APTOS.waitForTransaction({
         transactionHash: res.hash,
       });

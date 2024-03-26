@@ -16,6 +16,8 @@ const ClaimModal = () => {
 
   const isOpen = useAppSelector((state) => state.dialogState.bClaimModal);
   const lastRenegadesData = useAppSelector((state) => state.renegadesState.lastRenegadesData);
+  const isLRDLoading = useAppSelector((state) => state.renegadesState.isLRDLoading);
+
   const [proceed, setProceed] = useState(0);
   const dispatch = useAppDispatch();
   const { account } = useWallet();
@@ -46,12 +48,18 @@ const ClaimModal = () => {
     }
   };
 
+  const onClose = async () => {
+    dispatch(toggleClaimModal(false));
+    setProceed(0);
+    setCount(1);
+  }
+
   const onClaim = async () => {
     if (account) {
       try {
         await claim(account.address, count);
         fetchEvents();
-        setProceed(1);
+        setProceed(proceed + 1);
       } catch (error) {
         console.error(error);
       }
@@ -69,16 +77,20 @@ const ClaimModal = () => {
           <div className="flex justify-between items-center">
             <p className="text-[26px] font-semibold text-[#FFF] leading-[130%]">{proceed == 0 ? 'Claim a Renegade' : 'You’ve got a new Renegade!'}</p>
             <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
-              <Icon onClick={() => { dispatch(toggleClaimModal(false)); setCount(0); setProceed(0); }} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
+              <Icon onClick={onClose} icon={'iconoir:cancel'} fontSize={34} className=" cursor-pointer" />
             </div>
           </div>
           <div className={`flex flex-col items-center justify-between mt-8`} >
             <div className="flex flex-col items-center relative">
-              {proceed != 0 ?
+              {proceed > 0 ?
                 <>
-                  <img src={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px] mt-2" />
+                  {isLRDLoading ?
+                    <div className="w-[194px] h-[194px] rounded-[8px] mt-2 bg-gray-loading" />
+                    :
+                    <img src={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px] mt-2" />
+                  }
                   <p className="text-[26px] font-semibold mt-1" >{lastRenegadesData?.token_name}</p>
-                  {lastRenegadesData?.token_count &&
+                  {lastRenegadesData?.token_count && proceed > 1 &&
                     <div className="absolute -right-[60px] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {lastRenegadesData?.token_count} more</div>
                   }
                 </>
@@ -117,9 +129,9 @@ const ClaimModal = () => {
             <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-8 mb-2 w-full">
               {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
               {renaBalance > 0 ?
-                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0); setCount(0); }} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
+                <SecondaryButton onClick={onClose} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
                 :
-                <SecondaryButton onClick={() => { dispatch(toggleClaimModal(false)); setProceed(0); setCount(0); }} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
+                <SecondaryButton onClick={onClose} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
               }
               {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] !h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
             </div>

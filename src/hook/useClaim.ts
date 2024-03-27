@@ -19,7 +19,7 @@ const useClaim = () => {
     console.log(res);
 
     if (res.hash) {
-      dispatch(updateLRDLoading(false));
+      dispatch(updateLRDLoading(true));
       const result = await APTOS.waitForTransaction({
         transactionHash: res.hash,
       });

@@ -5,6 +5,7 @@ interface dialogStates {
   isLoading: boolean;
   isBalanceLoading: boolean;
   renegadesData: NFTtype[];
+  renegadesRankData: NFTtype[];
   lastRenegadesData: NFTtype | undefined;
   renaBalance: number;
   isRenaLoading: boolean;
@@ -15,6 +16,7 @@ const initialState: dialogStates = {
   isLoading: false,
   isBalanceLoading: false,
   renegadesData: [],
+  renegadesRankData: [],
   lastRenegadesData: undefined,
   renaBalance: 0,
   isRenaLoading: true,
@@ -25,6 +27,9 @@ export const dialogSlice = createSlice({
   name: "dialog",
   initialState,
   reducers: {
+    updateRenegadesRankData: (state, action: PayloadAction<NFTtype[]>) => {
+      state.renegadesRankData = action.payload;
+    },
     updateRenegadesData: (state, action: PayloadAction<NFTtype[]>) => {
       state.isLoading = true;
       state.renegadesData = action.payload;
@@ -34,7 +39,7 @@ export const dialogSlice = createSlice({
       state.renaBalance = action.payload;
     },
     updateLastRenegadesData: (state, action: PayloadAction<NFTtype>) => {
-      state.isLRDLoading = true;
+      state.isLRDLoading = false;
       state.lastRenegadesData = action.payload;
     },
     updateIsRenaLoading: (state, action: PayloadAction<boolean>) => {
@@ -52,6 +57,7 @@ export const {
   updateRenaBalance,
   updateLastRenegadesData,
   updateIsRenaLoading,
+  updateRenegadesRankData,
   updateLRDLoading
 } = dialogSlice.actions;
 export default dialogSlice.reducer;

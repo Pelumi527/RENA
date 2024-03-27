@@ -8,6 +8,8 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import useClaim from "../../hook/useClaim";
+import LoadingImageClaim from "../loadingImageClaim";
+import { RenegadeItemWithRarity, calculateRankings, getRankForRenegadeItem, getRaritiesForRenegadeItem, levelClass } from "../../util/renegadeUtils";
 
 const ClaimModal = () => {
   const updateTokenList = useTokenList();
@@ -24,6 +26,30 @@ const ClaimModal = () => {
   const renaBalance = useAppSelector(state => state.renegadesState.renaBalance);
 
   const [count, setCount] = useState(1);
+  const [currentRank, setCurrentRank] = useState<number | undefined>(undefined);
+  const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
+  const renegades: RenegadeItemWithRarity[] = require('../../metadata.json');
+
+  useEffect(() => {
+    const calculateAndSetRaritiesAndRankings = () => {
+      const itemsWithCalculatedRarities = renegades.map(renegade => {
+        const rarities = getRaritiesForRenegadeItem(renegades, renegade.name);
+        return {
+          ...renegade,
+          overallRarity: rarities.overallRarity,
+        };
+      });
+      const rankedItems = calculateRankings(itemsWithCalculatedRarities);
+      setRenegadesWithRarity(rankedItems);
+    };
+    calculateAndSetRaritiesAndRankings();
+  }, [renegades]);
+
+  useEffect(() => {
+    if (lastRenegadesData?.token_name && renegadesWithRarity.length > 0) {
+      setCurrentRank(getRankForRenegadeItem(lastRenegadesData?.token_name, renegadesWithRarity));
+    }
+  }, [lastRenegadesData, renegadesWithRarity]);
 
   const incrementValue = () => {
     if (renaBalance > count) {
@@ -82,14 +108,15 @@ const ClaimModal = () => {
           </div>
           <div className={`flex flex-col items-center justify-between mt-8`} >
             <div className="flex flex-col items-center relative">
-              {proceed > 0 ?
+              {proceed > 0 || isLRDLoading ?
                 <>
-                  {isLRDLoading ?
-                    <div className="w-[194px] h-[194px] rounded-[8px] mt-2 bg-gray-loading" />
-                    :
-                    <img src={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px] mt-2" />
-                  }
+                  <LoadingImageClaim url={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px] mt-2" />
                   <p className="text-[26px] font-semibold mt-1" >{lastRenegadesData?.token_name}</p>
+                  <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center ${currentRank && levelClass(currentRank)}`}>
+                    <Icon icon={'ph:medal-fill'} fontSize={20} className={`mr-1 ${currentRank && levelClass(currentRank)}`} />
+                    Rank {currentRank}
+                    <p className="text-[#666] font-semibold">/5000</p>
+                  </div>
                   {lastRenegadesData?.token_count && proceed > 1 &&
                     <div className="absolute -right-[60px] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {lastRenegadesData?.token_count} more</div>
                   }

@@ -1,29 +1,20 @@
 import { Icon } from "@iconify/react";
 import LoadingImage from "../../components/loadingImage";
 import { useAppSelector } from "../../state/hooks";
+import { levelClass } from "../../util/renegadeUtils";
 
 interface Props {
   avatar?: string;
   name?: string;
-  rank?: string;
-  level?: number;
+  rank?: number;
   onClick?: () => void;
 }
 
-const RenegadesItem = ({ avatar, name, rank, level, onClick }: Props) => {
+const RenegadesItem = ({ avatar, name, rank, onClick }: Props) => {
 
   const isLoading = useAppSelector(
     (state) => state.renegadesState.isRenaLoading
   );
-  const levelClass = () => {
-    switch (level) {
-      case 1: return 'text-[#B83032]';
-      case 2: return 'text-[#FFC539]';
-      case 3: return 'text-[#218380]';
-      case 4: return 'text-[#FFF]';
-      default: return 'text-gray-500';
-    }
-  }
 
   return (
     <div onClick={onClick} className="w-[153px] h-[216px] sm:w-[194px] sm:h-[261px] cursor-pointer flex flex-col items-center">
@@ -35,11 +26,11 @@ const RenegadesItem = ({ avatar, name, rank, level, onClick }: Props) => {
         :
         <p className="text-[18px] sm:text-[22px] font-semibold text-center mt-4">{name}</p>
       }
-      {/* <div className={`text-[15px] font-bold flex items-center justify-center ${levelClass()}`}>
-        <Icon icon={'ph:medal-fill'} fontSize={16} color={levelClass()} className="mr-1" />
+      <div className={`text-[15px] font-bold flex items-center justify-center ${rank && levelClass(rank)}`}>
+        <Icon icon={'ph:medal-fill'} fontSize={16} className={`mr-1 ${rank && levelClass(rank)}`} />
         Rank {rank}
         <p className="text-[#666] font-semibold">/5000</p>
-      </div> */}
+      </div>
     </div>
   );
 };

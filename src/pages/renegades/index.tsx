@@ -9,18 +9,52 @@ import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppSelector } from "../../state/hooks";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
-import useClaim from "../../hook/useClaim";
+import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
+import { updateRenegadesRankData } from "../../state/renegades";
+
+const renegadesJsonData = require('../../metadata.json');
 
 const Renegades = () => {
   const { connected, account } = useWallet();
   const dispatch = useDispatch();
   const updateTokenList = useTokenList();
   const updateTokenBalance = useTokenBalance();
-  const claim = useClaim();
+  const renegadesData = useAppSelector((state) => state.renegadesState.renegadesData);
+  const renegadesRankData = useAppSelector((state) => state.renegadesState.renegadesRankData);
+  const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
 
-  const renegadesData = useAppSelector(
-    (state) => state.renegadesState.renegadesData
-  );
+  useEffect(() => {
+    const calculateAndSetRaritiesAndRankings = () => {
+      const itemsWithCalculatedRarities = renegadesJsonData.map((renegade: any) => {
+        const rarities = getRaritiesForRenegadeItem(renegadesJsonData, renegade.name);
+        return {
+          ...renegade,
+          overallRarity: rarities.overallRarity,
+        };
+      });
+      const rankedItems = calculateRankings(itemsWithCalculatedRarities);
+      setRenegadesWithRarity(rankedItems);
+    };
+    calculateAndSetRaritiesAndRankings();
+  }, [renegadesJsonData]);
+
+  useEffect(() => {
+    if (renegadesWithRarity.length > 0) {
+      const rankedRenegades = calculateRankings(renegadesWithRarity);
+      const updatedRenegadesData = renegadesData.map(renegade => {
+        const foundRankedItem = rankedRenegades.find(rankedItem => rankedItem?.name?.trim() === renegade?.token_name?.trim());
+        if (foundRankedItem) {
+          return { ...renegade, rank: foundRankedItem.rank };
+        }
+        return renegade;
+      });
+      if (updatedRenegadesData.length > 0) {
+        console.log("updatedRenegadesData>>>>", updatedRenegadesData);
+        dispatch(updateRenegadesRankData(updatedRenegadesData));
+      }
+    }
+  }, [renegadesData, renegadesWithRarity]);
+
   const renaBalance = useAppSelector(
     (state) => state.renegadesState.renaBalance
   );
@@ -45,6 +79,7 @@ const Renegades = () => {
   useEffect(() => {
     fetchEvents();
   }, [connected, account]);
+
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -106,14 +141,13 @@ const Renegades = () => {
           }
           {connected ? (
             <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
-              {renegadesData.map((item, index) => (
+              {renegadesRankData.map((item, index) => (
                 <RenegadesItem
                   onClick={() => dispatch(toggleItemModal(item))}
                   key={index}
                   avatar={item.token_uri}
                   name={item.token_name}
-                  rank={""}
-                  level={1}
+                  rank={item?.rank}
                 />
               ))}
             </div>

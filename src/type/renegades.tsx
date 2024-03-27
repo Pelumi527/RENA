@@ -5,4 +5,5 @@ export interface NFTtype {
   token_name?: string;
   token_uri?: string;
   token_count?: number;
+  rank?: number;
 }

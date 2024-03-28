@@ -4,7 +4,7 @@ import {
     AptosConfig,
     GetEventsResponse,
 } from "@aptos-labs/ts-sdk";
-import { RENA_MODULE_TESTNET } from "../util/module-endpoints";
+import { RENA_MODULE_TESTNET, RENA_PRESALE_MODULE_TESTNET } from "../util/module-endpoints";
 
 export class Events {
     private aptos: Aptos;
@@ -140,6 +140,74 @@ export class Events {
         return liquifyEvent;
     }
 
+    /**
+     * Get the event for a pre-sale created
+     */
+    // :!:PresaleCreated
+    async getPresaleCreatedEvent(): Promise<GetEventsResponse> {
+        const preSaleCreatedEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_MODULE_TESTNET}::PresaleInitialized`,
+                minimumLedgerVersion: 0,
+            });
 
+        return preSaleCreatedEvent;
+    }
 
+    /**
+     * Get the event for a contribution made
+     */
+    // :!:Contributions
+    async getContributionsEvent(): Promise<GetEventsResponse> {
+        const contributionsEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_MODULE_TESTNET}::Contributed`,
+                minimumLedgerVersion: 0,
+            });
+
+        return contributionsEvent;
+    }
+
+    /**
+     * Get the event for a contribution updated
+     */
+    // :!:ContributionsUpdated
+    async getContributionsUpdatedEvent(): Promise<GetEventsResponse> {
+        const contributionsUpdatedEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_MODULE_TESTNET}::ContributionUpdated`,
+                minimumLedgerVersion: 0,
+            });
+
+        return contributionsUpdatedEvent;
+    }
+    
+    /**
+     * Get the event for the presale finalized
+     */
+    // :!:PresaleFinalized
+    async getPresaleFinalizedEvent(): Promise<GetEventsResponse> {
+        const preSaleFinalizedEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_MODULE_TESTNET}::PresaleFinalized`,
+                minimumLedgerVersion: 0,
+                });
+            
+        return preSaleFinalizedEvent;
+    }
+    
+    
+    /**
+     * Get the event for the sale funds distributed
+     */
+    // :!:SaleFundsDistributed
+    async getSaleFundsDistributedEvent(): Promise<GetEventsResponse> {
+        const saleFundsDistributedEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_MODULE_TESTNET}::ShareDistributed`,
+                minimumLedgerVersion: 0,
+            });
+
+        return saleFundsDistributedEvent;
+    }
 }

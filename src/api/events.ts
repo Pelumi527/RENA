@@ -4,7 +4,7 @@ import {
     AptosConfig,
     GetEventsResponse,
 } from "@aptos-labs/ts-sdk";
-import { RENA_MODULE_TESTNET } from "../util/module-endpoints";
+import { RENA_MODULE_TESTNET, RENA_PRESALE_MODULE_TESTNET } from "../util/module-endpoints";
 
 export class Events {
     private aptos: Aptos;
@@ -138,6 +138,20 @@ export class Events {
             });
 
         return liquifyEvent;
+    }
+
+    /**
+     * Get the event for a pre-sale created
+     */
+    // :!:PresaleCreated
+    async getPresaleCreatedEvent(): Promise<GetEventsResponse> {
+        const preSaleCreatedEvent = 
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_MODULE_TESTNET}::PresaleInitialized`,
+                minimumLedgerVersion: 0,
+            });
+
+        return preSaleCreatedEvent;
     }
 
 

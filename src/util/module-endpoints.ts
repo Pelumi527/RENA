@@ -5,7 +5,9 @@ import { Network } from "aptos";
 
 // module endpoints
 export const RENA_MODULE_TESTNET = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::core";
+export const RENA_PRESALE_MODULE_TESTNET = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::presale";
 export const RENA_MODULE_MAINNET = "<address>::core";
+export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
 
 // function names
 export const CLAIM = "claim";

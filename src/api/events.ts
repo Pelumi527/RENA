@@ -4,9 +4,12 @@ import {
     AptosConfig,
     GetEventsResponse,
 } from "@aptos-labs/ts-sdk";
-import { RENA_MODULE_TESTNET, RENA_PRESALE_MODULE_TESTNET } from "../util/module-endpoints";
+import { RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET } from "../util/module-endpoints";
 
 export class Events {
+    static getPresaleCreatedEvent() {
+      throw new Error('Method not implemented.');
+    }
     private aptos: Aptos;
 
     constructor(config: AptosConfig) {
@@ -20,7 +23,7 @@ export class Events {
     async getCollectionCreatedEvents(args: {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
-        const collectionCreatedEvent = 
+        const collectionCreatedEvent =
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::CollectionCreated`,
                 minimumLedgerVersion: 0,
@@ -36,7 +39,7 @@ export class Events {
     async getLiquidTokensCreatedEvents(args: {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
-        const liquidTokensCreatedEvent = 
+        const liquidTokensCreatedEvent =
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidTokensCreated`,
                 minimumLedgerVersion: 0,
@@ -52,7 +55,7 @@ export class Events {
     async getLiquidCoinCreatedEvents(args: {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
-        const liquidCoinCreatedEvent = 
+        const liquidCoinCreatedEvent =
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::LiquidCoinCreated`,
                 minimumLedgerVersion: 0,
@@ -60,7 +63,7 @@ export class Events {
 
         return liquidCoinCreatedEvent;
     }
-    
+
     /**
      * Get the event for a fee updated
      */
@@ -68,7 +71,7 @@ export class Events {
     async getFeeUpdatedEvents(args: {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
-        const feeUpdatedEvent = 
+        const feeUpdatedEvent =
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::FeeUpdated`,
                 minimumLedgerVersion: 0,
@@ -82,7 +85,7 @@ export class Events {
      */
     // :!:AllClaim
     async getAllClaimEvents(): Promise<GetEventsResponse> {
-        const allClaimsEvent = 
+        const allClaimsEvent =
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::Claimed`,
                 minimumLedgerVersion: 0,
@@ -96,7 +99,7 @@ export class Events {
      */
     // :!:AllLiquify
     async getAllLiquifyEvents(): Promise<GetEventsResponse> {
-        const allLiquifyEvent = 
+        const allLiquifyEvent =
             await this.aptos.getModuleEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::Liquified`,
                 minimumLedgerVersion: 0,
@@ -104,7 +107,7 @@ export class Events {
 
         return allLiquifyEvent;
     }
-    
+
 
     /**
      * Get the events for claim for an account
@@ -113,7 +116,7 @@ export class Events {
     async getClaimEventsForAccountAddress(args: {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
-        const claimEvent = 
+        const claimEvent =
             await this.aptos.getAccountEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::Claimed`,
                 minimumLedgerVersion: 0,
@@ -130,7 +133,7 @@ export class Events {
     async getLiquifyEventsForAccountAddress(args: {
         account_address: AccountAddress;
     }): Promise<GetEventsResponse> {
-        const liquifyEvent = 
+        const liquifyEvent =
             await this.aptos.getAccountEventsByEventType({
                 eventType: `${RENA_MODULE_TESTNET}::Liquified`,
                 minimumLedgerVersion: 0,
@@ -145,9 +148,9 @@ export class Events {
      */
     // :!:PresaleCreated
     async getPresaleCreatedEvent(): Promise<GetEventsResponse> {
-        const preSaleCreatedEvent = 
+        const preSaleCreatedEvent =
             await this.aptos.getModuleEventsByEventType({
-                eventType: `${RENA_PRESALE_MODULE_TESTNET}::PresaleInitialized`,
+                eventType: `${RENA_PRESALE_TESTNET}::PresaleInitialized`,
                 minimumLedgerVersion: 0,
             });
 
@@ -159,9 +162,9 @@ export class Events {
      */
     // :!:Contributions
     async getContributionsEvent(): Promise<GetEventsResponse> {
-        const contributionsEvent = 
+        const contributionsEvent =
             await this.aptos.getModuleEventsByEventType({
-                eventType: `${RENA_PRESALE_MODULE_TESTNET}::Contributed`,
+                eventType: `${RENA_PRESALE_TESTNET}::Contributed`,
                 minimumLedgerVersion: 0,
             });
 
@@ -173,38 +176,38 @@ export class Events {
      */
     // :!:ContributionsUpdated
     async getContributionsUpdatedEvent(): Promise<GetEventsResponse> {
-        const contributionsUpdatedEvent = 
+        const contributionsUpdatedEvent =
             await this.aptos.getModuleEventsByEventType({
-                eventType: `${RENA_PRESALE_MODULE_TESTNET}::ContributionUpdated`,
+                eventType: `${RENA_PRESALE_TESTNET}::ContributionUpdated`,
                 minimumLedgerVersion: 0,
             });
 
         return contributionsUpdatedEvent;
     }
-    
+
     /**
      * Get the event for the presale finalized
      */
     // :!:PresaleFinalized
     async getPresaleFinalizedEvent(): Promise<GetEventsResponse> {
-        const preSaleFinalizedEvent = 
+        const preSaleFinalizedEvent =
             await this.aptos.getModuleEventsByEventType({
-                eventType: `${RENA_PRESALE_MODULE_TESTNET}::PresaleFinalized`,
+                eventType: `${RENA_PRESALE_TESTNET}::PresaleFinalized`,
                 minimumLedgerVersion: 0,
-                });
-            
+            });
+
         return preSaleFinalizedEvent;
     }
-    
-    
+
+
     /**
      * Get the event for the sale funds distributed
      */
     // :!:SaleFundsDistributed
     async getSaleFundsDistributedEvent(): Promise<GetEventsResponse> {
-        const saleFundsDistributedEvent = 
+        const saleFundsDistributedEvent =
             await this.aptos.getModuleEventsByEventType({
-                eventType: `${RENA_PRESALE_MODULE_TESTNET}::ShareDistributed`,
+                eventType: `${RENA_PRESALE_TESTNET}::ShareDistributed`,
                 minimumLedgerVersion: 0,
             });
 

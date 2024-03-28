@@ -5,16 +5,42 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useDispatch } from "react-redux";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { ViewRequest } from "@aptos-labs/ts-sdk";
+import { AccountAddress, AptosConfig, GetEventsResponse, ViewRequest } from "@aptos-labs/ts-sdk";
 import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
+import { Network } from 'aptos';
+import { Events } from '../../api';
 
 const PreSale = () => {
-  const { connected } = useWallet();
+  const { connected, account } = useWallet();
   const dispatch = useDispatch();
   const [count, setCount] = useState<number>();
   const [liveTime, setLiveTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number>(0);
+  const [endTime, setEndTime] = useState<number>(0);
   const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
+
+  const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
+
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      if (account) {
+        try {
+          const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+          const event = new Events(aptosConfig);
+          const events = await event.getPresaleCreatedEvent();
+          const startTime = Number(events[0].data.start);
+          const endTime = Number(events[0].data.end);
+          setEndTime(endTime);
+          setStartTime(startTime);
+          setLiveTime(startTime - Date.now());
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    fetchEvents();
+  }, [account]);
 
   useEffect(() => {
     const updateBackground = () => {
@@ -29,21 +55,6 @@ const PreSale = () => {
     updateBackground();
 
     return () => window.removeEventListener('resize', updateBackground);
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const payload: ViewRequest = {
-        function: `${RENA_PRESALE_TESTNET}::start_time`,
-        typeArguments: [],
-        functionArguments: [],
-      };
-      const res = await APTOS.view({ payload });
-      const startTime = Number(res[0]);
-      setStartTime(startTime);
-      setLiveTime(startTime - Date.now());
-    };
-    fetchData();
   }, []);
 
   useEffect(() => {
@@ -75,7 +86,7 @@ const PreSale = () => {
     const date = new Date(startTime);
     return date.toLocaleDateString('en-US', {
       day: '2-digit',
-      month: 'long',
+      month: 'short',
       year: 'numeric',
     }) + ' @' + date.toLocaleTimeString('en-US', {
       hour: '2-digit',
@@ -94,8 +105,8 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{formatTime()}</p>
-              <p className="text-[22px] font-semibold">{formatDate()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{Date.now() > endTime ? "Presale has ENDED" : Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">{formatDate()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
@@ -117,7 +128,7 @@ const PreSale = () => {
                 </div>
               </div>
               {connected ?
-                <PrimaryButton className="z-20 relative w-full !h-[48px] my-6">
+                <PrimaryButton className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
                   <p className="text-[18px] h-6 font-bold">BUY $RENA</p>
                 </PrimaryButton>
                 :

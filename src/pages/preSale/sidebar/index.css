@@ -1,0 +1,24 @@
+@keyframes scrollItems {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-200%);
+  }
+}
+
+.scrolling-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.scrolling-content {
+  display: inline-flex;
+  animation: scrollItems 1000s linear infinite;
+}
+
+.sidebar-item {
+  display: inline-block;
+  white-space: normal;
+}

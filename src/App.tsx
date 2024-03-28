@@ -8,6 +8,7 @@ import Renegades from "./pages/renegades";
 import LiquifyModal from "./components/modal/liquifyModal";
 import ClaimModal from "./components/modal/claimModal";
 import SideBar from "./components/header/sideBar";
+import PreSale from "./pages/preSale";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/claim" element={<Claim />} />
         <Route path="/renegades" element={<Renegades />} />
+        <Route path="/presale" element={<PreSale />} />
       </Routes>
       <WalletModal />
       <LiquifyModal />

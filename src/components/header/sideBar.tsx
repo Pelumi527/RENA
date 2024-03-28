@@ -30,6 +30,7 @@ const SideBar = () => {
             <div className="flex flex-col justify-between flex-grow">
                 <div />
                 <div className="flex flex-col gap-8 flex-shrink-0">
+                    <Link to={'/presale'}><p onClick={() => dispatch(toggleSidebar(2))} className="text-[26px] font-semibold text-center leading-[30px]" >Presale</p></Link>
                     <Link to={'/claim'}><p onClick={() => dispatch(toggleSidebar(2))} className="text-[26px] font-semibold text-center leading-[30px]" >Claim or Liquify NFT</p></Link>
                     <Link to={'/renegades'}><p onClick={() => dispatch(toggleSidebar(2))} className="text-[26px] font-semibold text-center leading-[30px]" >My Renegades</p></Link>
                 </div>

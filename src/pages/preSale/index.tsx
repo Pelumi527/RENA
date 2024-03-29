@@ -109,6 +109,23 @@ const PreSale = () => {
     });
   };
 
+  const formatEndTime = () => {
+    if (!startTime) return 'Loading...';
+    const timeDifference = endTime - Date.now();
+    if (timeDifference <= 0) return 'Ends in 00d 00h 00m 00s';
+
+    let seconds = Math.floor(timeDifference / 1000);
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    hours %= 24;
+    minutes %= 60;
+    seconds %= 60;
+
+    return `Ends in ${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+  };
+
   return (
     <div className="parallax relative" id="cred-point">
       <Header className="" active={2} />
@@ -119,8 +136,8 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{"Presale has ENDED" && Date.now() > endTime ? "Presale has ENDED" : Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">{formatDate()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{Date.now() > endTime ? "Presale has ENDED" : Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">{Date.now() >= startTime ? formatEndTime() : formatDate()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">

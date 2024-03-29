@@ -13,8 +13,8 @@ const useContribute = () => {
       sender: accountAddress,
       data: {
         function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTE}`,
-        typeArguments: ["0x1::coin::Coin"],
-        functionArguments: [aptAmount],
+        typeArguments: [],
+        functionArguments: [aptAmount * 1e8],
       },
     });
     // print tx hash

@@ -21,8 +21,6 @@ const useTokenBalance = () => {
     });
     dispatch(updateRenaBalance(parseInt(res[0] as any) / ONE_RENEGADES));
   };
-
   return updateTokenBalance;
 };
-
 export default useTokenBalance;

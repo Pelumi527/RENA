@@ -5,7 +5,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useDispatch } from "react-redux";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { AccountAddress, AptosConfig, GetEventsResponse, ViewRequest } from "@aptos-labs/ts-sdk";
+import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, ViewRequest } from "@aptos-labs/ts-sdk";
 import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
@@ -20,7 +20,27 @@ const PreSale = () => {
   const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
 
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
+  const [presaleExists, setPresaleExists] = useState<boolean>(false);
 
+  // Check if a presale exists
+  useEffect(() => {
+    const fetchPresale = async () => {
+      if (!account) return [];
+      try {
+        const aptos = new Aptos();
+        const presaleResource = await aptos.getAccountResource(
+          {
+            accountAddress:account?.address,
+            resourceType:`${RENA_PRESALE_TESTNET}::Info`
+          }
+        );
+        setPresaleExists(true);
+      } catch (e: any) {
+        setPresaleExists(false);
+      }
+    };
+    fetchPresale();
+  }, [account]);
 
   useEffect(() => {
     const fetchEvents = async () => {

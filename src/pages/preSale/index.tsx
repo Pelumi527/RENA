@@ -9,6 +9,7 @@ import { AccountAddress, AptosConfig, GetEventsResponse, ViewRequest } from "@ap
 import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
+import { toggleWalletPanel } from '../../state/dialog';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -24,23 +25,22 @@ const PreSale = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      if (account) {
-        try {
-          const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-          const event = new Events(aptosConfig);
-          const events = await event.getPresaleCreatedEvent();
-          const startTime = Number(events[0].data.start);
-          const endTime = Number(events[0].data.end);
-          setEndTime(endTime);
-          setStartTime(startTime);
-          setLiveTime(startTime - Date.now());
-        } catch (error) {
-          console.error(error);
-        }
+      try {
+        const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+        const event = new Events(aptosConfig);
+        const events = await event.getPresaleCreatedEvent();
+        const startTime = Number(events[0].data.start);
+        const endTime = Number(events[0].data.end);
+        console.log(Date.now(), events);
+        setEndTime(endTime);
+        setStartTime(startTime);
+        setLiveTime(startTime - Date.now());
+      } catch (error) {
+        console.error(error);
       }
-    };
+    }
     fetchEvents();
-  }, [account]);
+  }, []);
 
   useEffect(() => {
     const updateBackground = () => {
@@ -66,6 +66,17 @@ const PreSale = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const handleBuyRena = async () => {
+    try {
+      const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+      const event = new Events(aptosConfig);
+      const events = await event.getContributionsUpdatedEvent();
+      console.log(events)
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const formatTime = () => {
     if (liveTime <= 0) return '00d 00h 00m 00s';
@@ -128,11 +139,11 @@ const PreSale = () => {
                 </div>
               </div>
               {connected ?
-                <PrimaryButton className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                <PrimaryButton onClick={handleBuyRena} className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
                   <p className="text-[18px] h-6 font-bold">BUY $RENA</p>
                 </PrimaryButton>
                 :
-                <PrimaryButton className="z-20 relative w-full !h-[48px] my-6">
+                <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
                   <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
                 </PrimaryButton>
               }

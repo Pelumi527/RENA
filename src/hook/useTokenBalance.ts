@@ -5,13 +5,13 @@ import {
   RENA_COIN_TYPE_TESTNET,
 } from "../util/module-endpoints";
 import { updateRenaBalance } from "../state/renegades";
-import { ViewRequest } from "@aptos-labs/ts-sdk";
+import { InputViewFunctionData } from "@aptos-labs/ts-sdk";
 
 const useTokenBalance = () => {
   const dispatch = useDispatch();
 
   const updateTokenBalance = async (accountAddress: string) => {
-    const payload: ViewRequest = {
+    const payload: InputViewFunctionData = {
       function: "0x1::coin::balance",
       typeArguments: [RENA_COIN_TYPE_TESTNET],
       functionArguments: [accountAddress],
@@ -21,8 +21,6 @@ const useTokenBalance = () => {
     });
     dispatch(updateRenaBalance(parseInt(res[0] as any) / ONE_RENEGADES));
   };
-
   return updateTokenBalance;
 };
-
 export default useTokenBalance;

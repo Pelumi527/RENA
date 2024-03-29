@@ -30,10 +30,12 @@ const PreSale = () => {
         const aptos = new Aptos();
         const presaleResource = await aptos.getAccountResource(
           {
-            accountAddress:account?.address,
+            accountAddress:`0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
             resourceType:`${RENA_PRESALE_TESTNET}::Info`
           }
         );
+        // if presaleResource exists, set presaleExists to true
+        if (presaleResource) 
         setPresaleExists(true);
       } catch (e: any) {
         setPresaleExists(false);
@@ -49,11 +51,16 @@ const PreSale = () => {
           const aptosConfig = new AptosConfig({ network: Network.TESTNET });
           const event = new Events(aptosConfig);
           const events = await event.getPresaleCreatedEvent();
-          const startTime = Number(events[0].data.start);
-          const endTime = Number(events[0].data.end);
+          const startTime = Number(events[2].data.start);
+          const endTime = Number(events[2].data.end);
+          const currentUnixTimeSeconds: number = Math.floor(Date.now() / 1000);
+          // livetime: if time.now < endtime, then endtime - time.now, else 0
+          const liveTime = currentUnixTimeSeconds < endTime ? endTime - currentUnixTimeSeconds : 0;
           setEndTime(endTime);
           setStartTime(startTime);
-          setLiveTime(startTime - Date.now());
+          setLiveTime(liveTime);
+          console.log(`start time:`, startTime, `; end time:`, endTime, `; live time:`, liveTime);
+          // console.log(events);
         } catch (error) {
           console.error(error);
         }
@@ -80,26 +87,30 @@ const PreSale = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setLiveTime((prevLiveTime) => {
-        const updatedLiveTime = prevLiveTime - 1000;
+        const updatedLiveTime = prevLiveTime - 1;
         return updatedLiveTime > 0 ? updatedLiveTime : 0;
       });
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = () => {
-    if (liveTime <= 0) return '00d 00h 00m 00s';
-    let seconds = Math.floor(liveTime / 1000);
-    let minutes = Math.floor(seconds / 60);
-    let hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
+  useEffect(() => {
+    console.log("liveTime:", liveTime);
+}, [liveTime]);
 
-    hours %= 24;
-    minutes %= 60;
-    seconds %= 60;
+const formatTime = () => {
+  if (liveTime <= 0) return '00d 00h 00m 00s';
 
-    return `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-  };
+  // Calculate days, hours, minutes, and seconds
+  const days = Math.floor(liveTime / (60 * 60 * 24)); // Convert seconds to days
+  const hours = Math.floor((liveTime % (60 * 60 * 24)) / (60 * 60)); // Convert remaining seconds to hours
+  const minutes = Math.floor((liveTime % (60 * 60)) / 60); // Convert remaining seconds to minutes
+  const seconds = Math.floor(liveTime % 60); // Get remaining seconds
+
+  // Construct the formatted time string
+  return `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+};
+  console.log("format time", formatTime());
 
   const formatDate = () => {
     if (!startTime) return 'Loading...';
@@ -114,6 +125,7 @@ const PreSale = () => {
       timeZoneName: 'short',
     });
   };
+  console.log("format date", formatDate());
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -125,8 +137,8 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{!presaleExists? "Presale has ENDED" : presaleExists && Date.now() > endTime ? "Presale has ENDED" : presaleExists && Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">{formatDate()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{/*!presaleExists? "TBD" : presaleExists && */Math.floor(Date.now() / 1000) > endTime ? "Presale has ENDED" : /*presaleExists && */Math.floor(Date.now() / 1000) >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">{formatTime()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">

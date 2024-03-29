@@ -9,9 +9,10 @@ import { Aptos, AptosConfig, GetEventsResponse } from "@aptos-labs/ts-sdk";
 import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
-import { time } from 'console';
-import useContribute from '../../hook/useContribute';
 import { toggleWalletPanel } from '../../state/dialog';
+import useContribute from '../../hook/useContribute';
+import { useAppSelector } from '../../state/hooks';
+import { updateAptConts } from '../../state/renegades';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -21,69 +22,39 @@ const PreSale = () => {
   const [startTime, setStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
   const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
-
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
-
-  // function to convert unix time microseconds to unix time seconds
-  const convertUnixTimeMicrosecondsToSeconds = (time: number) => {
-    return Math.floor(time / 1000);
-  };
-
+  const aptConts = useAppSelector((state) => state.renegadesState.aptConts);
   const contribute = useContribute();
 
   const onContribute = async () => {
-    console.log(account?.address, count, "account");
-    if (account && count) {
-      console.log(convertUnixTimeMicrosecondsToSeconds(Date.now()), endTime, startTime)
-      if (account && count && convertUnixTimeMicrosecondsToSeconds(Date.now()) < endTime && convertUnixTimeMicrosecondsToSeconds(Date.now()) >= startTime) {
-        try {
-          const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-          const event = new Events(aptosConfig);
-          const contributionEvents = await event.getContributionsEvent();
-          const contributionUpdatedEvents = await event.getContributionsUpdatedEvent();
-
-          await contribute(account.address, count);
-          console.log("called onContribute")
-
-          // print contributed events
-          console.log("List of contributions", contributionEvents);
-          console.log("List of updated contributions", contributionUpdatedEvents);
-        } catch (error) {
-          console.error(error);
-        }
+    console.log(Date.now(), endTime, startTime)
+    if (account && count && Date.now() < endTime && Date.now() >= startTime) {
+      try {
+        await contribute(account.address, count);
+        getContributions();
+      } catch (error) {
+        console.error(error);
       }
-    };
-  }
-
-  // Check if a presale exists
-  useEffect(() => {
-    const fetchPresale = async () => {
-        try {
-            const aptos = new Aptos();
-            await aptos.getAccountResource({
-                accountAddress: `0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
-                resourceType: `${RENA_PRESALE_TESTNET}::Info`
-            });
-            setPresaleExists(true);
-            console.log(presaleExists);
-        } catch (error) {
-            console.error("Error fetching presale:", error);
-            console.log(presaleExists);
-            setPresaleExists(false);
-        }
-    };
-
-    fetchPresale();
-}, [presaleExists]); // Removed presaleExists from the dependency array
-
+    }
+  };
 
   const getContributions = async () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
       const event = new Events(aptosConfig);
-      const events = await event.getContributionsUpdatedEvent();
-      console.log("event====>", events);
+      const contributionssEvent = await event.getContributionsEvent();
+      const contributionsUpdatedEvent = await event.getContributionsUpdatedEvent();
+      const updatedAmounts = contributionsUpdatedEvent
+        .filter(event => event.data.contributor === account?.address)
+        .map(event => event.data.updated_amount);
+
+      const amounts = contributionssEvent
+        .filter(event => event.data.contributor === account?.address)
+        .map(event => event.data.amount);
+
+      console.log(Number(updatedAmounts[0]) + Number(amounts[0]));
+      dispatch(updateAptConts((Number(updatedAmounts[0]) + Number(amounts[0])) / 1e8));
     } catch (error) {
       console.error(error);
     }
@@ -96,28 +67,21 @@ const PreSale = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      if (account) {
-        try {
-          const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-          const event = new Events(aptosConfig);
-          const events = await event.getPresaleCreatedEvent();
-          const startTime = Number(events[events.length - 1].data.start);
-          const endTime = Number(events[events.length - 1].data.end);
-          const currentUnixTimeSeconds: number = convertUnixTimeMicrosecondsToSeconds(Date.now());
-          // livetime: if time.now < endtime, then endtime - time.now, else 0
-          const liveTime = currentUnixTimeSeconds < endTime ? endTime - currentUnixTimeSeconds : 0;
-          setEndTime(endTime);
-          setStartTime(startTime);
-          setLiveTime(liveTime);
-          console.log(`start time:`, startTime, `; end time:`, endTime, `; live time:`, liveTime);
-          // console.log(events);
-        } catch (error) {
-          console.error(error);
-        }
+      try {
+        const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+        const event = new Events(aptosConfig);
+        const events = await event.getPresaleCreatedEvent();
+        const start = Number(events[events.length - 1].data.start);
+        const end = Number(events[events.length - 1].data.end);
+        setEndTime(end);
+        setStartTime(start);
+        setLiveTime(start - Date.now());
+      } catch (error) {
+        console.error(error);
       }
-    };
+    }
     fetchEvents();
-  }, [account]);
+  }, []);
 
   useEffect(() => {
     const updateBackground = () => {
@@ -137,30 +101,30 @@ const PreSale = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setLiveTime((prevLiveTime) => {
-        const updatedLiveTime = prevLiveTime - 1;
+        const updatedLiveTime = prevLiveTime - 1000;
         return updatedLiveTime > 0 ? updatedLiveTime : 0;
+      });
+      setEndTime((prevEndTime) => {
+        const updatedEndTime = prevEndTime - 1000;
+        return updatedEndTime > 0 ? updatedEndTime : 0;
       });
     }, 1000);
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    console.log("liveTime:", liveTime);
-}, [liveTime]);
+  const formatTime = () => {
+    if (liveTime <= 0) return '00d 00h 00m 00s';
+    let seconds = Math.floor(liveTime / 1000);
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
 
-const formatTime = () => {
-  if (liveTime <= 0) return '00d 00h 00m 00s';
+    hours %= 24;
+    minutes %= 60;
+    seconds %= 60;
 
-  // Calculate days, hours, minutes, and seconds
-  const days = Math.floor(liveTime / (60 * 60 * 24)); // Convert seconds to days
-  const hours = Math.floor((liveTime % (60 * 60 * 24)) / (60 * 60)); // Convert remaining seconds to hours
-  const minutes = Math.floor((liveTime % (60 * 60)) / 60); // Convert remaining seconds to minutes
-  const seconds = Math.floor(liveTime % 60); // Get remaining seconds
-
-  // Construct the formatted time string
-  return `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-};
-  console.log("format time", formatTime());
+    return `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+  };
 
   const formatDate = () => {
     if (!startTime) return 'Loading...';
@@ -175,7 +139,23 @@ const formatTime = () => {
       timeZoneName: 'short',
     });
   };
-  console.log("format date", formatDate());
+
+  const formatEndTime = () => {
+    if (!startTime) return 'Loading...';
+    const timeDifference = endTime - Date.now();
+    if (timeDifference <= 0) return 'Ends in 00d 00h 00m 00s';
+
+    let seconds = Math.floor(timeDifference / 1000);
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    hours %= 24;
+    minutes %= 60;
+    seconds %= 60;
+
+    return `Ends in ${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+  };
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -187,8 +167,8 @@ const formatTime = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{presaleExists? "TBD" : presaleExists && convertUnixTimeMicrosecondsToSeconds(Date.now()) >= startTime ? "Presale is LIVE" : "Presale has ENDED"}</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">{formatTime()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{Date.now() > endTime ? "Presale has ENDED" : Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">{Date.now() >= startTime ? formatEndTime() : formatDate()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
@@ -210,7 +190,7 @@ const formatTime = () => {
                 </div>
               </div>
               {connected ?
-                <PrimaryButton onClick={onContribute} className={`z-20 relative w-full !h-[48px] my-6 ${convertUnixTimeMicrosecondsToSeconds(Date.now()) < startTime || convertUnixTimeMicrosecondsToSeconds(Date.now()) > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                <PrimaryButton onClick={onContribute} className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
                   <p className="text-[18px] h-6 font-bold">BUY $RENA</p>
                 </PrimaryButton>
                 :
@@ -223,7 +203,7 @@ const formatTime = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
                 <p className="text-[18px] font-medium text-[#CCC]">Total Contributed</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>0</p>
+                  <p>{aptConts}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

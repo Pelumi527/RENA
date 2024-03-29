@@ -10,6 +10,7 @@ interface dialogStates {
   renaBalance: number;
   isRenaLoading: boolean;
   isLRDLoading: boolean;
+  aptConts: number;
 }
 
 const initialState: dialogStates = {
@@ -20,7 +21,8 @@ const initialState: dialogStates = {
   lastRenegadesData: undefined,
   renaBalance: 0,
   isRenaLoading: true,
-  isLRDLoading: false
+  isLRDLoading: false,
+  aptConts: 0
 };
 
 export const dialogSlice = createSlice({
@@ -48,6 +50,9 @@ export const dialogSlice = createSlice({
     updateLRDLoading: (state, action: PayloadAction<boolean>) => {
       state.isLRDLoading = action.payload;
     },
+    updateAptConts: (state, action: PayloadAction<number>) => {
+      state.aptConts = action.payload;
+    },
   },
   extraReducers: (builder) => { },
 });
@@ -58,6 +63,7 @@ export const {
   updateLastRenegadesData,
   updateIsRenaLoading,
   updateRenegadesRankData,
-  updateLRDLoading
+  updateLRDLoading,
+  updateAptConts
 } = dialogSlice.actions;
 export default dialogSlice.reducer;

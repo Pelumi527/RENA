@@ -5,7 +5,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useDispatch } from "react-redux";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, ViewRequest } from "@aptos-labs/ts-sdk";
+import { Aptos, AptosConfig, GetEventsResponse } from "@aptos-labs/ts-sdk";
 import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';

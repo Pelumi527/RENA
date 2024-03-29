@@ -5,10 +5,11 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { useDispatch } from "react-redux";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, ViewRequest } from "@aptos-labs/ts-sdk";
+import { Aptos, AptosConfig, GetEventsResponse } from "@aptos-labs/ts-sdk";
 import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
+import { time } from 'console';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -22,27 +23,32 @@ const PreSale = () => {
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
 
+  // function to convert unix time microseconds to unix time seconds
+  const convertUnixTimeMicrosecondsToSeconds = (time: number) => {
+    return Math.floor(time / 1000);
+  };
+
   // Check if a presale exists
   useEffect(() => {
     const fetchPresale = async () => {
-      if (!account) return [];
-      try {
-        const aptos = new Aptos();
-        const presaleResource = await aptos.getAccountResource(
-          {
-            accountAddress:`0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
-            resourceType:`${RENA_PRESALE_TESTNET}::Info`
-          }
-        );
-        // if presaleResource exists, set presaleExists to true
-        if (presaleResource) 
-        setPresaleExists(true);
-      } catch (e: any) {
-        setPresaleExists(false);
-      }
+        try {
+            const aptos = new Aptos();
+            await aptos.getAccountResource({
+                accountAddress: `0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
+                resourceType: `${RENA_PRESALE_TESTNET}::Info`
+            });
+            setPresaleExists(true);
+            console.log(presaleExists);
+        } catch (error) {
+            console.error("Error fetching presale:", error);
+            console.log(presaleExists);
+            setPresaleExists(false);
+        }
     };
+
     fetchPresale();
-  }, [account]);
+}, [presaleExists]); // Removed presaleExists from the dependency array
+
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -51,9 +57,9 @@ const PreSale = () => {
           const aptosConfig = new AptosConfig({ network: Network.TESTNET });
           const event = new Events(aptosConfig);
           const events = await event.getPresaleCreatedEvent();
-          const startTime = Number(events[2].data.start);
-          const endTime = Number(events[2].data.end);
-          const currentUnixTimeSeconds: number = Math.floor(Date.now() / 1000);
+          const startTime = Number(events[events.length - 1].data.start);
+          const endTime = Number(events[events.length - 1].data.end);
+          const currentUnixTimeSeconds: number = convertUnixTimeMicrosecondsToSeconds(Date.now());
           // livetime: if time.now < endtime, then endtime - time.now, else 0
           const liveTime = currentUnixTimeSeconds < endTime ? endTime - currentUnixTimeSeconds : 0;
           setEndTime(endTime);
@@ -137,7 +143,7 @@ const formatTime = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{/*!presaleExists? "TBD" : presaleExists && */Math.floor(Date.now() / 1000) > endTime ? "Presale has ENDED" : /*presaleExists && */Math.floor(Date.now() / 1000) >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{presaleExists? "TBD" : presaleExists && convertUnixTimeMicrosecondsToSeconds(Date.now()) >= startTime ? "Presale is LIVE" : "Presale has ENDED"}</p>
               <p className="text-[22px] font-semibold text-[#CCC]">{formatTime()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>

@@ -67,10 +67,10 @@
     form-data "4.0.0"
     tweetnacl "1.0.3"
 
-"@aptos-labs/ts-sdk@^1.10.0":
-  version "1.10.0"
-  resolved "https://registry.npmjs.org/@aptos-labs/ts-sdk/-/ts-sdk-1.10.0.tgz#f07b7fba155dbb8ee50e3feb7f2610d178c577c1"
-  integrity sha512-mENnzxcaWMGaJZeFO/kXUW/J4n7O+lNkj1WhI8rHkyVthPbVcgkjknAdfxPNdIsaaZltPVVO1XgKLN3OypIidw==
+"@aptos-labs/ts-sdk@^1.11.0":
+  version "1.11.0"
+  resolved "https://registry.npmjs.org/@aptos-labs/ts-sdk/-/ts-sdk-1.11.0.tgz#d32d0fc5b310e1d318ebc4e4295f96cb98d1b09a"
+  integrity sha512-iy4bcHHVfRxcMgrdZEl6KBu2NeWpD9oMMli43R82eBLHfBO+LjDHdkr9GcFE5FE6ogt0EP9EWQk8TcjZmWkyVg==
   dependencies:
     "@aptos-labs/aptos-client" "^0.1.0"
     "@noble/curves" "^1.2.0"

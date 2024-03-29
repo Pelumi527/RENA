@@ -37,6 +37,22 @@ const PreSale = () => {
     }
   };
 
+  const getContributions = async () => {
+    try {
+      const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+      const event = new Events(aptosConfig);
+      const events = await event.getContributionsUpdatedEvent();
+      console.log("event====>", events);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    if (account) {
+      getContributions();
+    }
+  }, [account]);
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {

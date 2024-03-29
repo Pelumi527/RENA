@@ -136,7 +136,7 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{Date.now() > endTime ? "Presale has ENDED" : Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{!presaleExists? "Presale has ENDED" : presaleExists && Date.now() > endTime ? "Presale has ENDED" : presaleExists && Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
               <p className="text-[22px] font-semibold text-[#CCC]">{formatDate()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>

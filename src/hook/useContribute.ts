@@ -8,16 +8,17 @@ const useContribute = () => {
   const { signAndSubmitTransaction } = useWallet();
 
   const contribute = async (accountAddress: string, aptAmount: number) => {
+    console.log("input==============>", accountAddress, aptAmount)
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
         function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTE}`,
-        typeArguments: [],
+        typeArguments: ["0x1::coin::Coin"],
         functionArguments: [aptAmount],
       },
     });
     // print tx hash
-    console.log(res);
+    console.log("res=============>", res);
   };
 
   return contribute;

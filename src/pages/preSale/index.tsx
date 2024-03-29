@@ -10,11 +10,12 @@ import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
 import { toggleWalletPanel } from '../../state/dialog';
+import useContribute from '../../hook/useContribute';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
   const dispatch = useDispatch();
-  const [count, setCount] = useState<number>();
+  const [count, setCount] = useState<number>(0);
   const [liveTime, setLiveTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
@@ -22,8 +23,20 @@ const PreSale = () => {
 
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
+  const contribute = useContribute();
 
-  // Check if a presale exists
+  const onContribute = async () => {
+    console.log(account?.address, count, "account");
+    if (account && count) {
+      try {
+        await contribute(account.address, count);
+        console.log("called onContribute")
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchPresale = async () => {
       if (!account) return [];
@@ -31,8 +44,8 @@ const PreSale = () => {
         const aptos = new Aptos();
         const presaleResource = await aptos.getAccountResource(
           {
-            accountAddress:account?.address,
-            resourceType:`${RENA_PRESALE_TESTNET}::Info`
+            accountAddress: account?.address,
+            resourceType: `${RENA_PRESALE_TESTNET}::Info`
           }
         );
         setPresaleExists(true);
@@ -87,17 +100,6 @@ const PreSale = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleBuyRena = async () => {
-    try {
-      const aptosConfig = new AptosConfig({ network: Network.TESTNET });
-      const event = new Events(aptosConfig);
-      const events = await event.getContributionsUpdatedEvent();
-      console.log(events)
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   const formatTime = () => {
     if (liveTime <= 0) return '00d 00h 00m 00s';
     let seconds = Math.floor(liveTime / 1000);
@@ -136,7 +138,7 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{!presaleExists? "Presale has ENDED" : presaleExists && Date.now() > endTime ? "Presale has ENDED" : presaleExists && Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
+              <p className="text-[32px] leading-[38px] font-bold">{!presaleExists ? "Presale has ENDED" : presaleExists && Date.now() > endTime ? "Presale has ENDED" : presaleExists && Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
               <p className="text-[22px] font-semibold text-[#CCC]">{formatDate()}</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
@@ -159,7 +161,7 @@ const PreSale = () => {
                 </div>
               </div>
               {connected ?
-                <PrimaryButton onClick={handleBuyRena} className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
+                <PrimaryButton onClick={onContribute} className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
                   <p className="text-[18px] h-6 font-bold">BUY $RENA</p>
                 </PrimaryButton>
                 :

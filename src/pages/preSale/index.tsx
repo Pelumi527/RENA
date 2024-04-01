@@ -184,6 +184,8 @@ const PreSale = () => {
                   value={count}
                   onChange={(e) => { Number(e.target.value) >= 0 && setCount(Number(e.target.value)) }}
                   className="font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
+                  disabled={true}
+                  style={{ opacity: 0.5 }}
                 />
                 <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
                   <p>APT</p>
@@ -191,7 +193,7 @@ const PreSale = () => {
                 </div>
               </div>
               {/* {connected ? */}
-              <PrimaryButton onClick={onContribute} className={`z-20 relative py-1 w-full !h-fit my-6`}>
+              <PrimaryButton onClick={onContribute} className={`z-20 relative py-1 w-full !h-fit my-6 opacity-50 cursor-not-allowed`}>
                 <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
                 <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
               </PrimaryButton>

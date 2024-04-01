@@ -13,6 +13,7 @@ import { toggleWalletPanel } from '../../state/dialog';
 import useContribute from '../../hook/useContribute';
 import { useAppSelector } from '../../state/hooks';
 import { updateAptConts } from '../../state/renegades';
+import { Icon } from '@iconify/react';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -166,9 +167,9 @@ const PreSale = () => {
             <p className="font-bold text-[42px] lg:text-[58px] mb-9">
               Join the Presale
             </p>
-            <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-[540px] bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[32px] leading-[38px] font-bold">{Date.now() > endTime ? "Presale has ENDED" : Date.now() >= startTime ? "Presale is LIVE" : formatTime()}</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">{Date.now() >= startTime ? formatEndTime() : formatDate()}</p>
+            <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
+              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">on @0xrenegades on X</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
@@ -189,16 +190,20 @@ const PreSale = () => {
                   <img src="/presale/aptos.svg" className="w-[24px] h-[24px]" />
                 </div>
               </div>
-              {connected ?
-                <PrimaryButton onClick={onContribute} className={`z-20 relative w-full !h-[48px] my-6 ${Date.now() < startTime || Date.now() > endTime ? 'opacity-30 cursor-not-allowed' : ''}`}>
-                  <p className="text-[18px] h-6 font-bold">BUY $RENA</p>
-                </PrimaryButton>
-                :
+              {/* {connected ? */}
+              <PrimaryButton onClick={onContribute} className={`z-20 relative py-1 w-full !h-fit my-6`}>
+                <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
+                <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
+              </PrimaryButton>
+              {/* :
                 <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
                   <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
                 </PrimaryButton>
-              }
-              <p className="text-[18px] h-6 font-semibold">Minimum contribution is 1 APT</p>
+              } */}
+              <div className='flex flex-col items-start w-full gap-2'>
+                <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> Minimum contribution is 1 APT</p>
+                <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>
+              </div>
               <div className="border-b border-[#666] w-full my-6" />
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
                 <p className="text-[18px] font-medium text-[#CCC]">Total Contributed</p>

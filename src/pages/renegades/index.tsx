@@ -11,6 +11,7 @@ import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
 import { updateRenegadesRankData } from "../../state/renegades";
+import { Link } from "react-router-dom";
 
 const renegadesJsonData = require('../../metadata.json');
 
@@ -132,7 +133,7 @@ const Renegades = () => {
                       You don’t have any Renegades to claim
                     </p>
                     <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                      Get $RENA to claim NFTs
+                      <Link to={'/presale'}>Get $RENA to claim NFTs</Link>
                     </p>
                   </div>
                 )}
@@ -161,7 +162,7 @@ const Renegades = () => {
                 You don’t have any Renegades in your wallet
               </p>
               <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                Get $RENA to get NFTs
+                <Link to={'/presale'}>Get $RENA to get NFTs</Link>
               </p>
               <p className="text-[26px]">or</p>
               <p className="text-[26px]">Get them on marketplaces</p>

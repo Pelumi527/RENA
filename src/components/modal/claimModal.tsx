@@ -98,7 +98,7 @@ const ClaimModal = () => {
     <div
       className={`${isOpen && "block"} ${animationClass} fixed z-[100] inset-0 h-full flex justify-center sm:items-center items-end bg-gray-dark-1`}
     >
-      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-fit bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] py-4 px-6">
+      <div style={{ backgroundImage: `url("/renegades/bg-model.png")`, backgroundPosition: 'top 65px center', backgroundRepeat: 'no-repeat' }} className="custom-background-position relative w-full sm:w-[566px] h-[95%] sm:h-fit bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] py-4 px-6">
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center">
             <p className="text-[26px] font-semibold text-[#FFF] leading-[130%]">{proceed == 0 ? 'Claim a Renegade' : 'You’ve got a new Renegade!'}</p>

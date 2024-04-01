@@ -13,7 +13,7 @@ const Footer = () => {
                 <p className="hidden sm:block text-[16px] font-semibold text-[#666] text-center md:text-left">© {new Date().getFullYear()} Renegades</p>
               </div>
               <div className="flex flex-col gap-4">
-                <Link to={'#'}><p className="text-[18px] font-semibold">Get $RENA</p></Link>
+                <Link to={'/presale'}><p className="text-[18px] font-semibold">Get $RENA</p></Link>
                 <Link to={'/claim'}> <p className="text-[18px] font-semibold">Claim or Liquify NFT</p></Link>
                 <Link to={'/renegades'}><p className="text-[18px] font-semibold">My Renegades</p></Link>
                 <div className="hidden sm:flex justify-between w-[278px] font-semibold text-[16px] text-[#CCC] mt-[56px]">

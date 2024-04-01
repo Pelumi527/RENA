@@ -35,7 +35,7 @@ const SideBar = () => {
                     <Link to={'/renegades'}><p onClick={() => dispatch(toggleSidebar(2))} className="text-[26px] font-semibold text-center leading-[30px]" >My Renegades</p></Link>
                 </div>
                 <div className="flex flex-col w-full items-center flex-shrink-0">
-                    <button className="w-[176px] mb-6 h-12 bg-[#FFF] text-[#121221] font-bold text-[18px] rounded-[4px]">Get $RENA</button>
+                    <Link to={'/presale'}><button className="w-[176px] mb-6 h-12 bg-[#FFF] text-[#121221] font-bold text-[18px] rounded-[4px]">Get $RENA</button></Link>
                     <ConnectButton />
                     <div className="mt-14">
                         <JoinUs />

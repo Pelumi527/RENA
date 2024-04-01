@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import JoinUs from "../../../components/header/joinus";
 import PrimaryButton from "../../../components/primaryButton";
 
@@ -11,7 +12,7 @@ const MainSection = () => {
         <p className="text-[22px] mt-6 md:text-[26px] text-center font-semibold z-20 relative text-gray-light">Liquid NFT is an experimental fractionalized liquidity standard for NFTs via a mix of fungible & non-fungible tokens, based on Aptos Token</p>
         <div className="flex w-full justify-center mt-10">
           <PrimaryButton className="z-20 relative w-[200px]">
-            <p className="text-[18px] h-6 font-bold">Get $RENA</p>
+            <Link to={'/presale'}><p className="text-[18px] h-6 font-bold">Get $RENA</p></Link>
           </PrimaryButton>
         </div>
       </div>

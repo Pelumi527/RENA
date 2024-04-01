@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import PrimaryButton from "../../../components/primaryButton";
+import { Link } from "react-router-dom";
 
 const ThirdSection = () => {
   return (
@@ -58,7 +59,7 @@ const ThirdSection = () => {
           </div>
           <div className="sm:flex w-full justify-center mt-14 hidden">
             <PrimaryButton className="z-20 relative w-[200px]">
-              <p className="text-[18px] h-6 font-bold">Get $RENA</p>
+              <Link to={'/presale'}><p className="text-[18px] h-6 font-bold">Get $RENA</p></Link>
             </PrimaryButton>
           </div>
         </div>

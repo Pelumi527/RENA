@@ -8,6 +8,8 @@ import useTokenBalance from "../../hook/useTokenBalance";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { Icon } from "@iconify/react";
+import Cookies from 'js-cookie';
+
 import {
   RenegadeItemWithRarity,
   calculateRankings,
@@ -25,6 +27,7 @@ const LiquifyModal = () => {
   const data = useAppSelector((state) => state.dialogState.bItemModal);
   const [isChecked, setIsChecked] = useState(false);
   const [proceed, setProceed] = useState(0);
+  const [skip, setSkip] = useState(false);
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
   const [traitRarities, setTraitRarities] = useState<Record<string, any>>({});
   const [overallRarity, setOverallRarity] = useState<number>(0);
@@ -73,8 +76,23 @@ const LiquifyModal = () => {
     }));
   }, [traitRarities]);
 
+  useEffect(() => {
+    const dontShowAgain = Cookies.get('dontShowAgain');
+    console.log("dontShowAgain", dontShowAgain);
+    if (dontShowAgain === 'true') {
+      setSkip(true);
+    }
+  }, []);
+
   const toggleCheckbox = () => {
-    setIsChecked(!isChecked);
+    const newIsChecked = !isChecked;
+    setIsChecked(newIsChecked);
+
+    if (newIsChecked) {
+      Cookies.set('dontShowAgain', 'true', { expires: 365 });
+    } else {
+      Cookies.remove('dontShowAgain');
+    }
   };
 
   const fetchEvents = async () => {
@@ -254,7 +272,7 @@ const LiquifyModal = () => {
                 Liquify NFT to retrieve your 1 $RENA
               </p>
               <button
-                onClick={() => setProceed(1)}
+                onClick={() => skip ? onLiqify() : setProceed(1)}
                 className="mt-3 rounded-[4px] w-full sm:w-[200px] h-12 text-[17px] sm:text-[18px] text-[#121221] bg-[#FFF] font-bold"
               >
                 Liquify NFT

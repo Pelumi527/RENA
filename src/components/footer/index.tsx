@@ -16,9 +16,9 @@ const Footer = () => {
                 <Link to={'/presale'}><p className="text-[18px] font-semibold">Get $RENA</p></Link>
                 <Link to={'/claim'}> <p className="text-[18px] font-semibold">Claim or Liquify NFT</p></Link>
                 <Link to={'/renegades'}><p className="text-[18px] font-semibold">My Renegades</p></Link>
-                <div className="hidden sm:flex justify-between w-[278px] font-semibold text-[16px] text-[#CCC] mt-[56px]">
-                  <p className="">Privacy policy</p>
-                  <p className="">Terms of Service</p>
+                <div className="hidden sm:flex justify-between h-8 w-[278px] font-semibold text-[16px] text-[#CCC] mt-[56px]">
+                  {/* <p className="">Privacy policy</p>
+                  <p className="">Terms of Service</p> */}
                 </div>
               </div>
             </div>

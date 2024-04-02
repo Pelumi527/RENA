@@ -42,8 +42,11 @@ const PreSale = () => {
     try {
       const presaleResource = await aptos.getAccountResource(
         {
-          accountAddress: RENA_MODULE_TESTNET,
-          resourceType: `${RENA_PRESALE_TESTNET}::Info`
+          accountAddress: `0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
+          resourceType: `${RENA_PRESALE_TESTNET}::Info`,
+          options: {
+            ledgerVersion: 994771682,
+          },
         }
       );
       console.log('presale resource: ', presaleResource);

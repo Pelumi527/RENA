@@ -9,10 +9,20 @@ export const RENA_PRESALE_TESTNET = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a3
 export const RENA_MODULE_MAINNET = "<address>::core";
 export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
 
-// function names
+// entry functions
 export const CLAIM = "claim";
 export const LIQUIFY = "liquify";
 export const CONTRIBUTE = "contribute";
+
+// view functions
+export const TREASURY_ADDRESS = "treasury_address";
+export const START_TIME = "start_time";
+export const END_TIME = "end_time";
+export const REMAINING_TIME = "remaining_time";
+export const IS_COMPLETED = "is_completed";
+export const TOTAL_CONTRIBUTORS = "total_contributors";
+export const TOTAL_RAISED_FUNDS = "total_raised_funds";
+export const CONTRIBUTED_AMOUNT = "contributed_amount";
 
 // coin endpoints
 export const RENA_COIN_TYPE_TESTNET = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::core::RenegadeCoin"

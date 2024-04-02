@@ -23,8 +23,8 @@ const GridPanel = () => {
   }, [windowWidth]);
 
   return (
-    <div className="w-[150vw] -ml-14 -mt-[100px]">
-      <div className="bg-[#121212] flex min-w-[150vw] flex-wrap">
+    <div style={{ width: '100vw', overflowX: 'hidden',  marginTop: '-100px' }}>
+      <div style={{ backgroundColor: '#121212', display: 'flex', minWidth: '110vw', flexWrap: 'wrap', overflow: 'hidden' }}>
         {Array(26).fill(<ActivedItem />).concat(Array(10).fill(<InactivedItem />))}
         {items.map((isActive, index) =>
           isActive ? <ActivedItem key={index} /> : <InactivedItem key={index} />

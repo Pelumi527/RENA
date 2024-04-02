@@ -15,7 +15,7 @@ const Sidebar = () => {
    const allItems = Array.from({ length: 40 }, () => items).flat();
 
    return (
-      <div className="scrolling-wrapper w-[4000vw] mt-16">
+      <div className="scrolling-wrapper w-[100vw] mt-16">
          <div className="scrolling-content gap-[17px]">
             {allItems.map((item, index) => (
                <div key={index} className="sidebar-item w-[327px] h-[143px]">

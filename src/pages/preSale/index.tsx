@@ -90,8 +90,8 @@ const PreSale = () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
       };
-      let res = await APTOS.view({payload});
-          console.log('is presale completed: ', res);
+      let res = await APTOS.view({ payload });
+      console.log('is presale completed: ', res);
     };
     return viewIsCompleted;
   };
@@ -112,7 +112,7 @@ const PreSale = () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
       };
-      let res = await APTOS.view({payload});
+      let res = await APTOS.view({ payload });
       console.log('remaining time: ', res);
     };
     return viewRemainingTime;
@@ -133,7 +133,7 @@ const PreSale = () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`
       };
-      let res = await APTOS.view({payload});
+      let res = await APTOS.view({ payload });
       console.log('total contributors number: ', res);
     };
     return viewTotalContributors;
@@ -153,7 +153,7 @@ const PreSale = () => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
     };
-    let res = await APTOS.view({payload});
+    let res = await APTOS.view({ payload });
     console.log('total raised funds: ', res);
     // Assuming res is the total raised funds
     return res;
@@ -174,7 +174,7 @@ const PreSale = () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
       };
-      let res = await APTOS.view({payload});
+      let res = await APTOS.view({ payload });
       console.log('treasury address: ', res);
     };
     return viewTreasuryAddress;
@@ -335,7 +335,7 @@ const PreSale = () => {
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">on @0xrenegades on X</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">

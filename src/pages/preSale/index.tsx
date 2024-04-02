@@ -194,10 +194,9 @@ const PreSale = () => {
     fetchData();
   }, []);
 
-
   const onContribute = async () => {
     console.log(Date.now(), endTime, startTime)
-    if (account && count) {
+    if (account && count && Date.now() < endTime && Date.now() >= startTime) {
       try {
         await contribute(account.address, count);
         getTotalRaisedAmount();
@@ -241,10 +240,8 @@ const PreSale = () => {
         const aptosConfig = new AptosConfig({ network: Network.TESTNET });
         const event = new Events(aptosConfig);
         const events = await event.getPresaleCreatedEvent();
-        const start = Number(events[events.length - 1].data.start);
-        const end = Number(events[events.length - 1].data.end);
-
-        // time related
+        const start = Number(events[events.length - 1].data.start * 1000);
+        const end = Number(events[events.length - 1].data.end * 1000);
         setEndTime(end);
         setStartTime(start);
         setLiveTime(start - Date.now());
@@ -284,52 +281,6 @@ const PreSale = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = () => {
-    if (liveTime <= 0) return '00d 00h 00m 00s';
-    let seconds = Math.floor(liveTime / 1000);
-    let minutes = Math.floor(seconds / 60);
-    let hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    hours %= 24;
-    minutes %= 60;
-    seconds %= 60;
-
-    return `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-  };
-
-  // Format functions
-  const formatDate = () => {
-    if (!startTime) return 'Loading...';
-    const date = new Date(startTime);
-    return date.toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    }) + ' @' + date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZoneName: 'short',
-    });
-  };
-
-  const formatEndTime = () => {
-    if (!startTime) return 'Loading...';
-    const timeDifference = endTime - Date.now();
-    if (timeDifference <= 0) return 'Ends in 00d 00h 00m 00s';
-
-    let seconds = Math.floor(timeDifference / 1000);
-    let minutes = Math.floor(seconds / 60);
-    let hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    hours %= 24;
-    minutes %= 60;
-    seconds %= 60;
-
-    return `Ends in ${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
-  };
-
   return (
     <div className="parallax relative" id="cred-point">
       <Header className="" active={2} />
@@ -356,7 +307,7 @@ const PreSale = () => {
                   value={count}
                   onChange={(e) => { Number(e.target.value) >= 0 && setCount(Number(e.target.value)) }}
                   className="font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
-                  // disabled={true}
+                  disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
                   style={{ opacity: 0.5 }}
                 />
                 <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
@@ -365,7 +316,7 @@ const PreSale = () => {
                 </div>
               </div>
               {/* {connected ? */}
-              <PrimaryButton onClick={onContribute} className={`z-20 relative py-1 w-full !h-fit my-6`}>
+              <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50"} py-1 w-full !h-fit my-6`}>
                 <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
                 <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
               </PrimaryButton>

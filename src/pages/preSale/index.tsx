@@ -5,7 +5,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
 import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
-import { APTOS, CONTRIBUTED_AMOUNT, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
+import { APTOS, CONTRIBUTED_AMOUNT, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
 import { toggleWalletPanel } from '../../state/dialog';
@@ -15,6 +15,7 @@ import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { AccountInfo } from '@aptos-labs/wallet-adapter-core';
+import { Address } from 'aptos/src/generated';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -62,27 +63,20 @@ const PreSale = () => {
     fetchPresale();
   }, []);
 
-  // // get contributed amount per account
-  // // TODO: need to pass the reference of the account signature as a parameter (&signer)
-  // const getContributedAmount = () => {
-  //   const viewContributedAmount = async () => {
-  //     const payload: InputViewFunctionData = {
-  //       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT}`
-  //     };
-  //     let res = await APTOS.view({payload});
-  //         console.log('contributed amount: ', res);
-  //   };
-  //   return viewContributedAmount;
-  // };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const result = await getContributedAmount();
-  //     setContributedAmount(result as any);
-  //   };
-
-  //   fetchData();
-  // }, []);
+  // get contributed amount per account
+  // TODO: need to pass the reference of the account signature as a parameter (&signer)
+  const getContributedAmount = (accountAddress: Address) => {
+    const viewContributedAmount = async () => {
+        const payload: InputViewFunctionData = {
+            function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+            functionArguments: [accountAddress]
+        };
+        let res = await APTOS.view({payload});
+        console.log('contributed amount: ', res);
+        return res; // Return the result from viewContributedAmount
+    };
+    return viewContributedAmount; // Return the function itself, not the result of calling it
+};
 
   // get the completion status of the presale
   const getIsPresaleCompleted = () => {

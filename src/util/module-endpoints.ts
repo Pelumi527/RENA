@@ -23,6 +23,7 @@ export const IS_COMPLETED = "is_completed";
 export const TOTAL_CONTRIBUTORS = "total_contributors";
 export const TOTAL_RAISED_FUNDS = "total_raised_funds";
 export const CONTRIBUTED_AMOUNT = "contributed_amount";
+export const CONTRIBUTED_AMOUNT_FROM_ADDRESS = "contributed_amount_from_address";
 
 // coin endpoints
 export const RENA_COIN_TYPE_TESTNET = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::core::RenegadeCoin"

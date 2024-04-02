@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import {
     APTOS,
     RENA_PRESALE_TESTNET,
@@ -5,15 +6,17 @@ import {
   } from "../util/module-endpoints";
   import { InputViewFunctionData } from "@aptos-labs/ts-sdk";
   
-  const useTokenBalance = () => {
+  const useTotalRaisedFunds = () => {
+    const dispatch = useDispatch();
   
-    const updateTokenBalance = async () => {
+    const viewTotalRaisedFunds = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
       };
       let res = await APTOS.view({payload});
-        console.log(res);
+        console.log('total raised funds: ', res);
+        dispatch((res[0] as any));
     };
-    return updateTokenBalance;
+    return viewTotalRaisedFunds;
   };
-  export default useTokenBalance;
+  export default useTotalRaisedFunds;

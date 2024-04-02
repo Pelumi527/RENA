@@ -14,6 +14,14 @@ import useContribute from '../../hook/useContribute';
 import { useAppSelector } from '../../state/hooks';
 import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
+import useContributedAmount from '../../hook/useContributedAmount';
+import useEndTime from '../../hook/useEndTime';
+import useIsCompleted from '../../hook/useIsCompleted';
+import useRemainingTime from '../../hook/useRemainingTime';
+import useStartTime from '../../hook/useStartTime';
+import useTotalContributors from '../../hook/useTotalContributors';
+import useTotalRaisedFunds from '../../hook/useTotalRaisedFunds';
+import useTreasuryAddress from '../../hook/useTreasuryAddress';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -27,6 +35,16 @@ const PreSale = () => {
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
   const aptConts = useAppSelector((state) => state.renegadesState.aptConts);
   const contribute = useContribute();
+
+  // hooks
+  const contributedAmount = useAppSelector((state) => state.renegadesState.aptConts);
+  // const endTime = useEndTime();
+  const presaleCompleted = useIsCompleted();
+  const remainingTime  = useRemainingTime();
+  // const startTime = useStartTime();
+  const totalContributors = useTotalContributors();
+  const totalRaisedFunds = useTotalRaisedFunds();
+  const treasuryAddress = useTreasuryAddress();
 
   const onContribute = async () => {
     console.log(Date.now(), endTime, startTime)
@@ -173,7 +191,7 @@ const PreSale = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>0</p>
+                  <p>totalRaisedFunds</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

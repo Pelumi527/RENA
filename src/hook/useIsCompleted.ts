@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import {
     APTOS,
     IS_COMPLETED,
@@ -5,15 +6,17 @@ import {
   } from "../util/module-endpoints";
   import { InputViewFunctionData } from "@aptos-labs/ts-sdk";
   
-  const useTokenBalance = () => {
+  const useIsCompleted = () => {
+    const dispatch = useDispatch();
   
-    const updateTokenBalance = async () => {
+    const viewIsCompleted = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
       };
       let res = await APTOS.view({payload});
-        console.log(res);
+        console.log('is completed: ', res);
+        dispatch((res[0] as any));
     };
-    return updateTokenBalance;
+    return viewIsCompleted;
   };
-  export default useTokenBalance;
+  export default useIsCompleted;

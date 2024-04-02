@@ -91,7 +91,7 @@ const PreSale = () => {
         function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
       };
       let res = await APTOS.view({payload});
-          console.log('is completed: ', res);
+          console.log('is presale completed: ', res);
     };
     return viewIsCompleted;
   };

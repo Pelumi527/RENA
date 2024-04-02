@@ -8,17 +8,16 @@ import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@a
 import { APTOS, CONTRIBUTED_AMOUNT, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
-import { toggleWalletPanel } from '../../state/dialog';
 import useContribute from '../../hook/useContribute';
 import { useAppSelector } from '../../state/hooks';
 import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
-import { AccountInfo } from '@aptos-labs/wallet-adapter-core';
 import { Address } from 'aptos/src/generated';
+import { toNumber } from 'lodash';
 
 const PreSale = () => {
-  const { connected, account } = useWallet();
+  const { account } = useWallet();
   const dispatch = useDispatch();
   const [count, setCount] = useState<number>(0);
   const [liveTime, setLiveTime] = useState<number>(0);
@@ -281,6 +280,27 @@ const PreSale = () => {
     return () => clearInterval(interval);
   }, []);
 
+  function formatNumberWithDecimals(number: number, decimals: number | string): string {
+    const parsedDecimals = typeof decimals === 'number' ? decimals : parseFloat(decimals);
+  
+    if (isNaN(parsedDecimals) || parsedDecimals < 0 || parsedDecimals > 100) {
+      throw new Error('Invalid decimals argument');
+    }
+  
+    const formattedResult = number.toFixed(parsedDecimals);
+  
+    // Check if the decimal part consists only of zeros using a regular expression
+    const hasTrailingZeros = /^\d+\.0+$/.test(formattedResult);
+  
+    // If trailing zeros exist, remove them, otherwise keep the formatted result
+    const displayResult = hasTrailingZeros ? formattedResult.slice(0, formattedResult.indexOf('.')) : formattedResult;
+  
+    return displayResult;
+  }
+  
+
+
+
   return (
     <div className="parallax relative" id="cred-point">
       <Header className="" active={2} />
@@ -296,7 +316,7 @@ const PreSale = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{totalRaisedFunds ? (totalRaisedFunds / 1e+8).toFixed(8) : 0}</p>
+                  <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / 100000000), '8')}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

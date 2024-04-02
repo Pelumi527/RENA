@@ -91,7 +91,7 @@ const PreSale = () => {
         function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
       };
       let res = await APTOS.view({payload});
-          console.log('is completed: ', res);
+      console.log('is completed: ', res);
     };
     return viewIsCompleted;
   };
@@ -104,7 +104,7 @@ const PreSale = () => {
 
     fetchData();
   }
-  , []);
+    , []);
 
   // get the remaining time of the presale
   const getRemainingTime = () => {
@@ -113,7 +113,7 @@ const PreSale = () => {
         function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
       };
       let res = await APTOS.view({payload});
-          console.log('remaining time: ', res);
+      console.log('remaining time: ', res);
     };
     return viewRemainingTime;
   };
@@ -134,7 +134,7 @@ const PreSale = () => {
         function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`
       };
       let res = await APTOS.view({payload});
-          console.log('total contributors number: ', res);
+      console.log('total contributors number: ', res);
     };
     return viewTotalContributors;
   };
@@ -157,7 +157,7 @@ const PreSale = () => {
     console.log('total raised funds: ', res);
     // Assuming res is the total raised funds
     return res;
-  };  
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -175,7 +175,7 @@ const PreSale = () => {
         function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
       };
       let res = await APTOS.view({payload});
-          console.log('treasury address: ', res);
+      console.log('treasury address: ', res);
     };
     return viewTreasuryAddress;
   };
@@ -192,7 +192,7 @@ const PreSale = () => {
 
   const onContribute = async () => {
     console.log(Date.now(), endTime, startTime)
-    if (account && count && Date.now() < endTime && Date.now() >= startTime) {
+    if (account && count) {
       try {
         await contribute(account.address, count);
         getContributions();
@@ -334,8 +334,8 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-            <p className="text-[22px] font-semibold text-[#CCC]">on @0xrenegades on X</p>
+              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">on @0xrenegades on X</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
@@ -350,7 +350,7 @@ const PreSale = () => {
                   value={count}
                   onChange={(e) => { Number(e.target.value) >= 0 && setCount(Number(e.target.value)) }}
                   className="font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
-                  disabled={true}
+                  // disabled={true}
                   style={{ opacity: 0.5 }}
                 />
                 <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
@@ -359,7 +359,7 @@ const PreSale = () => {
                 </div>
               </div>
               {/* {connected ? */}
-              <PrimaryButton onClick={onContribute} className={`z-20 relative py-1 w-full !h-fit my-6 opacity-50 cursor-not-allowed`}>
+              <PrimaryButton onClick={onContribute} className={`z-20 relative py-1 w-full !h-fit my-6`}>
                 <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
                 <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
               </PrimaryButton>

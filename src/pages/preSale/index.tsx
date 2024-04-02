@@ -67,16 +67,16 @@ const PreSale = () => {
   // TODO: need to pass the reference of the account signature as a parameter (&signer)
   const getContributedAmount = (accountAddress: Address) => {
     const viewContributedAmount = async () => {
-        const payload: InputViewFunctionData = {
-            function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
-            functionArguments: [accountAddress]
-        };
-        let res = await APTOS.view({payload});
-        console.log('contributed amount: ', res);
-        return res; // Return the result from viewContributedAmount
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+        functionArguments: [accountAddress]
+      };
+      let res = await APTOS.view({ payload });
+      console.log('contributed amount: ', res);
+      return res; // Return the result from viewContributedAmount
     };
     return viewContributedAmount; // Return the function itself, not the result of calling it
-};
+  };
 
   // get the completion status of the presale
   const getIsPresaleCompleted = () => {
@@ -89,6 +89,18 @@ const PreSale = () => {
     };
     return viewIsCompleted;
   };
+
+  const getContributs = async (address: string) => {
+    const result = await getContributedAmount(address);
+    console.log("result====>", result)
+    setPresaleCompleted(result as any);
+  };
+  useEffect(() => {
+    if (account) {
+      getContributs(account?.address);
+    }
+  }
+    , [account]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -133,13 +145,13 @@ const PreSale = () => {
     return viewTotalContributors;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getTotalContributors();
-      setTotalContributors(result as any);
-    };
+  const fetchData = async () => {
+    const result = await getTotalContributors();
+    setTotalContributors(result as any);
+  };
 
-    fetchData();
+  useEffect(() => {
+    getTotalContributors();
   }, []);
 
   // get the total raised funds
@@ -153,13 +165,12 @@ const PreSale = () => {
     return res;
   };
 
+  const getTotalRaisedAmount = async () => {
+    const result = await getTotalRaisedFunds();
+    setTotalRaisedFunds(result as any);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await getTotalRaisedFunds();
-      setTotalRaisedFunds(result as any);
-    };
-
-    fetchData();
+    getTotalRaisedAmount();
   }, []);
 
   // get the treasury address
@@ -189,7 +200,8 @@ const PreSale = () => {
     if (account && count) {
       try {
         await contribute(account.address, count);
-        getContributions();
+        getTotalRaisedAmount();
+        getContributs(account?.address);
       } catch (error) {
         console.error(error);
       }
@@ -333,7 +345,7 @@ const PreSale = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{totalRaisedFunds}</p>
+                  <p>{totalRaisedFunds && totalRaisedFunds / 1e8}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

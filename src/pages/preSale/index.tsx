@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { useDispatch } from "react-redux";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { Aptos, AptosConfig, GetEventsResponse } from "@aptos-labs/ts-sdk";
-import { APTOS, RENA_PRESALE_TESTNET } from "../../util/module-endpoints";
+import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
+import { APTOS, CONTRIBUTED_AMOUNT, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
 import { toggleWalletPanel } from '../../state/dialog';
@@ -14,14 +13,8 @@ import useContribute from '../../hook/useContribute';
 import { useAppSelector } from '../../state/hooks';
 import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
-import useContributedAmount from '../../hook/useContributedAmount';
-import useEndTime from '../../hook/useEndTime';
-import useIsCompleted from '../../hook/useIsCompleted';
-import useRemainingTime from '../../hook/useRemainingTime';
-import useStartTime from '../../hook/useStartTime';
-import useTotalContributors from '../../hook/useTotalContributors';
-import useTotalRaisedFunds from '../../hook/useTotalRaisedFunds';
-import useTreasuryAddress from '../../hook/useTreasuryAddress';
+import { useDispatch } from 'react-redux';
+import { AccountInfo } from '@aptos-labs/wallet-adapter-core';
 
 const PreSale = () => {
   const { connected, account } = useWallet();
@@ -33,18 +26,166 @@ const PreSale = () => {
   const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
+
+  const [contributedAmount, setContributedAmount] = useState<number>(0);
+  const [presaleCompleted, setPresaleCompleted] = useState<boolean>(false);
+  const [remainingTime, setRemainingTime] = useState<number>(0);
+  const [totalContributors, setTotalContributors] = useState<number>(0);
+  const [totalRaisedFunds, setTotalRaisedFunds] = useState<number | null>(null);
+  const [treasuryAddress, setTreasuryAddress] = useState<string>('');
+
   const aptConts = useAppSelector((state) => state.renegadesState.aptConts);
   const contribute = useContribute();
 
-  // hooks
-  const contributedAmount = useAppSelector((state) => state.renegadesState.aptConts);
-  // const endTime = useEndTime();
-  const presaleCompleted = useIsCompleted();
-  const remainingTime  = useRemainingTime();
-  // const startTime = useStartTime();
-  const totalContributors = useTotalContributors();
-  const totalRaisedFunds = useTotalRaisedFunds();
-  const treasuryAddress = useTreasuryAddress();
+  const fetchPresale = async () => {
+    const aptos = new Aptos();
+    try {
+      const presaleResource = await aptos.getAccountResource(
+        {
+          accountAddress: RENA_MODULE_TESTNET,
+          resourceType: `${RENA_PRESALE_TESTNET}::Info`
+        }
+      );
+      console.log('presale resource: ', presaleResource);
+      setPresaleExists(true);
+      // TODO: show relevant data
+    } catch (e: any) {
+      setPresaleExists(false);
+      // TODO: show presale coming soon
+    }
+  };
+
+  useEffect(() => {
+    fetchPresale();
+  }, []);
+
+  // // get contributed amount per account
+  // // TODO: need to pass the reference of the account signature as a parameter (&signer)
+  // const getContributedAmount = () => {
+  //   const viewContributedAmount = async () => {
+  //     const payload: InputViewFunctionData = {
+  //       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT}`
+  //     };
+  //     let res = await APTOS.view({payload});
+  //         console.log('contributed amount: ', res);
+  //   };
+  //   return viewContributedAmount;
+  // };
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await getContributedAmount();
+  //     setContributedAmount(result as any);
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // get the completion status of the presale
+  const getIsPresaleCompleted = () => {
+    const viewIsCompleted = async () => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
+      };
+      let res = await APTOS.view({payload});
+          console.log('is completed: ', res);
+    };
+    return viewIsCompleted;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getIsPresaleCompleted();
+      setPresaleCompleted(result as any);
+    };
+
+    fetchData();
+  }
+  , []);
+
+  // get the remaining time of the presale
+  const getRemainingTime = () => {
+    const viewRemainingTime = async () => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
+      };
+      let res = await APTOS.view({payload});
+          console.log('remaining time: ', res);
+    };
+    return viewRemainingTime;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getRemainingTime();
+      setRemainingTime(result as any);
+    };
+
+    fetchData();
+  }, []);
+
+  // get the total contributors
+  const getTotalContributors = () => {
+    const viewTotalContributors = async () => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`
+      };
+      let res = await APTOS.view({payload});
+          console.log('total contributors number: ', res);
+    };
+    return viewTotalContributors;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getTotalContributors();
+      setTotalContributors(result as any);
+    };
+
+    fetchData();
+  }, []);
+
+  // get the total raised funds
+  const getTotalRaisedFunds = async () => {
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
+    };
+    let res = await APTOS.view({payload});
+    console.log('total raised funds: ', res);
+    // Assuming res is the total raised funds
+    return res;
+  };  
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getTotalRaisedFunds();
+      setTotalRaisedFunds(result as any);
+    };
+
+    fetchData();
+  }, []);
+
+  // get the treasury address
+  const getTreasuryAddress = () => {
+    const viewTreasuryAddress = async () => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
+      };
+      let res = await APTOS.view({payload});
+          console.log('treasury address: ', res);
+    };
+    return viewTreasuryAddress;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getTreasuryAddress();
+      setTreasuryAddress(result as any);
+    };
+
+    fetchData();
+  }, []);
+
 
   const onContribute = async () => {
     console.log(Date.now(), endTime, startTime)
@@ -81,6 +222,7 @@ const PreSale = () => {
   useEffect(() => {
     if (account) {
       getContributions();
+      // getContributedAmount();
     }
   }, [account]);
 
@@ -92,6 +234,8 @@ const PreSale = () => {
         const events = await event.getPresaleCreatedEvent();
         const start = Number(events[events.length - 1].data.start);
         const end = Number(events[events.length - 1].data.end);
+
+        // time related
         setEndTime(end);
         setStartTime(start);
         setLiveTime(start - Date.now());
@@ -145,6 +289,7 @@ const PreSale = () => {
     return `${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
   };
 
+  // Format functions
   const formatDate = () => {
     if (!startTime) return 'Loading...';
     const date = new Date(startTime);
@@ -186,12 +331,12 @@ const PreSale = () => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">on @0xrenegades on X</p>
+            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+            <p className="text-[22px] font-semibold text-[#CCC]">on @0xrenegades on X</p>
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>totalRaisedFunds</p>
+                  <p>{totalRaisedFunds}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>
@@ -226,9 +371,9 @@ const PreSale = () => {
               </div>
               <div className="border-b border-[#666] w-full my-6" />
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
-                <p className="text-[18px] font-medium text-[#CCC]">Total Contributed</p>
+                <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{aptConts}</p>
+                  <p>{contributedAmount}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

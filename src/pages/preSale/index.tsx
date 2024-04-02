@@ -333,7 +333,7 @@ const PreSale = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{totalRaisedFunds}</p>
+                  <p>{totalRaisedFunds ? (totalRaisedFunds / 1e+8).toFixed(8) : 0}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

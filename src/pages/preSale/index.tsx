@@ -27,14 +27,13 @@ const PreSale = () => {
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
 
-  const [contributedAmount, setContributedAmount] = useState<number>(0);
+  const [contributedAmount, setContributedAmount] = useState<any>(null);
   const [presaleCompleted, setPresaleCompleted] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [totalContributors, setTotalContributors] = useState<number>(0);
-  const [totalRaisedFunds, setTotalRaisedFunds] = useState<number | null>(null);
+  const [totalRaisedFunds, setTotalRaisedFunds] = useState<number>(0);
   const [treasuryAddress, setTreasuryAddress] = useState<string>('');
 
-  const aptConts = useAppSelector((state) => state.renegadesState.aptConts);
   const contribute = useContribute();
 
   const fetchPresale = async () => {
@@ -61,22 +60,7 @@ const PreSale = () => {
   useEffect(() => {
     fetchPresale();
   }, []);
-
-  // get contributed amount per account
-  // TODO: need to pass the reference of the account signature as a parameter (&signer)
-  const getContributedAmount = (accountAddress: Address) => {
-    const viewContributedAmount = async () => {
-      const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
-        functionArguments: [accountAddress]
-      };
-      let res = await APTOS.view({ payload });
-      console.log('contributed amount: ', res);
-      return res; // Return the result from viewContributedAmount
-    };
-    return viewContributedAmount; // Return the function itself, not the result of calling it
-  };
-
+  
   // get the completion status of the presale
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
@@ -89,18 +73,6 @@ const PreSale = () => {
     return viewIsCompleted;
   };
 
-  const getContributs = async (address: string) => {
-    const result = await getContributedAmount(address);
-    console.log("result====>", result)
-    setPresaleCompleted(result as any);
-  };
-  useEffect(() => {
-    if (account) {
-      getContributs(account?.address);
-    }
-  }
-    , [account]);
-
   useEffect(() => {
     const fetchData = async () => {
       const result = await getIsPresaleCompleted();
@@ -110,6 +82,52 @@ const PreSale = () => {
     fetchData();
   }
     , []);
+
+  // get contributed amount per account
+  const getContributedAmount = async (accountAddress: Address) => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+        functionArguments: [accountAddress]
+      };
+      let res = await APTOS.view({ payload });
+      console.log('contributed amount: ', res);
+      return res; // Return the result from viewContributedAmount
+  };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
+        setContributedAmount(result[0]); 
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [account, getContributedAmount]);
+
+
+  // get the total raised funds
+  // get the total raised funds
+  const getTotalRaisedFunds = async () => {
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
+    };
+    let res = await APTOS.view({ payload });
+    console.log('total raised funds: ', res);
+    // Assuming res is the total raised funds
+    return res;
+  };
+
+  const getTotalRaisedAmount = async () => {
+    const result = await getTotalRaisedFunds();
+    setTotalRaisedFunds(result as any);
+  };
+  useEffect(() => {
+    getTotalRaisedAmount();
+  }, []);
 
   // get the remaining time of the presale
   const getRemainingTime = () => {
@@ -153,25 +171,6 @@ const PreSale = () => {
     getTotalContributors();
   }, []);
 
-  // get the total raised funds
-  const getTotalRaisedFunds = async () => {
-    const payload: InputViewFunctionData = {
-      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
-    };
-    let res = await APTOS.view({ payload });
-    console.log('total raised funds: ', res);
-    // Assuming res is the total raised funds
-    return res;
-  };
-
-  const getTotalRaisedAmount = async () => {
-    const result = await getTotalRaisedFunds();
-    setTotalRaisedFunds(result as any);
-  };
-  useEffect(() => {
-    getTotalRaisedAmount();
-  }, []);
-
   // get the treasury address
   const getTreasuryAddress = () => {
     const viewTreasuryAddress = async () => {
@@ -198,8 +197,8 @@ const PreSale = () => {
     if (account && count && Date.now() < endTime && Date.now() >= startTime) {
       try {
         await contribute(account.address, count);
-        getTotalRaisedAmount();
-        getContributs(account?.address);
+        getTotalRaisedFunds();
+        getContributedAmount(account?.address);
       } catch (error) {
         console.error(error);
       }
@@ -288,18 +287,12 @@ const PreSale = () => {
     }
   
     const formattedResult = number.toFixed(parsedDecimals);
-  
-    // Check if the decimal part consists only of zeros using a regular expression
-    const hasTrailingZeros = /^\d+\.0+$/.test(formattedResult);
-  
-    // If trailing zeros exist, remove them, otherwise keep the formatted result
-    const displayResult = hasTrailingZeros ? formattedResult.slice(0, formattedResult.indexOf('.')) : formattedResult;
-  
-    return displayResult;
-  }
-  
 
-
+    // Remove trailing zeros from the decimal part
+    const trimmedResult = formattedResult.replace(/\.?0+$/, '');
+  
+    return trimmedResult;
+}
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -353,7 +346,7 @@ const PreSale = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{contributedAmount}</p>
+                  <p>{formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8')}</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

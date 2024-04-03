@@ -14,7 +14,7 @@ import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { Address } from 'aptos/src/generated';
-import { set, toNumber } from 'lodash';
+import { get, set, toNumber } from 'lodash';
 
 const PreSale = () => {
   const { account } = useWallet();
@@ -61,7 +61,7 @@ const PreSale = () => {
   useEffect(() => {
     fetchPresale();
   }, []);
-
+  
   // get the completion status of the presale
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
@@ -86,27 +86,27 @@ const PreSale = () => {
 
   // get contributed amount per account
   const getContributedAmount = async (accountAddress: Address) => {
-    const payload: InputViewFunctionData = {
-      function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
-      functionArguments: [accountAddress]
-    };
-    let res = await APTOS.view({ payload });
-    setContributedAmount(res[0]);
-    console.log('contributed amount: ', res);
-    return res; // Return the result from viewContributedAmount
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+        functionArguments: [accountAddress]
+      };
+      let res = await APTOS.view({ payload });
+      console.log('contributed amount: ', res);
+      return res; // Return the result from viewContributedAmount
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
+        const result = await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
+        setContributedAmount(result[0]); 
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [account]);
+  }, [shouldFetch, account]);
 
   // get the total raised funds
   const getTotalRaisedFunds = async () => {
@@ -114,7 +114,6 @@ const PreSale = () => {
       function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
     };
     let res = await APTOS.view({ payload });
-    setTotalRaisedFunds(res as any);
     console.log('total raised funds: ', res);
     return res;
 };
@@ -134,25 +133,26 @@ useEffect(() => {
 }, [shouldFetch, account]);
 
   // get the remaining time of the presale
-  const getRemainingTime = () => {
-    const viewRemainingTime = async () => {
+  const getRemainingTime = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
       };
       let res = await APTOS.view({ payload });
-      console.log('remaining time: ', res);
-    };
-    return viewRemainingTime;
+      console.log('remaining time: ', res[0]);
+    return res[0];
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getRemainingTime();
-      setRemainingTime(result as any);
+      try {
+        const result = await getRemainingTime(); // Call the returned function to trigger fetch
+        setRemainingTime(result as any);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
-
     fetchData();
-  }, []);
+  }, [getRemainingTime]);
 
   // get the total contributors
   const getTotalContributors = () => {
@@ -286,18 +286,28 @@ useEffect(() => {
 
   function formatNumberWithDecimals(number: number, decimals: number | string): string {
     const parsedDecimals = typeof decimals === 'number' ? decimals : parseFloat(decimals);
-
+  
     if (isNaN(parsedDecimals) || parsedDecimals < 0 || parsedDecimals > 100) {
       throw new Error('Invalid decimals argument');
     }
-
+  
     const formattedResult = number.toFixed(parsedDecimals);
 
     // Remove trailing zeros from the decimal part
     const trimmedResult = formattedResult.replace(/\.?0+$/, '');
-
+  
     return trimmedResult;
-  }
+}
+
+function formatSeconds(seconds: number): string {
+  let days = Math.floor(seconds / (3600 * 24));
+  let hours = Math.floor((seconds % (3600 * 24)) / 3600);
+  let minutes = Math.floor((seconds % 3600) / 60);
+  let remainingSeconds = seconds % 60;
+
+  let formattedTime = `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
+  return formattedTime;
+}
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -309,8 +319,19 @@ useEffect(() => {
               Join the Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
-              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-              <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
+              {
+                presaleExists ?
+                /* add another check to see if the presale is scheduled or live */
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
+                </p>
+                :
+                <p>
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
+                </p>
+              }
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">

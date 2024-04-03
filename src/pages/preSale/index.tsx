@@ -14,7 +14,7 @@ import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { Address } from 'aptos/src/generated';
-import { toNumber } from 'lodash';
+import { set, toNumber } from 'lodash';
 
 const PreSale = () => {
   const { account } = useWallet();
@@ -34,18 +34,19 @@ const PreSale = () => {
   const [totalRaisedFunds, setTotalRaisedFunds] = useState<number>(0);
   const [treasuryAddress, setTreasuryAddress] = useState<string>('');
 
+  const [shouldFetch, setShouldFetch] = useState(false);
+
   const contribute = useContribute();
 
+  const config = new AptosConfig({ network: Network.TESTNET });
+  const aptos = new Aptos(config);
+
   const fetchPresale = async () => {
-    const aptos = new Aptos();
     try {
       const presaleResource = await aptos.getAccountResource(
         {
           accountAddress: `0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
           resourceType: `${RENA_PRESALE_TESTNET}::Info`,
-          options: {
-            ledgerVersion: 994771682,
-          },
         }
       );
       console.log('presale resource: ', presaleResource);
@@ -94,7 +95,6 @@ const PreSale = () => {
       return res; // Return the result from viewContributedAmount
   };
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -106,10 +106,8 @@ const PreSale = () => {
     };
 
     fetchData();
-  }, [account, getContributedAmount]);
+  }, [shouldFetch, account]);
 
-
-  // get the total raised funds
   // get the total raised funds
   const getTotalRaisedFunds = async () => {
     const payload: InputViewFunctionData = {
@@ -117,17 +115,22 @@ const PreSale = () => {
     };
     let res = await APTOS.view({ payload });
     console.log('total raised funds: ', res);
-    // Assuming res is the total raised funds
     return res;
+};
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const result = await getTotalRaisedFunds(); // Call the returned function to trigger fetch
+      setTotalRaisedFunds(result as any);
+      setShouldFetch(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
-  const getTotalRaisedAmount = async () => {
-    const result = await getTotalRaisedFunds();
-    setTotalRaisedFunds(result as any);
-  };
-  useEffect(() => {
-    getTotalRaisedAmount();
-  }, []);
+  fetchData();
+}, [shouldFetch, account]);
 
   // get the remaining time of the presale
   const getRemainingTime = () => {
@@ -199,6 +202,7 @@ const PreSale = () => {
         await contribute(account.address, count);
         getTotalRaisedFunds();
         getContributedAmount(account?.address);
+        setShouldFetch(true);
       } catch (error) {
         console.error(error);
       }

@@ -60,7 +60,7 @@ const PreSale = () => {
   useEffect(() => {
     fetchPresale();
   }, []);
-  
+
   // get the completion status of the presale
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
@@ -85,28 +85,28 @@ const PreSale = () => {
 
   // get contributed amount per account
   const getContributedAmount = async (accountAddress: Address) => {
-      const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
-        functionArguments: [accountAddress]
-      };
-      let res = await APTOS.view({ payload });
-      console.log('contributed amount: ', res);
-      return res; // Return the result from viewContributedAmount
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+      functionArguments: [accountAddress]
+    };
+    let res = await APTOS.view({ payload });
+    setContributedAmount(res[0]);
+    console.log('contributed amount: ', res);
+    return res; // Return the result from viewContributedAmount
   };
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
-        setContributedAmount(result[0]); 
+        await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [account, getContributedAmount]);
+  }, [account]);
 
 
   // get the total raised funds
@@ -116,6 +116,7 @@ const PreSale = () => {
       function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
     };
     let res = await APTOS.view({ payload });
+    setTotalRaisedFunds(res as any);
     console.log('total raised funds: ', res);
     // Assuming res is the total raised funds
     return res;
@@ -281,18 +282,18 @@ const PreSale = () => {
 
   function formatNumberWithDecimals(number: number, decimals: number | string): string {
     const parsedDecimals = typeof decimals === 'number' ? decimals : parseFloat(decimals);
-  
+
     if (isNaN(parsedDecimals) || parsedDecimals < 0 || parsedDecimals > 100) {
       throw new Error('Invalid decimals argument');
     }
-  
+
     const formattedResult = number.toFixed(parsedDecimals);
 
     // Remove trailing zeros from the decimal part
     const trimmedResult = formattedResult.replace(/\.?0+$/, '');
-  
+
     return trimmedResult;
-}
+  }
 
   return (
     <div className="parallax relative" id="cred-point">

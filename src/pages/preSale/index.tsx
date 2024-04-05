@@ -4,7 +4,7 @@ import Header from "../../components/header";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
+import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
 import { APTOS, CONTRIBUTED_AMOUNT, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
@@ -15,6 +15,7 @@ import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { Address } from 'aptos/src/generated';
 import { get, set, toNumber } from 'lodash';
+import { time } from 'console';
 
 const PreSale = () => {
   const { account } = useWallet();
@@ -32,7 +33,10 @@ const PreSale = () => {
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [totalContributors, setTotalContributors] = useState<number>(0);
   const [totalRaisedFunds, setTotalRaisedFunds] = useState<number>(0);
+  const [finalTotalRaisedFunds, setFinalTotalRaisedFunds] = useState<number>(0);
   const [treasuryAddress, setTreasuryAddress] = useState<string>('');
+
+  const [contributors, setContributors] = useState<any[]>([]);
 
   const [shouldFetch, setShouldFetch] = useState(false);
 
@@ -50,8 +54,8 @@ const PreSale = () => {
         }
       );
       console.log('presale resource: ', presaleResource);
+      // setContributors(presaleResource.data.contributors);
       setPresaleExists(true);
-      // TODO: show relevant data
     } catch (e: any) {
       setPresaleExists(false);
       // TODO: show presale coming soon
@@ -82,7 +86,8 @@ const PreSale = () => {
 
     fetchData();
   }
-    , []);
+  // when it changes to true, we can show the presale is completed
+  , []);
 
   // get contributed amount per account
   const getContributedAmount = async (accountAddress: Address) => {
@@ -133,6 +138,7 @@ useEffect(() => {
 }, [shouldFetch, account]);
 
   // get the remaining time of the presale
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getRemainingTime = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
@@ -210,32 +216,43 @@ useEffect(() => {
     }
   };
 
-  const getContributions = async () => {
+  const getDistributedFunds = async () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
       const event = new Events(aptosConfig);
-      const contributionssEvent = await event.getContributionsEvent();
-      const contributionsUpdatedEvent = await event.getContributionsUpdatedEvent();
-      const updatedAmounts = contributionsUpdatedEvent
-        .filter(event => event.data.contributor === account?.address)
-        .map(event => event.data.updated_amount);
-
-      const amounts = contributionssEvent
+      const contributionsUpdatedEvent = await event.getSaleFundsDistributedEvent();
+      const amounts = contributionsUpdatedEvent
         .filter(event => event.data.contributor === account?.address)
         .map(event => event.data.amount);
-
-      console.log(Number(updatedAmounts[0]) + Number(amounts[0]));
-      dispatch(updateAptConts((Number(updatedAmounts[0]) + Number(amounts[0])) / 1e8));
+      console.log('get distribution: ', Number(amounts[amounts.length - 1]));
     } catch (error) {
       console.error(error);
     }
   }
   useEffect(() => {
     if (account) {
-      getContributions();
+      getDistributedFunds();
       // getContributedAmount();
     }
   }, [account]);
+
+  const getPresaleFinalized = async () => {
+    try {
+      const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+      const event = new Events(aptosConfig);
+      const finalizedEvent = await event.getPresaleFinalizedEvent();
+      console.log('finalized event: ', finalizedEvent);
+      let total_funds_raised = Number(finalizedEvent[finalizedEvent.length - 1].data.raised_funds);
+      console.log('total funds raised: ', total_funds_raised);
+      setFinalTotalRaisedFunds(total_funds_raised);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getPresaleFinalized();
+  }, []);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -309,6 +326,21 @@ function formatSeconds(seconds: number): string {
   return formattedTime;
 }
 
+// format milliseconds to date
+function formatDate(milliseconds: number): string {
+  const date = new Date(milliseconds);
+  return date.toDateString();
+}
+
+// format remaining time to date given two dates
+function formatRemainingTime(startDate: number, endDate: number): string {
+  const remainingTime = endDate - startDate;
+  // don't show decimals=
+  const formattedTime = formatNumberWithDecimals(remainingTime, 0);
+
+  return formatSeconds(Number(formattedTime));
+}
+
   return (
     <div className="parallax relative" id="cred-point">
       <Header className="" active={2} />
@@ -320,22 +352,42 @@ function formatSeconds(seconds: number): string {
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
-                presaleExists ?
-                /* add another check to see if the presale is scheduled or live */
+                /* Presale is not created yet */
+                !presaleExists?
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
+                  </p>
+                /* Presale is scheduled */
+                : presaleExists && (startTime > Date.now()) && (endTime >= Date.now())?
+                  /* add another check to see if the presale is scheduled or live */
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now() / 1000), startTime / 1000)}</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">{formatDate(startTime)}</p>
+                  </p>
+                /* Presale is live */
+                : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now())?
                 <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
                   <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
                   <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
                 </p>
-                :
-                <p>
-                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-                  <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
-                </p>
+                /* Presale is completed */
+                : presaleExists && (endTime <= Date.now())?
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is COMPLETED</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
+                  </p>
+                : null
               }
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / 100000000), '8')}</p>
+                  {
+                    /* presale is completed */
+                    presaleExists && (endTime < Date.now()) ?
+                    <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / 100000000), '8')}</p> :
+                    <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / 100000000), '8')}</p>
+                  }                  
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>
@@ -372,7 +424,12 @@ function formatSeconds(seconds: number): string {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8')}</p>
+                  <p>{ 
+                    /* presale ended */
+                    presaleExists && (endTime < Date.now()) ? 
+                    formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8') :
+                    formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8')
+                  }</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>

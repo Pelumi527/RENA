@@ -210,7 +210,7 @@ const LiquifyModal = () => {
         </div>
       )}
       {proceed == 0 && (
-        <div className="relative w-full sm:w-[965px] h-[95%] sm:h-[545px] bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
+        <div className="relative w-full sm:w-[965px] h-[95%] sm:h-fit bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
           <div className="flex w-full justify-between">
             <img
               src={data?.token_uri}
@@ -252,7 +252,7 @@ const LiquifyModal = () => {
                     {dataItems.map((item, index) => (
                       <div
                         key={index}
-                        className="w-[158px] sm:w-[188px] h-[83px] rounded-[8px] border-[#666] border flex flex-col items-start px-3 py-[11px]"
+                        className="w-[158px] sm:w-[188px] h-[110px] rounded-[8px] border-[#666] border flex flex-col items-start px-3 py-[11px]"
                       >
                         <p className="text-[14px] text-[#CCC] font-bold">
                           {item.title}

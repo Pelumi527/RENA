@@ -53,3 +53,8 @@
     transform: rotate(360deg);
   }
 }
+
+input::selection,
+textarea::selection {
+  background-color: #FF7C2A4D;
+}

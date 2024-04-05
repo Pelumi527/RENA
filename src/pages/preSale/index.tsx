@@ -15,11 +15,12 @@ import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { Address } from 'aptos/src/generated';
 import { get, set, toNumber } from 'lodash';
+import { toggleWalletPanel } from '../../state/dialog';
 
 const PreSale = () => {
-  const { account } = useWallet();
   const dispatch = useDispatch();
-  const [count, setCount] = useState<number>(0);
+  const [count, setCount] = useState<string>("0");
+  const { account, connected } = useWallet();
   const [liveTime, setLiveTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
@@ -61,7 +62,7 @@ const PreSale = () => {
   useEffect(() => {
     fetchPresale();
   }, []);
-  
+
   // get the completion status of the presale
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
@@ -84,22 +85,21 @@ const PreSale = () => {
   }
     , []);
 
-  // get contributed amount per account
   const getContributedAmount = async (accountAddress: Address) => {
-      const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
-        functionArguments: [accountAddress]
-      };
-      let res = await APTOS.view({ payload });
-      console.log('contributed amount: ', res);
-      return res; // Return the result from viewContributedAmount
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+      functionArguments: [accountAddress]
+    };
+    let res = await APTOS.view({ payload });
+    console.log('contributed amount: ', res);
+    return res;
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
-        setContributedAmount(result[0]); 
+        setContributedAmount(result[0]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -116,29 +116,29 @@ const PreSale = () => {
     let res = await APTOS.view({ payload });
     console.log('total raised funds: ', res);
     return res;
-};
-
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const result = await getTotalRaisedFunds(); // Call the returned function to trigger fetch
-      setTotalRaisedFunds(result as any);
-      setShouldFetch(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
   };
 
-  fetchData();
-}, [shouldFetch, account]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getTotalRaisedFunds(); // Call the returned function to trigger fetch
+        setTotalRaisedFunds(result as any);
+        setShouldFetch(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [shouldFetch, account]);
 
   // get the remaining time of the presale
   const getRemainingTime = async () => {
-      const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
-      };
-      let res = await APTOS.view({ payload });
-      console.log('remaining time: ', res[0]);
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
+    };
+    let res = await APTOS.view({ payload });
+    console.log('remaining time: ', res[0]);
     return res[0];
   };
 
@@ -200,10 +200,11 @@ useEffect(() => {
     console.log(Date.now(), endTime, startTime)
     if (account && count && Date.now() < endTime && Date.now() >= startTime) {
       try {
-        await contribute(account.address, count);
+        await contribute(account.address, Number(count));
         getTotalRaisedFunds();
         getContributedAmount(account?.address);
         setShouldFetch(true);
+        setCount("0");
       } catch (error) {
         console.error(error);
       }
@@ -286,28 +287,28 @@ useEffect(() => {
 
   function formatNumberWithDecimals(number: number, decimals: number | string): string {
     const parsedDecimals = typeof decimals === 'number' ? decimals : parseFloat(decimals);
-  
+
     if (isNaN(parsedDecimals) || parsedDecimals < 0 || parsedDecimals > 100) {
       throw new Error('Invalid decimals argument');
     }
-  
+
     const formattedResult = number.toFixed(parsedDecimals);
 
     // Remove trailing zeros from the decimal part
     const trimmedResult = formattedResult.replace(/\.?0+$/, '');
-  
+
     return trimmedResult;
-}
+  }
 
-function formatSeconds(seconds: number): string {
-  let days = Math.floor(seconds / (3600 * 24));
-  let hours = Math.floor((seconds % (3600 * 24)) / 3600);
-  let minutes = Math.floor((seconds % 3600) / 60);
-  let remainingSeconds = seconds % 60;
+  function formatSeconds(seconds: number): string {
+    let days = Math.floor(seconds / (3600 * 24));
+    let hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let remainingSeconds = seconds % 60;
 
-  let formattedTime = `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
-  return formattedTime;
-}
+    let formattedTime = `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
+    return formattedTime;
+  }
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -315,22 +316,22 @@ function formatSeconds(seconds: number): string {
       <div className="w-full h-full pb-16">
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }} className="w-full flex flex-col z-20 relative items-center sm:-mt-10">
           <div className="flex flex-col items-center w-full mt-20 sm:mt-[120px]">
-            <p className="font-bold text-[42px] lg:text-[58px] mb-9">
-              Join the Presale
+            <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+              Join the $RENA Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
                 presaleExists ?
-                /* add another check to see if the presale is scheduled or live */
-                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
-                  <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
-                </p>
-                :
-                <p>
-                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-                  <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
-                </p>
+                  /* add another check to see if the presale is scheduled or live */
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
+                  </p>
+                  :
+                  <p>
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
+                  </p>
               }
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
@@ -344,26 +345,31 @@ function formatSeconds(seconds: number): string {
                   type="text"
                   placeholder="0.00"
                   value={count}
-                  onChange={(e) => { Number(e.target.value) >= 0 && setCount(Number(e.target.value)) }}
-                  className="font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
+                  onChange={(e) => { setCount(e.target.value) }}
+                  className={` ${Date.now() < endTime && Date.now() >= startTime ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
                   disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
-                  style={{ opacity: 0.5 }}
                 />
                 <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
                   <p>APT</p>
                   <img src="/presale/aptos.svg" className="w-[24px] h-[24px]" />
                 </div>
               </div>
-              {/* {connected ? */}
-              <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50"} py-1 w-full !h-fit my-6`}>
-                <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
-                <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
-              </PrimaryButton>
-              {/* :
+              {connected ?
+                <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50"} py-1 w-full !h-fit my-6`}>
+                  {Date.now() < endTime && Date.now() >= startTime ?
+                    <p className="text-[18px] font-bold my-2">Send Aptos</p>
+                    :
+                    <>
+                      <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
+                      <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
+                    </>
+                  }
+                </PrimaryButton>
+                :
                 <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
                   <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
                 </PrimaryButton>
-              } */}
+              }
               <div className='flex flex-col items-start w-full gap-2'>
                 <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> Minimum contribution is 1 APT</p>
                 <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>

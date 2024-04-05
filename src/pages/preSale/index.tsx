@@ -326,20 +326,42 @@ function formatSeconds(seconds: number): string {
   return formattedTime;
 }
 
-// format milliseconds to date
-function formatDate(milliseconds: number): string {
-  const date = new Date(milliseconds);
-  return date.toDateString();
+// format timestamp
+function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp);
+  const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZoneName: 'short' // include timezone abbreviation
+  };
+
+  const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
+  return formattedDate;
 }
 
 // format remaining time to date given two dates
-function formatRemainingTime(startDate: number, endDate: number): string {
-  const remainingTime = endDate - startDate;
-  // don't show decimals=
-  const formattedTime = formatNumberWithDecimals(remainingTime, 0);
+function formatRemainingTime(startTime: number, endTime: number): string {
+  const remainingTime = endTime - startTime;
 
-  return formatSeconds(Number(formattedTime));
+  // Calculate days, hours, minutes, and seconds
+  const seconds = Math.floor(remainingTime / 1000);
+  const minutes = Math.floor(seconds / 60) % 60;
+  const hours = Math.floor(seconds / 3600) % 24;
+  const days = Math.floor(seconds / 86400);
+
+  // Format the time components
+  const formattedDays = String(days).padStart(2, '0');
+  const formattedHours = String(hours).padStart(2, '0');
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(seconds % 60).padStart(2, '0');
+
+  return `${formattedDays}d ${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
 }
+
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -362,8 +384,8 @@ function formatRemainingTime(startDate: number, endDate: number): string {
                 : presaleExists && (startTime > Date.now()) && (endTime >= Date.now())?
                   /* add another check to see if the presale is scheduled or live */
                   <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now() / 1000), startTime / 1000)}</p>
-                    <p className="text-[22px] font-semibold text-[#CCC]">{formatDate(startTime)}</p>
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
                   </p>
                 /* Presale is live */
                 : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now())?

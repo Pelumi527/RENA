@@ -117,8 +117,8 @@ const ClaimModal = () => {
                     Rank {currentRank}
                     <p className="text-[#666] font-semibold">/5000</p>
                   </div>
-                  {lastRenegadesData?.token_count && proceed > 1 &&
-                    <div className="absolute -right-[60px] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {lastRenegadesData?.token_count} more</div>
+                  {lastRenegadesData?.token_count && lastRenegadesData?.token_count > 1 &&
+                    <div className="absolute -right-[60px] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {lastRenegadesData?.token_count - 1} more</div>
                   }
                 </>
                 :

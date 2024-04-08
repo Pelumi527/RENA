@@ -10,7 +10,7 @@ import { useAppSelector } from "../../state/hooks";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
-import { updateRenegadesRankData } from "../../state/renegades";
+import { updateIsRenaListLoading, updateRenegadesRankData } from "../../state/renegades";
 import { Link } from "react-router-dom";
 
 const renegadesJsonData = require('../../metadata.json');
@@ -22,6 +22,7 @@ const Renegades = () => {
   const updateTokenBalance = useTokenBalance();
   const renegadesData = useAppSelector((state) => state.renegadesState.renegadesData);
   const renegadesRankData = useAppSelector((state) => state.renegadesState.renegadesRankData);
+  const isRenaListLoading = useAppSelector((state) => state.renegadesState.isRenaListLoading);
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
 
   useEffect(() => {
@@ -51,6 +52,7 @@ const Renegades = () => {
       });
       if (updatedRenegadesData.length > 0) {
         console.log("updatedRenegadesData>>>>", updatedRenegadesData);
+        dispatch(updateIsRenaListLoading(false));
         dispatch(updateRenegadesRankData(updatedRenegadesData));
       }
     }
@@ -90,7 +92,7 @@ const Renegades = () => {
         <div className="flex flex-col w-[90%] sm:w-[1100px]">
           <div className="mt-12 flex sm:flex-row flex-col justify-between sm:h-[47px] sm:items-end">
             <p className="font-bold text-[42px]">My Renegades</p>
-            {!isBalanceLoading && connected ?
+            {!isBalanceLoading ?
               <div className="bg-gray-loading w-[228px] h-[30px]" />
               :
               <div className="flex items-center">
@@ -102,7 +104,7 @@ const Renegades = () => {
               </div>
             }
           </div>
-          {!isBalanceLoading && connected ?
+          {!isBalanceLoading ?
             <div className="h-[110px] w-full bg-gray-loading mt-10 rounded-[8px]" />
             :
             <div
@@ -123,7 +125,7 @@ const Renegades = () => {
                   <>
                     <p className="font-medium text-[22px] sm:text-[26px]">
                       You can claim{" "}
-                      <span className="font-bold ">{renaBalance} NFT {renaBalance > 1 && "s"}</span>
+                      <span className="font-bold ">{Math.floor(renaBalance)} NFT{renaBalance > 1 && "s"}</span>
                     </p>
                     <Icon icon={"mingcute:right-line"} fontSize={25} />
                   </>
@@ -140,7 +142,7 @@ const Renegades = () => {
               </div>
             </div>
           }
-          {connected ? (
+          {renegadesRankData.length > 0 ? (
             <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
               {renegadesRankData.map((item, index) => (
                 <RenegadesItem
@@ -153,19 +155,23 @@ const Renegades = () => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col mt-[120px] mb-[219px] items-center w-full">
-              <img
-                src="/renegades/avatar-default.png"
-                className="w-[140px] h-[140px] rounded-lg"
-              />
-              <p className="text-[26px] my-[24px] text-center">
-                You don’t have any Renegades in your wallet
-              </p>
-              <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                <Link to={'/presale'}>Get $RENA to get NFTs</Link>
-              </p>
-              <p className="text-[26px]">or</p>
-              <p className="text-[26px]">Get them on marketplaces</p>
+            <div className={`flex flex-col mt-[120px] mb-[219px] items-center w-full`}>
+              {connected && !isRenaListLoading &&
+                <>
+                  <img
+                    src="/renegades/avatar-default.png"
+                    className="w-[140px] h-[140px] rounded-lg"
+                  />
+                  <p className="text-[26px] my-[24px] text-center">
+                    You don’t have any Renegades in your wallet
+                  </p>
+                  <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                    <Link to={'/presale'}>Get $RENA to get NFTs</Link>
+                  </p>
+                  <p className="text-[26px]">or</p>
+                  <p className="text-[26px]">Get them on marketplaces</p>
+                </>
+              }
             </div>
           )}
         </div>

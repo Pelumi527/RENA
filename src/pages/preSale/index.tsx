@@ -4,7 +4,7 @@ import Header from "../../components/header";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
+import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData, MoveUint64Type } from "@aptos-labs/ts-sdk";
 import { APTOS, CONTRIBUTED_AMOUNT, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
@@ -205,7 +205,7 @@ const PreSale = () => {
     console.log(Date.now(), endTime, startTime)
     if (account && count && Date.now() < endTime && Date.now() >= startTime) {
       try {
-        await contribute(account.address, Number(count));
+        await contribute(account.address, parseFloat(count));
         getTotalRaisedFunds();
         getContributedAmount(account?.address);
         setShouldFetch(true);

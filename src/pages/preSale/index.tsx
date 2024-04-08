@@ -447,9 +447,9 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                 <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>
               </div>
               <div className="border-b border-[#666] w-full my-6" />
-              <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
+              <div className="flex w-full items-center justify-between h-[36px] font-semibold text-[18px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
-                <div className="flex items-center font-semibold text-[22px] gap-4">
+                <div className="flex items-center font-semibold text-18px] gap-4">
                   <p>{ 
                     presaleExists && (Date.now() > startTime) ? 
                     formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8') :
@@ -458,9 +458,9 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
+              <div className="flex w-full items-center justify-between h-[36px] font-semibold text-[18px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My $RENA</p>
-                <div className="flex items-center font-semibold text-[22px] gap-4">
+                <div className="flex items-center font-semibold text-[18px] gap-4">
                   <p>{ 
                     /* presale ended */
                     presaleExists && (endTime < Date.now()) ? 

@@ -4,17 +4,14 @@ import Header from "../../components/header";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { AccountAddress, Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData, MoveUint64Type } from "@aptos-labs/ts-sdk";
-import { APTOS, CONTRIBUTED_AMOUNT, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_MODULE_TESTNET, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
+import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
+import { APTOS, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
 import useContribute from '../../hook/useContribute';
-import { useAppSelector } from '../../state/hooks';
-import { updateAptConts } from '../../state/renegades';
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { Address } from 'aptos/src/generated';
-import { get, set, toNumber } from 'lodash';
 import { toggleWalletPanel } from '../../state/dialog';
 
 const PreSale = () => {
@@ -86,8 +83,8 @@ const PreSale = () => {
 
     fetchData();
   }
-    // when it changes to true, we can show the presale is completed
-    , []);
+  // when it changes to true, we can show the presale is completed
+  , []);
 
   const getContributedAmount = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
@@ -326,10 +323,10 @@ const PreSale = () => {
     return formattedTime;
   }
 
-  // format timestamp
-  function formatTimestamp(timestamp: number): string {
-    const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = {
+// format timestamp
+function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp);
+  const options: Intl.DateTimeFormatOptions = {
       day: '2-digit',
       month: 'long',
       year: 'numeric',
@@ -337,30 +334,30 @@ const PreSale = () => {
       minute: '2-digit',
       hour12: false,
       timeZoneName: 'short' // include timezone abbreviation
-    };
+  };
 
-    const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
-    return formattedDate;
-  }
+  const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
+  return formattedDate;
+}
 
-  // format remaining time to date given two dates
-  function formatRemainingTime(startTime: number, endTime: number): string {
-    const remainingTime = endTime - startTime;
+// format remaining time to date given two dates
+function formatRemainingTime(startTime: number, endTime: number): string {
+  const remainingTime = endTime - startTime;
 
-    // Calculate days, hours, minutes, and seconds
-    const seconds = Math.floor(remainingTime / 1000);
-    const minutes = Math.floor(seconds / 60) % 60;
-    const hours = Math.floor(seconds / 3600) % 24;
-    const days = Math.floor(seconds / 86400);
+  // Calculate days, hours, minutes, and seconds
+  const seconds = Math.floor(remainingTime / 1000);
+  const minutes = Math.floor(seconds / 60) % 60;
+  const hours = Math.floor(seconds / 3600) % 24;
+  const days = Math.floor(seconds / 86400);
 
-    // Format the time components
-    const formattedDays = String(days).padStart(2, '0');
-    const formattedHours = String(hours).padStart(2, '0');
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(seconds % 60).padStart(2, '0');
+  // Format the time components
+  const formattedDays = String(days).padStart(2, '0');
+  const formattedHours = String(hours).padStart(2, '0');
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(seconds % 60).padStart(2, '0');
 
-    return `${formattedDays}d ${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
-  }
+  return `${formattedDays}d ${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
+}
 
 
   return (
@@ -375,31 +372,31 @@ const PreSale = () => {
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
                 /* Presale is not created yet */
-                !presaleExists ?
+                !presaleExists?
                   <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
                     <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
                     <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
                   </p>
-                  /* Presale is scheduled */
-                  : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
-                    /* add another check to see if the presale is scheduled or live */
-                    <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                      <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
-                      <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
-                    </p>
-                    /* Presale is live */
-                    : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
-                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
-                        <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
-                      </p>
-                      /* Presale is completed */
-                      : presaleExists && (endTime <= Date.now()) ?
-                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is COMPLETED</p>
-                          <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
-                        </p>
-                        : null
+                /* Presale is scheduled */
+                : presaleExists && (startTime > Date.now()) && (endTime >= Date.now())?
+                  /* add another check to see if the presale is scheduled or live */
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
+                  </p>
+                /* Presale is live */
+                : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now())?
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatRemainingTime(startTime, endTime)}</p>
+                </p>
+                /* Presale is completed */
+                : presaleExists && (endTime <= Date.now())?
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is COMPLETED</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
+                  </p>
+                : null
               }
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
                 <p>Total Raised</p>
@@ -407,9 +404,9 @@ const PreSale = () => {
                   {
                     /* presale is completed */
                     presaleExists && (endTime < Date.now()) ?
-                      <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / 100000000), '8')}</p> :
-                      <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / 100000000), '8')}</p>
-                  }
+                    <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / 100000000), '8')}</p> :
+                    <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / 100000000), '8')}</p>
+                  }                  
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>
@@ -418,15 +415,7 @@ const PreSale = () => {
                   type="text"
                   placeholder="0.00"
                   value={count}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    // Allow only numbers and dot, and up to 4 decimal places
-                    const regex = /^\d*\.?\d{0,4}$/;
-                    if (regex.test(value) || value === "") {
-                      setCount(value);
-                    }
-                  }}
-                  onClick={(e) => e.currentTarget.select()}
+                  onChange={(e) => { setCount(e.target.value) }}
                   className={` ${Date.now() < endTime && Date.now() >= startTime ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
                   disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
                 />
@@ -438,7 +427,7 @@ const PreSale = () => {
               {connected ?
                 <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50"} py-1 w-full !h-fit my-6`}>
                   {Date.now() < endTime && Date.now() >= startTime ?
-                    <p className="text-[18px] font-bold my-2">Send APT</p>
+                    <p className="text-[18px] font-bold my-2">Send Aptos</p>
                     :
                     <>
                       <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
@@ -459,11 +448,11 @@ const PreSale = () => {
               <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
-                  <p>{
+                  <p>{ 
                     /* presale ended */
-                    presaleExists && (endTime < Date.now()) ?
-                      formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8') :
-                      formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8')
+                    presaleExists && (endTime < Date.now()) ? 
+                    formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8') :
+                    formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8')
                   }</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>

@@ -26,6 +26,7 @@ const PreSale = () => {
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
 
   const [contributedAmount, setContributedAmount] = useState<any>(null);
+  const [distributedFunds, setDistributedFunds] = useState<number>(0);
   const [presaleCompleted, setPresaleCompleted] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [totalContributors, setTotalContributors] = useState<number>(0);
@@ -217,11 +218,12 @@ const PreSale = () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
       const event = new Events(aptosConfig);
-      const contributionsUpdatedEvent = await event.getSaleFundsDistributedEvent();
-      const amounts = contributionsUpdatedEvent
+      const distributedFundsEvent = await event.getSaleFundsDistributedEvent();
+      const amounts = distributedFundsEvent
         .filter(event => event.data.contributor === account?.address)
         .map(event => event.data.amount);
-      console.log('get distribution: ', Number(amounts[amounts.length - 1]));
+      setDistributedFunds(Number(amounts[amounts.length - 1]));
+      console.log('distributed funds: ', Number(amounts[amounts.length - 1]));
     } catch (error) {
       console.error(error);
     }
@@ -367,7 +369,7 @@ function formatRemainingTime(startTime: number, endTime: number): string {
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }} className="w-full flex flex-col z-20 relative items-center sm:-mt-10">
           <div className="flex flex-col items-center w-full mt-20 sm:mt-[120px]">
             <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-              Join the $RENA Presale
+              $RENA Presale
             </p>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
@@ -388,12 +390,12 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                 : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now())?
                 <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
                   <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
-                  <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatRemainingTime(startTime, endTime)}</p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
                 </p>
                 /* Presale is completed */
                 : presaleExists && (endTime <= Date.now())?
                   <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is COMPLETED</p>
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale has ENDED</p>
                     <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
                   </p>
                 : null
@@ -449,12 +451,23 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                 <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
                   <p>{ 
-                    /* presale ended */
-                    presaleExists && (endTime < Date.now()) ? 
+                    presaleExists && (Date.now() > startTime) ? 
                     formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8') :
-                    formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8')
+                    0
                   }</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
+                </div>
+              </div>
+              <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px]">
+                <p className="text-[18px] font-medium text-[#CCC]">My $RENA</p>
+                <div className="flex items-center font-semibold text-[22px] gap-4">
+                  <p>{ 
+                    /* presale ended */
+                    presaleExists && (endTime < Date.now()) ? 
+                    formatNumberWithDecimals(((distributedFunds as number) / 100000000), '4') :
+                    0
+                  }</p>
+                  <img src="/renegades/rena.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>
             </div>

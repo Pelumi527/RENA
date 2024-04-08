@@ -3,11 +3,12 @@ import { APTOS, CONTRIBUTE, RENA_PRESALE_TESTNET } from "../util/module-endpoint
 import { useDispatch } from "react-redux";
 import { updateLRDLoading, updateLastRenegadesData } from "../state/renegades";
 import { Events } from "../api/events";
+import { MoveUint64Type } from "@aptos-labs/ts-sdk";
 
 const useContribute = () => {
   const { signAndSubmitTransaction } = useWallet();
 
-  const contribute = async (accountAddress: string, aptAmount: number) => {
+  const contribute = async (accountAddress: string, aptAmount: any) => {
     console.log("input==============>", accountAddress, aptAmount)
     const res = await signAndSubmitTransaction({
       sender: accountAddress,

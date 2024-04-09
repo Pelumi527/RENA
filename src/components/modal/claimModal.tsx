@@ -149,7 +149,7 @@ const ClaimModal = () => {
                   </div>
                 </div>
                 <div className="flex items-center justify-center text-[18px] font-semibold gap-1 mt-3">
-                  <p>You can claim max</p><span onClick={() => setCount(renaBalance)} className="text-primary cursor-pointer">{renaBalance} Renegades</span>
+                  <p>You can claim max</p><span onClick={() => setCount(renaBalance)} className="text-primary cursor-pointer">{(Math.floor(renaBalance) as number)} Renegades</span>
                 </div>
               </>
             }

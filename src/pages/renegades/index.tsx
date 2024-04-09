@@ -12,6 +12,8 @@ import useTokenBalance from "../../hook/useTokenBalance";
 import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
 import { updateIsRenaListLoading, updateRenegadesRankData } from "../../state/renegades";
 import { Link } from "react-router-dom";
+import PrimaryButton from "../../components/primaryButton";
+import { NFTtype } from "../../type/renegades";
 
 const renegadesJsonData = require('../../metadata.json');
 
@@ -24,6 +26,16 @@ const Renegades = () => {
   const renegadesRankData = useAppSelector((state) => state.renegadesState.renegadesRankData);
   const isRenaListLoading = useAppSelector((state) => state.renegadesState.isRenaListLoading);
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
+
+  const [selectedItems, setSelectedItems] = useState<NFTtype[]>([]);
+
+  const toggleItemSelection = (itemId: NFTtype) => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.includes(itemId)
+        ? prevSelectedItems.filter((id) => id !== itemId)
+        : [...prevSelectedItems, itemId]
+    );
+  };
 
   useEffect(() => {
     const calculateAndSetRaritiesAndRankings = () => {
@@ -61,6 +73,11 @@ const Renegades = () => {
   const renaBalance = useAppSelector(
     (state) => state.renegadesState.renaBalance
   );
+
+  useEffect(() => {
+    setSelectedItems([])
+  }, [renaBalance]);
+
   const isBalanceLoading = useAppSelector(
     (state) => state.renegadesState.isBalanceLoading
   );
@@ -146,11 +163,13 @@ const Renegades = () => {
             <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
               {renegadesRankData.map((item, index) => (
                 <RenegadesItem
-                  onClick={() => dispatch(toggleItemModal(item))}
+                  onClick={() => dispatch(toggleItemModal([item]))}
                   key={index}
                   avatar={item.token_uri}
                   name={item.token_name}
                   rank={item?.rank}
+                  isSelected={!!item.token_data_id && selectedItems.includes(item)}
+                  onToggleSelected={() => item.token_data_id ? toggleItemSelection(item) : undefined}
                 />
               ))}
             </div>
@@ -176,6 +195,19 @@ const Renegades = () => {
           )}
         </div>
       </div>
+      {selectedItems.length > 0 && (
+        <div className="fixed inset-x-0 bottom-0 bg-[#222] h-20 text-white p-4 gap-10 flex justify-center items-center shadow-md z-50">
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setSelectedItems([])}
+          >
+            Deselect all
+          </button>
+          <PrimaryButton onClick={() => dispatch(toggleItemModal(selectedItems))} className="w-[176px] z-20 relative !font-bold !h-[48px]">
+            Liquify {selectedItems.length} NFT{selectedItems.length > 1 && 's'}
+          </PrimaryButton>
+        </div>
+      )}
       <Footer />
     </div>
   );

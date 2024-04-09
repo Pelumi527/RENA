@@ -17,6 +17,7 @@ import {
   getRaritiesForRenegadeItem,
   levelClass
 } from '../../util/renegadeUtils';
+import Checkbox from '../checkBox';
 
 const LiquifyModal = () => {
   const dispatch = useAppDispatch();
@@ -51,15 +52,15 @@ const LiquifyModal = () => {
   }, [renegades]);
 
   useEffect(() => {
-    if (data?.token_name) {
-      setCurrentRank(getRankForRenegadeItem(data.token_name, renegadesWithRarity));
+    if (data[0]?.token_name) {
+      setCurrentRank(getRankForRenegadeItem(data[0]?.token_name, renegadesWithRarity));
     }
   }, [data, renegadesWithRarity]);
 
   useEffect(() => {
-    if (data?.token_name) {
+    if (data[0]?.token_name) {
       try {
-        const rarities = getRaritiesForRenegadeItem(renegades, data.token_name);
+        const rarities = getRaritiesForRenegadeItem(renegades, data[0].token_name);
         setTraitRarities(rarities.traitRarities);
         setOverallRarity(rarities.overallRarity);
       } catch (error) {
@@ -109,9 +110,9 @@ const LiquifyModal = () => {
   const onLiqify = async () => {
     if (account) {
       try {
-        await liquify(account.address, [data?.token_data_id]);
+        await liquify(account.address, data.map((item: { token_data_id: string; }) => item.token_data_id));
         fetchEvents();
-        dispatch(toggleItemModal(false));
+        dispatch(toggleItemModal([]));
         setProceed(0);
       } catch (error) {
         console.error(error);
@@ -120,24 +121,24 @@ const LiquifyModal = () => {
   };
 
 
-  const animationClass = data ? "animate-slideInUp" : "animate-slideInDown";
+  const animationClass = data.length > 0 ? "animate-slideInUp" : "animate-slideInDown";
 
   return (
     <div
-      className={`${data && "block"
+      className={`${data.length > 0 && "block"
         } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
     >
-      {proceed == 1 && (
+      {proceed == 1 || data.length > 1 ? (
         <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[625px] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
-                Proceed and liquify {data?.token_name}?
+                Proceed and liquify {data.length > 1 ? "NFTs" : data[0]?.token_name}?
               </p>
               <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
                 <Icon
                   onClick={() => {
-                    dispatch(toggleItemModal(false));
+                    dispatch(toggleItemModal([]));
                     setProceed(0);
                   }}
                   icon={"iconoir:cancel"}
@@ -146,9 +147,12 @@ const LiquifyModal = () => {
                 />
               </div>
             </div>
-            <div className="flex my-8 sm:my-12 items-center justify-center">
+            <div className="flex my-8 sm:my-12 items-center justify-center relative">
+              {data.length > 1 &&
+                <div className="absolute -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {data.length - 1} more</div>
+              }
               <img
-                src={data?.token_uri}
+                src={data[0]?.token_uri}
                 className="w-[150px] h-[150px] rounded-[8px]"
               />
               <Icon
@@ -159,7 +163,7 @@ const LiquifyModal = () => {
               <img src="/renegades/rena.svg" className="w-[88px] h-[88pxpx]" />
             </div>
             <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
-              If you proceed you will lose the NFT, send it back to the NFT pool
+              If you proceed you will lose the NFT{data.length > 1 && "s"}, send it back to the NFT pool
               and get 1 $RENA. Are you sure you want to proceed?
             </p>
             <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
@@ -171,7 +175,7 @@ const LiquifyModal = () => {
               </PrimaryButton>
               <SecondaryButton
                 onClick={() => {
-                  dispatch(toggleItemModal(false));
+                  dispatch(toggleItemModal([]));
                   setProceed(0);
                 }}
                 className="!font-bold w-full sm:w-[203px] h-12"
@@ -180,25 +184,16 @@ const LiquifyModal = () => {
               </SecondaryButton>
               <PrimaryButton
                 onClick={onLiqify}
-                className="hidden sm:block !font-bold w-full sm:w-[253px] h-12"
+                className="hidden sm:block !font-bold w-full sm:w-[253px] !h-12"
               >
-                Liquify NFT and get 1 $RENA
+                Liquify {data.length > 1 && data.length} NFT{data.length > 1 && "s"} and get {data.length <= 1 && "1"}$RENA
               </PrimaryButton>
             </div>
             <div className="flex items-center justify-center">
-              {isChecked ? (
-                <img
-                  src="/component/checkbox-active.svg"
-                  className="w-[32px] h-[32px] cursor-pointer"
-                  onClick={toggleCheckbox}
-                />
-              ) : (
-                <img
-                  src="/component/checkbox-inactive.svg"
-                  className="w-[32px] h-[32px] cursor-pointer"
-                  onClick={toggleCheckbox}
-                />
-              )}
+              <Checkbox
+                isChecked={isChecked}
+                onToggle={toggleCheckbox}
+              />
               <p
                 className="text-lg h-[25px] ml-1 font-semibold cursor-pointer"
                 onClick={toggleCheckbox}
@@ -208,19 +203,19 @@ const LiquifyModal = () => {
             </div>
           </div>
         </div>
-      )}
-      {proceed == 0 && (
+      ) : ""}
+      {proceed == 0 && data.length <= 1 && (
         <div className="relative w-full sm:w-[965px] h-[95%] sm:h-fit bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
           <div className="flex w-full justify-between">
             <img
-              src={data?.token_uri}
+              src={data[0]?.token_uri}
               className="hidden sm:block w-[328px] h-[328px] sm:w-[497px] sm:h-[497px] rounded-lg"
             />
             <div className="flex flex-col w-[388px]">
               <div className="flex justify-between h-[62px]">
                 <div className="flex flex-col items-start">
                   <p className="text-[32px] font-bold leading-[38px]">
-                    {data?.token_name}
+                    {data[0]?.token_name}
                   </p>
                   <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center mb-[297px] ${currentRank && levelClass(currentRank)}`}>
                     <Icon icon={'ph:medal-fill'} fontSize={20} className={`mr-1 ${currentRank && levelClass(currentRank)}`} />
@@ -231,7 +226,7 @@ const LiquifyModal = () => {
                 <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
                   <Icon
                     onClick={() => {
-                      dispatch(toggleItemModal(false));
+                      dispatch(toggleItemModal([]));
                       setProceed(0);
                     }}
                     icon={"iconoir:cancel"}
@@ -242,7 +237,7 @@ const LiquifyModal = () => {
               </div>
               <div className="flex justify-center">
                 <img
-                  src={data?.token_uri}
+                  src={data[0]?.token_uri}
                   className="block sm:hidden w-full sm:w-[497px] sm:h-[497px] rounded-lg mt-8"
                 />
               </div>
@@ -307,7 +302,7 @@ const LiquifyModal = () => {
               <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
                 <Icon
                   onClick={() => {
-                    dispatch(toggleItemModal(false));
+                    dispatch(toggleItemModal([]));
                     setProceed(1);
                   }}
                   icon={"iconoir:cancel"}
@@ -331,7 +326,7 @@ const LiquifyModal = () => {
               </div>
               <SecondaryButton
                 onClick={() => {
-                  dispatch(toggleItemModal(false));
+                  dispatch(toggleItemModal([]));
                   setProceed(1);;
                 }}
                 className="!font-bold w-[203px] h-12 mt-14"

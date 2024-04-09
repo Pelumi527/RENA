@@ -463,7 +463,7 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                 <div className="flex items-center font-semibold text-[18px] gap-4">
                   <p>{ 
                     /* presale ended */
-                    presaleExists && (endTime < Date.now()) ? 
+                    presaleExists && (endTime < Date.now()) && distributedFunds !== 0 ? 
                     formatNumberWithDecimals(((distributedFunds as number) / 100000000), '4') :
                     0
                   }</p>

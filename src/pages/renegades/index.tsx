@@ -98,7 +98,7 @@ const Renegades = () => {
               <div className="flex items-center">
                 <p className="text-[26px] font-semibold">$RENA Balance:</p>
                 <p className="text-[26px] text-primary font-bold ml-3 mr-2">
-                  {renaBalance != 0 ? renaBalance : 0}
+                  {renaBalance !== 0 ? renaBalance.toFixed(4) : 0}
                 </p>
                 <img src="/renegades/rena.svg" className="mr-1" />
               </div>

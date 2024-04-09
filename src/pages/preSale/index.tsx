@@ -447,7 +447,7 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                 <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>
               </div>
               <div className="border-b border-[#666] w-full my-6" />
-              <div className="flex w-full items-center justify-between h-[36px] font-semibold text-[18px]">
+              <div className="flex w-full items-center justify-between h-[18px] font-semibold text-[18px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
                 <div className="flex items-center font-semibold text-18px] gap-4">
                   <p>{ 
@@ -458,7 +458,7 @@ function formatRemainingTime(startTime: number, endTime: number): string {
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-between h-[36px] font-semibold text-[18px]">
+              <div className="flex w-full items-center justify-between h-[18px] mt-6 mb-4 font-semibold text-[18px]">
                 <p className="text-[18px] font-medium text-[#CCC]">My $RENA</p>
                 <div className="flex items-center font-semibold text-[18px] gap-4">
                   <p>{ 

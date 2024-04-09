@@ -47,4 +47,5 @@ export const {
   toggleItemModal,
   toggleClaimModal
 } = dialogSlice.actions;
+
 export default dialogSlice.reducer;

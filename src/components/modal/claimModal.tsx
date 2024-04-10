@@ -125,7 +125,7 @@ const ClaimModal = () => {
                 <img src='/renegades/avatar-default.svg' className="w-[194px] h-[194px] rounded-[8px]" />
               }
             </div>
-            {renaBalance > 0 &&
+            {Math.floor(renaBalance) > 0 &&
               <>
                 <div className="flex h-12 justify-center gap-4 items-center mt-9">
                   <div
@@ -154,13 +154,13 @@ const ClaimModal = () => {
               </>
             }
             <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-8 mb-2 w-full">
-              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
-              {renaBalance > 0 ?
+              {Math.floor(renaBalance) > 0 && <PrimaryButton onClick={onClaim} className="block sm:hidden !font-bold text-[18px] w-full sm:w-[203px] h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
+              {Math.floor(renaBalance) > 0 ?
                 <SecondaryButton onClick={onClose} className="!font-bold w-full sm:w-[203px] h-12">Close </SecondaryButton>
                 :
                 <SecondaryButton onClick={onClose} className="!font-bold w-full sm:w-[203px] h-12">Great!</SecondaryButton>
               }
-              {renaBalance > 0 && <PrimaryButton onClick={onClaim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] !h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
+              {Math.floor(renaBalance) > 0 && <PrimaryButton onClick={onClaim} className="hidden sm:block !font-bold text-[18px] w-full sm:w-[203px] !h-12">Claim Renegade{count > 1 && 's'}</PrimaryButton>}
             </div>
           </div>
         </div>

@@ -52,7 +52,7 @@ const ClaimModal = () => {
   }, [lastRenegadesData, renegadesWithRarity]);
 
   const incrementValue = () => {
-    if (renaBalance > count) {
+    if (Math.floor(renaBalance) > count) {
       setCount((prevValue) => prevValue + 1);
     }
   };
@@ -142,14 +142,14 @@ const ClaimModal = () => {
                   />
 
                   <div
-                    className={`w-[72px] h-full ${renaBalance <= count ? 'bg-primary-disable' : 'bg-primary'} rounded-[4px] flex items-center justify-center cursor-pointer`}
+                    className={`w-[72px] h-full ${Math.floor(renaBalance) <= count ? 'bg-primary-disable' : 'bg-primary'} rounded-[4px] flex items-center justify-center cursor-pointer`}
                     onClick={incrementValue}
                   >
                     <Icon icon={'fa6-solid:plus'} fontSize={24} color="black" />
                   </div>
                 </div>
                 <div className="flex items-center justify-center text-[18px] font-semibold gap-1 mt-3">
-                  <p>You can claim max</p><span onClick={() => setCount(renaBalance)} className="text-primary cursor-pointer">{(Math.floor(renaBalance) as number)} Renegades</span>
+                  <p>You can claim max</p><span onClick={() => setCount(Math.floor(renaBalance))} className="text-primary cursor-pointer">{(Math.floor(renaBalance) as number)} Renegades</span>
                 </div>
               </>
             }

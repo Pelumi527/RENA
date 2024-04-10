@@ -125,8 +125,8 @@ const Renegades = () => {
             <div className="h-[110px] w-full bg-gray-loading mt-10 rounded-[8px]" />
             :
             <div
-              onClick={() => { renaBalance != 0 && dispatch(toggleClaimModal(true)) }}
-              className={`flex w-full h-[110px] items-center cursor-pointer justify-center ${renaBalance != 0
+              onClick={() => { Math.floor(renaBalance) != 0 && dispatch(toggleClaimModal(true)) }}
+              className={`flex w-full h-[110px] items-center cursor-pointer justify-center ${Math.floor(renaBalance) != 0
                 ? "bg-primary hover:bg-primary-hover"
                 : "bg-[#222]"
                 } border-2 rounded-[8px] mt-10`}
@@ -138,7 +138,7 @@ const Renegades = () => {
               }}
             >
               <div className="flex items-center">
-                {renaBalance != 0 ? (
+                {Math.floor(renaBalance) != 0 ? (
                   <>
                     <p className="font-medium text-[22px] sm:text-[26px]">
                       You can claim{" "}

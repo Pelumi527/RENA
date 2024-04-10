@@ -18,6 +18,7 @@ import {
   levelClass
 } from '../../util/renegadeUtils';
 import Checkbox from '../checkBox';
+import { updateRefresh } from '../../state/global';
 
 const LiquifyModal = () => {
   const dispatch = useAppDispatch();
@@ -112,14 +113,12 @@ const LiquifyModal = () => {
       try {
         await liquify(account.address, data.map((item: { token_data_id: string; }) => item.token_data_id));
         fetchEvents();
-        dispatch(toggleItemModal([]));
-        setProceed(0);
+        setProceed(2);
       } catch (error) {
         console.error(error);
       }
     }
   };
-
 
   const animationClass = data.length > 0 ? "animate-slideInUp" : "animate-slideInDown";
 
@@ -128,8 +127,8 @@ const LiquifyModal = () => {
       className={`${data.length > 0 && "block"
         } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
     >
-      {proceed == 1 || data.length > 1 ? (
-        <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[625px] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
+      {proceed == 1 || data.length > 1 ? proceed != 2 && (
+        <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[425px] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
           <div className="flex flex-col w-full">
             <div className="flex justify-between items-center">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
@@ -160,11 +159,14 @@ const LiquifyModal = () => {
                 fontSize={34}
                 className="text-primary ml-9 mr-[22px]"
               />
-              <img src="/renegades/rena.svg" className="w-[88px] h-[88pxpx]" />
+              <div className='flex flex-col'>
+                <img src="/renegades/rena.svg" className="w-[88px] h-[88pxpx]" />
+                <p className='text-[20px] font-semibold text-center mt-2'>$RENA</p>
+              </div>
             </div>
             <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
-              If you proceed you will lose the NFT{data.length > 1 && "s"}, send it back to the NFT pool
-              and get 1 $RENA. Are you sure you want to proceed?
+              If you proceed you will lose the NFT{data.length > 1 && "s"}, send {data.length > 1 ? "them" : "it"} back to the NFT pool
+              and get {data.length > 1 ? "" : 1} $RENA. Are you sure you want to proceed?
             </p>
             <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
               <PrimaryButton
@@ -292,9 +294,9 @@ const LiquifyModal = () => {
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
-          className="relative w-full sm:w-[566px] h-[622px] sm:h-[425px] bg-[#222] border-gray-light-3 rounded-[8px] px-6 py-4 overflow-y-scroll"
+          className="relative w-full sm:w-[566px] h-[522px] sm:h-[425px] bg-[#222] border-gray-light-3 rounded-[8px] px-6 py-4 overflow-y-scroll sm:overflow-hidden"
         >
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full mb-6">
             <div className="flex justify-between items-center">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
                 Success!
@@ -302,6 +304,7 @@ const LiquifyModal = () => {
               <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
                 <Icon
                   onClick={() => {
+                    dispatch(updateRefresh(true));
                     dispatch(toggleItemModal([]));
                     setProceed(1);
                   }}
@@ -316,18 +319,19 @@ const LiquifyModal = () => {
             >
               <div className="flex flex-col items-center">
                 <img src="/renegades/rena.svg" className="w-[88px] h-[88px]" />
-                <p className="text-[26px] font-bold mt-1">1 $RENA</p>
+                <p className="text-[26px] font-bold mt-1">{data.length} $RENA</p>
                 <p className="text-[22px] font-bold mt-3 leading-[24px] text-center ">
                   Hooray! You’ve got your $RENA back!
                 </p>
                 <p className="text-[18px] font-semibold text-center">
-                  If you want you can use it to claim a new Renegades NFT!
+                  If you want you can use {data.length > 1 ? "them" : "it"} to claim {data.length > 1 ? "" : "a"} new Renegades NFT{data.length > 1 && "s"}!
                 </p>
               </div>
               <SecondaryButton
                 onClick={() => {
+                  dispatch(updateRefresh(true));
                   dispatch(toggleItemModal([]));
-                  setProceed(1);;
+                  setProceed(1);
                 }}
                 className="!font-bold w-[203px] h-12 mt-14"
               >

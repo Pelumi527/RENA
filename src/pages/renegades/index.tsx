@@ -14,6 +14,7 @@ import { updateIsRenaListLoading, updateRenegadesRankData } from "../../state/re
 import { Link } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton";
 import { NFTtype } from "../../type/renegades";
+import { updateRefresh } from "../../state/global";
 
 const renegadesJsonData = require('../../metadata.json');
 
@@ -25,6 +26,7 @@ const Renegades = () => {
   const renegadesData = useAppSelector((state) => state.renegadesState.renegadesData);
   const renegadesRankData = useAppSelector((state) => state.renegadesState.renegadesRankData);
   const isRenaListLoading = useAppSelector((state) => state.renegadesState.isRenaListLoading);
+  const refresh = useAppSelector((state) => state.globalState.refresh);
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
 
   const [selectedItems, setSelectedItems] = useState<NFTtype[]>([]);
@@ -76,7 +78,8 @@ const Renegades = () => {
 
   useEffect(() => {
     setSelectedItems([])
-  }, [renaBalance]);
+    dispatch(updateRefresh(false));
+  }, [refresh]);
 
   const isBalanceLoading = useAppSelector(
     (state) => state.renegadesState.isBalanceLoading

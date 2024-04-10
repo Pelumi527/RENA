@@ -4,12 +4,14 @@ interface globalStates {
   step: number;
   initialized: boolean;
   visitorMode: boolean;
+  refresh: boolean;
 }
 
 const initialState: globalStates = {
   step: 0,
   initialized: false,
-  visitorMode: false
+  visitorMode: false,
+  refresh: false
 };
 
 export const globalSlice = createSlice({
@@ -30,8 +32,11 @@ export const globalSlice = createSlice({
     updateVisitorMode: (state, action: PayloadAction<boolean>) => {
       state.visitorMode = action.payload;
     },
+    updateRefresh: (state, action: PayloadAction<boolean>) => {
+      state.refresh = action.payload;
+    },
   },
 });
 
-export const { resetGlobal, updateStep, updateInitialized, updateVisitorMode } = globalSlice.actions;
+export const { resetGlobal, updateStep, updateInitialized, updateVisitorMode, updateRefresh } = globalSlice.actions;
 export default globalSlice.reducer;

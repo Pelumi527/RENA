@@ -83,7 +83,7 @@ const ClaimModal = () => {
   const onClaim = async () => {
     if (account) {
       try {
-        await claim(account.address, Number(count.toFixed(0)));
+        await claim(account.address, Math.floor(count));
         fetchEvents();
         setProceed(proceed + 1);
       } catch (error) {
@@ -136,7 +136,7 @@ const ClaimModal = () => {
                   </div>
                   <input
                     type="text"
-                    value={Number(count.toFixed(0))}
+                    value={Math.floor(count)}
                     onChange={(e) => { renaBalance < Number(e.target.value) ? setCount(renaBalance) : setCount(Number(e.target.value)) }}
                     className="w-[95px] h-full text-center rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300"
                   />

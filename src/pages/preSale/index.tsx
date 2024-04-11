@@ -378,9 +378,33 @@ const PreSale = () => {
       <div className="w-full h-full pb-16">
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }} className="w-full flex flex-col z-20 relative items-center sm:-mt-10">
           <div className="flex flex-col items-center w-full mt-20 sm:mt-[120px]">
-            <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-              $RENA Presale
-            </p>
+            {
+              /* Presale is not created yet */
+              !presaleExists ?
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  $RENA Presale
+                </p>
+                /* Presale is scheduled */
+                : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
+                  /* add another check to see if the presale is scheduled or live */
+                  <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                    Join the $RENA Presale
+                  </p>
+                  /* Presale is live */
+                  : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
+                    <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                      Join the $RENA Presale
+                    </p>
+                    /* Presale is completed */
+                    : presaleExists && (endTime <= Date.now()) ?
+                      <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                        $RENA Presale
+                      </p>
+                    : 
+                    <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                      $RENA Presale
+                    </p>
+            }
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
                 /* Presale is not created yet */

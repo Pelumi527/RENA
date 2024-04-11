@@ -438,14 +438,7 @@ const PreSale = () => {
               </div>
               {connected ?
                 <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
-                  {Date.now() < endTime && Date.now() >= startTime ?
-                    <p className="text-[18px] font-bold my-2">Send Aptos</p>
-                    :
-                    <>
-                      <p className="text-[18px] h-[22px] font-bold">GET $RENA</p>
-                      <p className="text-[16px] h-[22px] font-semibold">Coming soon</p>
-                    </>
-                  }
+                  <p className="text-[18px] font-bold my-2">Send APT</p>
                 </PrimaryButton>
                 :
                 <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">

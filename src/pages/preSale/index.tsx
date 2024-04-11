@@ -210,7 +210,7 @@ const PreSale = () => {
   }, []);
 
   const onContribute = async () => {
-    console.log(Date.now(), endTime, startTime)
+    console.log(Date.now(), endTime, startTime, parseFloat(count))
     if (account && count && Date.now() < endTime && Date.now() >= startTime) {
       try {
         await contribute(account.address, parseFloat(count));
@@ -400,10 +400,10 @@ const PreSale = () => {
                       <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
                         $RENA Presale
                       </p>
-                    : 
-                    <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                      $RENA Presale
-                    </p>
+                      :
+                      <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                        $RENA Presale
+                      </p>
             }
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
@@ -451,7 +451,13 @@ const PreSale = () => {
                   type="text"
                   placeholder="0.00"
                   value={count}
-                  onChange={(e) => { setCount(e.target.value) }}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    const regex = /^\d*\.?\d{0,4}$/;
+                    if (value === '' || regex.test(value)) {
+                      setCount(value);
+                    }
+                  }}
                   className={` ${Date.now() < endTime && Date.now() >= startTime ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
                   disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
                 />

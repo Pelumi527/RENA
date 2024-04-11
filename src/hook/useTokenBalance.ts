@@ -19,6 +19,7 @@ const useTokenBalance = () => {
     const res = await APTOS.view({
       payload,
     });
+    console.log(res);
     dispatch(updateRenaBalance(parseInt(res[0] as any) / ONE_RENEGADES));
   };
   return updateTokenBalance;

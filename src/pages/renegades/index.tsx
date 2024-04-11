@@ -10,7 +10,7 @@ import { useAppSelector } from "../../state/hooks";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
-import { updateIsRenaListLoading, updateRenegadesRankData } from "../../state/renegades";
+import { updateIsRenaListLoading, updateRenaBalance, updateRenegadesData, updateRenegadesRankData } from "../../state/renegades";
 import { Link } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton";
 import { NFTtype } from "../../type/renegades";
@@ -96,6 +96,9 @@ const Renegades = () => {
       } catch (error) {
         console.error(error);
       }
+    } else {
+      dispatch(updateRenaBalance(0));
+      dispatch(updateRenegadesData([]))
     }
   };
 

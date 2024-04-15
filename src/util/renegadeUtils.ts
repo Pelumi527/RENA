@@ -48,9 +48,8 @@ export function calculateTraitRarityScore(renegades: RenegadeItem[], traitValue:
         const trait = renegade.attributes.find(t => t.trait_type === traitType && t.value === traitValue);
         return trait ? acc + 1 : acc;
     }, 0);
-    const totalItems = renegades.length;
     if (totalOccurrences === 0) return 0;
-    return totalOccurrences / totalItems * 100;
+    return totalOccurrences;
 }
 
 export function getRaritiesForRenegadeItem(renegades: RenegadeItem[], itemName: string): { overallRarity: number; traitRarities: Record<string, any> } {
@@ -62,8 +61,11 @@ export function getRaritiesForRenegadeItem(renegades: RenegadeItem[], itemName: 
     const traitRarities: Record<string, any> = {};
 
     item.attributes.forEach((trait) => {
-        const rarityScore = calculateTraitRarityScore(renegades, trait.value, trait.trait_type);
-        traitRarities[trait.trait_type] = [rarityScore, trait.value];
+        const totalOccurrences = calculateTraitRarityScore(renegades, trait.value, trait.trait_type);
+        const collectionSize = 5000;
+        const traitRarityPercentage = (totalOccurrences / collectionSize) * 100;
+        const rarityScore = 1 / (traitRarityPercentage / 100);
+        traitRarities[trait.trait_type] = [traitRarityPercentage, trait.value];
         overallRarity += rarityScore;
     });
 

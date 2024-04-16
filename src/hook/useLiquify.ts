@@ -1,5 +1,5 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { APTOS, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../util/module-endpoints";
+import { APTOS, LIQUID_COIN_OBJECT_TESTNET, LIQUIFY_WITH_ADDRESS, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../util/module-endpoints";
 
 const useLiquify = () => {
   const { signAndSubmitTransaction } = useWallet();
@@ -8,8 +8,8 @@ const useLiquify = () => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
-        function: `${RENA_MODULE_TESTNET}::${LIQUIFY}`,
-        typeArguments: [RENA_COIN_TYPE_TESTNET],
+        function: `${RENA_MODULE_TESTNET}::${LIQUIFY_WITH_ADDRESS}`,
+        typeArguments: [],
         functionArguments: [LIQUID_COIN_OBJECT_TESTNET, tokens],
       },
     });

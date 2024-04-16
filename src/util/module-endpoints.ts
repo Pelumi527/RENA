@@ -13,6 +13,7 @@ export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
 export const CLAIM = "claim";
 export const LIQUIFY = "liquify";
 export const CONTRIBUTE = "contribute";
+export const LIQUIFY_WITH_ADDRESS = "liquify_rena_coin_from_nft_address";
 
 // view functions
 export const TREASURY_ADDRESS = "treasury_address";

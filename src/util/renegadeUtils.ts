@@ -30,7 +30,7 @@ export interface RenegadeItemWithRarity extends RenegadeItem {
 }
 
 export function calculateRankings(renegadesWithRarity: RenegadeItemWithRarity[]): RenegadeItemWithRarity[] {
-    return renegadesWithRarity.sort((a, b) => b.overallRarity - a.overallRarity)
+    return renegadesWithRarity.sort((a, b) => a.overallRarity - b.overallRarity)
         .map((item, index) => ({ ...item, rank: index + 1 }));
 }
 
@@ -57,7 +57,7 @@ export function getRaritiesForRenegadeItem(renegades: RenegadeItem[], itemName: 
     if (!item) {
         throw new Error('Item not found');
     }
-    let overallRarity = 0;
+    let overallRarity = 1;
     const traitRarities: Record<string, any> = {};
 
     const mostCommonTraitCounts: Record<string, number> = {
@@ -69,13 +69,13 @@ export function getRaritiesForRenegadeItem(renegades: RenegadeItem[], itemName: 
     };
 
     item.attributes.forEach((trait) => {
-        const totalOccurrences = calculateTraitRarityScore(renegades, trait.value, trait.trait_type);
-        const collectionSize = 5000; 
+        const totalOccurrences = Number(trait.value);
+        const collectionSize = 5000;
         const traitRarityPercentage = (totalOccurrences / collectionSize) * 100;
-        const mostCommonCount = mostCommonTraitCounts[trait.trait_type] || 1; 
-        const rarityScore = 1 / (totalOccurrences / mostCommonCount);
+        const mostCommonCount = mostCommonTraitCounts[trait.trait_type] || 1;
+        // const rarityScore = 1 / (totalOccurrences / mostCommonCount);
         traitRarities[trait.trait_type] = [traitRarityPercentage, trait.value];
-        overallRarity += rarityScore;
+        overallRarity *= totalOccurrences;
     });
 
     return { overallRarity, traitRarities };

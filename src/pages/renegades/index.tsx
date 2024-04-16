@@ -49,6 +49,7 @@ const Renegades = () => {
         };
       });
       const rankedItems = calculateRankings(itemsWithCalculatedRarities);
+      console.log('rankedItems', rankedItems)
       setRenegadesWithRarity(rankedItems);
     };
     calculateAndSetRaritiesAndRankings();

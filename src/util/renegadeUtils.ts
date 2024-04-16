@@ -60,11 +60,20 @@ export function getRaritiesForRenegadeItem(renegades: RenegadeItem[], itemName: 
     let overallRarity = 0;
     const traitRarities: Record<string, any> = {};
 
+    const mostCommonTraitCounts: Record<string, number> = {
+        'BODY': 2156,
+        'EXPRESSION': 845,
+        'HAIR': 203,
+        'OUTFIT': 172,
+        'BACKGROUND': 657
+    };
+
     item.attributes.forEach((trait) => {
         const totalOccurrences = calculateTraitRarityScore(renegades, trait.value, trait.trait_type);
-        const collectionSize = 5000;
+        const collectionSize = 5000; 
         const traitRarityPercentage = (totalOccurrences / collectionSize) * 100;
-        const rarityScore = 1 / (traitRarityPercentage / 100);
+        const mostCommonCount = mostCommonTraitCounts[trait.trait_type] || 1; 
+        const rarityScore = 1 / (totalOccurrences / mostCommonCount);
         traitRarities[trait.trait_type] = [traitRarityPercentage, trait.value];
         overallRarity += rarityScore;
     });

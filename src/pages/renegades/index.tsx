@@ -209,6 +209,12 @@ const Renegades = () => {
           >
             Deselect all
           </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => setSelectedItems(renegadesRankData)}
+          >
+            Select all
+          </button>
           <PrimaryButton onClick={() => dispatch(toggleItemModal(selectedItems))} className="w-[176px] z-20 relative !font-bold !h-[48px]">
             Liquify {selectedItems.length} NFT{selectedItems.length > 1 && 's'}
           </PrimaryButton>

@@ -70,7 +70,7 @@ const Renegades = () => {
         dispatch(updateRenegadesRankData(updatedRenegadesData));
       }
     }
-  }, [renegadesData, renegadesWithRarity]);
+  }, [renegadesData, renegadesWithRarity, refresh]);
 
   const renaBalance = useAppSelector(
     (state) => state.renegadesState.renaBalance

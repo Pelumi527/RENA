@@ -11,9 +11,15 @@ const useTokenList = () => {
       collectionAddress: COLLECTION_ADDRESS,
     });
     console.log("token list => ", res)
-    dispatch(
-      updateRenegadesData(res.map((data: any) => data.current_token_data))
-    );
+    if (res.length == 0) {
+      dispatch(
+        updateRenegadesData([])
+      );
+    } else {
+      dispatch(
+        updateRenegadesData(res.map((data: any) => data.current_token_data))
+      );
+    }
   };
 
   return updateTokenList;

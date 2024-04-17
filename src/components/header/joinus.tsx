@@ -11,7 +11,7 @@ const JoinUs = () => {
         </div>
       </a>
       <a
-        href={`#`}
+        href={`https://github.com/TowneSquare/RENA-smart-contract`}
         target="_blank"
         className="w-12"
       >

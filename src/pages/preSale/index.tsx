@@ -17,7 +17,7 @@ import { useAppSelector } from '../../state/hooks';
 
 const PreSale = () => {
   const dispatch = useDispatch();
-  const [count, setCount] = useState<string>("0");
+  const [count, setCount] = useState<string>("0.00");
   const { account, connected } = useWallet();
   const [liveTime, setLiveTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number>(0);

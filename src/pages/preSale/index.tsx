@@ -338,18 +338,14 @@ const PreSale = () => {
   // format timestamp
   function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
-    const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZoneName: 'short' // include timezone abbreviation
-    };
 
-    const formattedDate = new Intl.DateTimeFormat('en-GB', options).format(date);
-    return formattedDate;
+    const timeString = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const day = date.toLocaleDateString('en-US', { day: '2-digit' });
+    const month = date.toLocaleDateString('en-US', { month: 'long' });
+    const year = date.toLocaleDateString('en-US', { year: 'numeric' });
+
+    // dd/mm/yyyy @ hh:mm am/pm UTC
+    return `${day} ${month} ${year} @ ${timeString.toLowerCase()}  UTC`;
   }
 
   // format remaining time to date given two dates

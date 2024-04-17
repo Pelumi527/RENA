@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { APTOS, COLLECTION_ADDRESS } from "../util/module-endpoints";
-import { updateRenegadesData } from "../state/renegades";
+import { updateRenegadesData, updateRenegadesRankData } from "../state/renegades";
 
 const useTokenList = () => {
   const dispatch = useDispatch();
@@ -11,10 +11,10 @@ const useTokenList = () => {
       collectionAddress: COLLECTION_ADDRESS,
     });
     console.log("token list => ", res)
-    if (res.length == 0) {
-      dispatch(
-        updateRenegadesData([])
-      );
+    if (res.length < 1) {
+      console.log("empty", res.length);
+      dispatch(updateRenegadesData([]));
+      dispatch(updateRenegadesRankData([]));
     } else {
       dispatch(
         updateRenegadesData(res.map((data: any) => data.current_token_data))

@@ -15,6 +15,8 @@ import { Link } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton";
 import { NFTtype } from "../../type/renegades";
 import { updateRefresh } from "../../state/global";
+import Cookies from "js-cookie";
+import useLiquify from "../../hook/useLiquify";
 
 const renegadesJsonData = require('../../metadata.json');
 
@@ -28,8 +30,17 @@ const Renegades = () => {
   const isRenaListLoading = useAppSelector((state) => state.renegadesState.isRenaListLoading);
   const refresh = useAppSelector((state) => state.globalState.refresh);
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
-
+  const [skip, setSkip] = useState(false);
   const [selectedItems, setSelectedItems] = useState<NFTtype[]>([]);
+  const liquify = useLiquify();
+
+  const updateCookie = () => {
+    const dontShowAgain = Cookies.get('dontShowAgain');
+    console.log("dontShowAgain", dontShowAgain);
+    if (dontShowAgain === 'true') {
+      setSkip(true);
+    }
+  }
 
   const toggleItemSelection = (itemId: NFTtype) => {
     setSelectedItems((prevSelectedItems) =>
@@ -64,7 +75,8 @@ const Renegades = () => {
           return { ...renegade, rank: foundRankedItem.rank };
         }
         return renegade;
-      });
+      }).sort((a, b) => (a.rank || 0) - (b.rank || 0));
+
       if (updatedRenegadesData.length > 0) {
         console.log("updatedRenegadesData>>>>", updatedRenegadesData);
         dispatch(updateIsRenaListLoading(false));
@@ -89,6 +101,10 @@ const Renegades = () => {
     (state) => state.renegadesState.isLoading
   );
 
+  useEffect(() => {
+    updateCookie();
+  }, []);
+
   const fetchEvents = async () => {
     if (account) {
       try {
@@ -107,6 +123,16 @@ const Renegades = () => {
     fetchEvents();
   }, [connected, account]);
 
+  const onLiqify = async () => {
+    if (account) {
+      try {
+        await liquify(account.address, selectedItems.map((item) => item.token_data_id as string));
+        fetchEvents();
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <div className="parallax relative" id="cred-point">
@@ -216,7 +242,7 @@ const Renegades = () => {
           >
             Select all
           </button>
-          <PrimaryButton onClick={() => dispatch(toggleItemModal(selectedItems))} className="w-[176px] z-20 relative !font-bold !h-[48px]">
+          <PrimaryButton onClick={() => skip ? onLiqify() : dispatch(toggleItemModal(selectedItems))} className="w-[176px] z-20 relative !font-bold !h-[48px]">
             Liquify {selectedItems.length} NFT{selectedItems.length > 1 && 's'}
           </PrimaryButton>
         </div>

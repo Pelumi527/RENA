@@ -188,7 +188,7 @@ const LiquifyModal = () => {
                 onClick={onLiqify}
                 className="hidden sm:block !font-bold w-full sm:w-[253px] !h-12"
               >
-                Liquify {data.length > 1 && data.length} NFT{data.length > 1 && "s"} and get {data.length <= 1 && "1"}$RENA
+                Liquify {data.length > 1 && data.length} NFT{data.length > 1 && "s"} and get {data.length <= 1 && "1 "}$RENA
               </PrimaryButton>
             </div>
             <div className="flex items-center justify-center">

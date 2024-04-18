@@ -16,13 +16,13 @@ interface dialogStates {
 
 const initialState: dialogStates = {
   isLoading: false,
-  isBalanceLoading: false,
+  isBalanceLoading: true,
   renegadesData: [],
   renegadesRankData: [],
   lastRenegadesData: undefined,
   renaBalance: 0,
   isRenaLoading: true,
-  isRenaListLoading : true,
+  isRenaListLoading: true,
   isLRDLoading: false,
   aptConts: 0
 };
@@ -39,7 +39,9 @@ export const dialogSlice = createSlice({
       state.renegadesData = action.payload;
     },
     updateRenaBalance: (state, action: PayloadAction<number>) => {
-      state.isBalanceLoading = true;
+      if (action.payload > 0) {
+        state.isBalanceLoading = false;
+      }
       state.renaBalance = action.payload;
     },
     updateLastRenegadesData: (state, action: PayloadAction<NFTtype>) => {

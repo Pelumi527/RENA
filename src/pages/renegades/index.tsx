@@ -33,6 +33,12 @@ const Renegades = () => {
   const [skip, setSkip] = useState(false);
   const [selectedItems, setSelectedItems] = useState<NFTtype[]>([]);
   const liquify = useLiquify();
+  const isBalanceLoading = useAppSelector(
+    (state) => state.renegadesState.isBalanceLoading
+  );
+  const isLoading = useAppSelector(
+    (state) => state.renegadesState.isLoading
+  );
 
   const updateCookie = () => {
     const dontShowAgain = Cookies.get('dontShowAgain');
@@ -94,13 +100,6 @@ const Renegades = () => {
     dispatch(updateRefresh(false));
   }, [refresh]);
 
-  const isBalanceLoading = useAppSelector(
-    (state) => state.renegadesState.isBalanceLoading
-  );
-  const isLoading = useAppSelector(
-    (state) => state.renegadesState.isLoading
-  );
-
   useEffect(() => {
     updateCookie();
   }, []);
@@ -142,7 +141,7 @@ const Renegades = () => {
         <div className="flex flex-col w-[90%] sm:w-[1100px]">
           <div className="mt-12 flex sm:flex-row flex-col justify-between sm:h-[47px] sm:items-end">
             <p className="font-bold text-[42px]">My Renegades</p>
-            {!isBalanceLoading ?
+            {isBalanceLoading ?
               <div className="bg-gray-loading w-[228px] h-[30px]" />
               :
               <div className="flex items-center">
@@ -154,7 +153,7 @@ const Renegades = () => {
               </div>
             }
           </div>
-          {!isBalanceLoading ?
+          {isBalanceLoading ?
             <div className="h-[110px] w-full bg-gray-loading mt-10 rounded-[8px]" />
             :
             <div
@@ -208,7 +207,7 @@ const Renegades = () => {
             </div>
           ) : (
             <div className={`flex flex-col mt-[120px] mb-[219px] items-center w-full`}>
-              {connected && !isRenaListLoading &&
+              {connected && !isBalanceLoading &&
                 <>
                   <img
                     src="/renegades/avatar-default.png"

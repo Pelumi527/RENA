@@ -10,6 +10,7 @@ import useTokenBalance from "../../hook/useTokenBalance";
 import useClaim from "../../hook/useClaim";
 import LoadingImageClaim from "../loadingImageClaim";
 import { RenegadeItemWithRarity, calculateRankings, getRankForRenegadeItem, getRaritiesForRenegadeItem, levelClass } from "../../util/renegadeUtils";
+import { Tooltip, Typography } from "@material-tailwind/react";
 
 const ClaimModal = () => {
   const updateTokenList = useTokenList();
@@ -112,11 +113,26 @@ const ClaimModal = () => {
                 <>
                   <LoadingImageClaim url={lastRenegadesData?.token_uri} className="w-[194px] h-[194px] rounded-[8px] mt-2" />
                   <p className="text-[26px] font-semibold mt-1" >{lastRenegadesData?.token_name}</p>
-                  <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center ${currentRank && levelClass(currentRank)}`}>
-                    <Icon icon={'ph:medal-fill'} fontSize={20} className={`mr-1 ${currentRank && levelClass(currentRank)}`} />
-                    Rank {currentRank}
-                    <p className="text-[#666] font-semibold">/5000</p>
-                  </div>
+
+                  <Tooltip
+                    animate={{
+                      mount: { scale: 1, y: 0 },
+                      unmount: { scale: 0, y: 25 },
+                    }}
+                    className="z-[100]"
+                    content={
+                      <div className="w-fit h-fit text-[14px] font-medium p-2 bg-[#000] border border-[#626262] rounded-[4px] z-[100] relative">
+                        {currentRank && levelClass(currentRank)[1]}
+                      </div>
+                    }
+                  >
+                    <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center ${currentRank && levelClass(currentRank)[0]}`}>
+                      <Icon icon={'ph:medal-fill'} fontSize={20} className={`mr-1 ${currentRank && levelClass(currentRank)[0]}`} />
+                      Rank {currentRank}
+                      <p className="text-[#666] font-semibold">/5000</p>
+                    </div>
+                  </Tooltip>
+
                   {lastRenegadesData?.token_count && lastRenegadesData?.token_count > 1 &&
                     <div className="absolute -right-[60px] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {lastRenegadesData?.token_count - 1} more</div>
                   }

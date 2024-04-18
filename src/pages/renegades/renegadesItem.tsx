@@ -4,6 +4,7 @@ import { useAppSelector } from "../../state/hooks";
 import { levelClass } from "../../util/renegadeUtils";
 import Checkbox from "../../components/checkBox";
 import React from 'react';
+import { Tooltip } from "@material-tailwind/react";
 
 interface Props {
   avatar?: string;
@@ -34,11 +35,24 @@ const RenegadesItem = ({ avatar, name, rank, onClick, isSelected, onToggleSelect
         :
         <p className="text-[18px] sm:text-[22px] font-semibold text-center mt-4">{name}</p>
       }
-      <div className={`text-[15px] font-bold flex items-center justify-center ${rank && levelClass(rank)}`}>
-        <Icon icon={'ph:medal-fill'} fontSize={16} className={`mr-1 ${rank && levelClass(rank)}`} />
-        Rank {rank}
-        <p className="text-[#666] font-semibold">/5000</p>
-      </div>
+      <Tooltip
+        animate={{
+          mount: { scale: 1, y: 0 },
+          unmount: { scale: 0, y: 25 },
+        }}
+        className="z-[100]"
+        content={
+          <div className="w-fit h-fit text-[14px] font-medium p-2 bg-[#000] border border-[#626262] rounded-[4px] z-[100] relative">
+            {rank && levelClass(rank)[1]}
+          </div>
+        }
+      >
+        <div className={`text-[15px] font-bold flex items-center justify-center ${rank && levelClass(rank)[0]}`}>
+          <Icon icon={'ph:medal-fill'} fontSize={16} className={`mr-1 ${rank && levelClass(rank)[0]}`} />
+          Rank {rank}
+          <p className="text-[#666] font-semibold">/5000</p>
+        </div>
+      </Tooltip>
     </div>
   );
 };

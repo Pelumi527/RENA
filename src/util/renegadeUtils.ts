@@ -1,14 +1,14 @@
 export const levelClass = (rank: number) => {
     if (rank >= 1 && rank <= 50) {
-        return "text-[#B83032]";
+        return ["text-[#B83032]", "Legendary"];
     } else if (rank >= 51 && rank <= 300) {
-        return "text-[#FFC539]";
+        return ["text-[#FFC539]", "Epic"];
     } else if (rank >= 301 && rank <= 1050) {
-        return "text-[#6F42C1]";
+        return ["text-[#6F42C1]", "Rare"];
     } else if (rank >= 1051 && rank <= 2050) {
-        return "text-[#218380]";
+        return ["text-[#218380]", "Uncommon"];
     } else if (rank >= 2051 && rank <= 5000) {
-        return "text-[#CCCCCC]";
+        return ["text-[#CCCCCC]", "Common"];
     } else {
         return "text-gray-500";
     }

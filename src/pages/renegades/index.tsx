@@ -32,6 +32,7 @@ const Renegades = () => {
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
   const [skip, setSkip] = useState(false);
   const [selectedItems, setSelectedItems] = useState<NFTtype[]>([]);
+  const multistate = useAppSelector((state) => state.renegadesState.multistate);
   const liquify = useLiquify();
   const isBalanceLoading = useAppSelector(
     (state) => state.renegadesState.isBalanceLoading
@@ -102,7 +103,7 @@ const Renegades = () => {
 
   useEffect(() => {
     updateCookie();
-  }, []);
+  }, [multistate]);
 
   const fetchEvents = async () => {
     if (account) {

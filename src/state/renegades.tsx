@@ -12,6 +12,7 @@ interface dialogStates {
   isRenaListLoading: boolean;
   isLRDLoading: boolean;
   aptConts: number;
+  multistate: boolean;
 }
 
 const initialState: dialogStates = {
@@ -24,7 +25,8 @@ const initialState: dialogStates = {
   isRenaLoading: true,
   isRenaListLoading: true,
   isLRDLoading: false,
-  aptConts: 0
+  aptConts: 0,
+  multistate: false
 };
 
 export const dialogSlice = createSlice({
@@ -60,6 +62,9 @@ export const dialogSlice = createSlice({
     updateAptConts: (state, action: PayloadAction<number>) => {
       state.aptConts = action.payload;
     },
+    updateMultistate: (state, action: PayloadAction<boolean>) => {
+      state.multistate = action.payload;
+    },
   },
   extraReducers: (builder) => { },
 });
@@ -72,6 +77,7 @@ export const {
   updateRenegadesRankData,
   updateLRDLoading,
   updateAptConts,
-  updateIsRenaListLoading
+  updateIsRenaListLoading,
+  updateMultistate
 } = dialogSlice.actions;
 export default dialogSlice.reducer;

@@ -19,6 +19,7 @@ import {
 } from '../../util/renegadeUtils';
 import Checkbox from '../checkBox';
 import { updateRefresh } from '../../state/global';
+import { updateMultistate } from '../../state/renegades';
 
 const LiquifyModal = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +35,7 @@ const LiquifyModal = () => {
   const [traitRarities, setTraitRarities] = useState<Record<string, any>>({});
   const [overallRarity, setOverallRarity] = useState<number>(0);
   const [currentRank, setCurrentRank] = useState<number | undefined>(undefined);
-
+  const multistate = useAppSelector((state) => state.renegadesState.multistate);
   const renegades: RenegadeItemWithRarity[] = require('../../metadata.json');
 
   useEffect(() => {
@@ -84,7 +85,7 @@ const LiquifyModal = () => {
     if (dontShowAgain === 'true') {
       setSkip(true);
     }
-  }, []);
+  }, [multistate]);
 
   const toggleCheckbox = () => {
     const newIsChecked = !isChecked;
@@ -92,8 +93,16 @@ const LiquifyModal = () => {
 
     if (newIsChecked) {
       Cookies.set('dontShowAgain', 'true', { expires: 365 });
+      setTimeout(() => {
+        dispatch(updateMultistate(true))
+      }, 500);
+      setSkip(true);
     } else {
       Cookies.remove('dontShowAgain');
+      setTimeout(() => {
+        dispatch(updateMultistate(false))
+      }, 500);
+      setSkip(false);
     }
   };
 

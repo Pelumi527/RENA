@@ -237,7 +237,7 @@ const Renegades = () => {
             Deselect all
           </button>
           <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            className={`${renegadesRankData.length == selectedItems.length && 'cursor-not-allowed text-[#c1c1c1]'} text-white font-bold py-2 px-4 rounded`}
             onClick={() => setSelectedItems(renegadesRankData)}
           >
             Select all

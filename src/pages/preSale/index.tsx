@@ -430,7 +430,17 @@ const PreSale = () => {
                         </p>
                         : null
               }
-              <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] my-[56px]">
+              {Date.now() < endTime && Date.now() >= startTime ?
+                <div className='flex justify-center items-center border-2 my-10 bg-[#2DCA63] bg-opacity-20 rounded-[8px] border-[#2DCA63] text-[22px] font-semibold w-[352px] h-[42px]'>
+                  You are eligible
+                </div>
+                :
+                <div className='flex flex-col justify-center items-center border-2 my-10 bg-[#FF4040] bg-opacity-20 rounded-[8px] border-[#FF4040] text-[22px] font-semibold w-[352px] h-[66px]'>
+                  You are not eligible
+                  <p className='text-[16px] font-semibold'>See requirements</p>
+                </div>
+              }
+              <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] mb-[56px]">
                 <p>Total Raised</p>
                 <div className="flex items-center font-semibold text-[22px] gap-4">
                   {
@@ -500,6 +510,11 @@ const PreSale = () => {
                 </div>
               </div>
             </div>
+            <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6 mt-4">
+              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Public Presale</p>
+              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
+            </div>
+
           </div>
           <Sidebar />
         </div>

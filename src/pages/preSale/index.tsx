@@ -5,51 +5,63 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
 import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
-import { APTOS, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, REMAINING_TIME, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS } from "../../util/module-endpoints";
+import { APTOS, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, PUBLIC_PRESALE, REMAINING_TIME, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS, WHITELISTED_PRESALE } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
 import useContribute from '../../hook/useContribute';
+import useWhitelistContribute from '../../hook/useWhitelistContribute';
 import { Icon } from '@iconify/react';
 import { useDispatch } from 'react-redux';
 import { Address } from 'aptos/src/generated';
 import { toggleSidebar, toggleWalletPanel } from '../../state/dialog';
 import { useAppSelector } from '../../state/hooks';
+import { set } from 'lodash';
 
 const PreSale = () => {
   const dispatch = useDispatch();
   const [count, setCount] = useState<string>("0.00");
+  const [whitelistCount, setWhitelistCount] = useState<string>("0.00");
   const { account, connected } = useWallet();
   const [liveTime, setLiveTime] = useState<number>(0);
   const [startTime, setStartTime] = useState<number>(0);
+  const [whitelistStartTime, setWhitelistStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
+  const [whitelistEndTime, setWhitelistEndTime] = useState<number>(0);
   const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
   const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
+  const [whitelistPresaleExists, setWhitelistPresaleExists] = useState<boolean>(false);
   const bSidebar = useAppSelector((state) => state.dialogState.bSidebar);
   const [contributedAmount, setContributedAmount] = useState<any>(null);
+  const [whitelistContributedAmount, setWhitelistContributedAmount] = useState<any>(null);
   const [distributedFunds, setDistributedFunds] = useState<number>(0);
   const [presaleCompleted, setPresaleCompleted] = useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [totalContributors, setTotalContributors] = useState<number>(0);
   const [totalRaisedFunds, setTotalRaisedFunds] = useState<number>(0);
+  const [whitelistTotalRaisedFunds, setWhitelistTotalRaisedFunds] = useState<number>(0);
   const [finalTotalRaisedFunds, setFinalTotalRaisedFunds] = useState<number>(0);
   const [treasuryAddress, setTreasuryAddress] = useState<string>('');
 
   const [contributors, setContributors] = useState<any[]>([]);
 
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [whitelistShouldFetch, setWhitelistShouldFetch] = useState(false);
 
   const contribute = useContribute();
 
   const config = new AptosConfig({ network: Network.TESTNET });
   const aptos = new Aptos(config);
 
+  /**
+   * Fetch the public presale resource
+   */
   const fetchPresale = async () => {
     try {
       const presaleResource = await aptos.getAccountResource(
         {
           accountAddress: `0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
-          resourceType: `${RENA_PRESALE_TESTNET}::Info`,
+          resourceType: `${PUBLIC_PRESALE}`,
         }
       );
       console.log('presale resource: ', presaleResource);
@@ -65,7 +77,35 @@ const PreSale = () => {
     fetchPresale();
   }, []);
 
-  // get the completion status of the presale
+  /**
+   * 
+   * Fetch the private presale resource
+   * 
+   */
+  const fetchPrivatePresale = async () => {
+    try {
+      const presaleResource = await aptos.getAccountResource(
+        {
+          accountAddress: `0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776`,
+          resourceType: `${WHITELISTED_PRESALE}`,
+        }
+      );
+      console.log('private presale resource: ', presaleResource);
+      setWhitelistPresaleExists(true);
+    } catch (e: any) {
+      setWhitelistPresaleExists(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPrivatePresale();
+  }, []);
+
+  /**
+   * 
+   * Fetch the completion status of the public presale
+   * 
+   */
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
       const payload: InputViewFunctionData = {
@@ -87,7 +127,40 @@ const PreSale = () => {
   }
     // when it changes to true, we can show the presale is completed
     , []);
+  
+  /**
+   * 
+   * Fetch the completion status of the whitelist presale
+   * 
+   */
+  const getIsWhitelistPresaleCompleted = () => {
+    const viewIsCompleted = async () => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
+      };
+      let res = await APTOS.view({ payload });
+      console.log('is whitelist presale completed: ', res);
+    };
+    return viewIsCompleted;
+  };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getIsWhitelistPresaleCompleted();
+      setPresaleCompleted(result as any);
+    };
+
+    fetchData();
+  }
+    // when it changes to true, we can show the presale is completed
+    , []);
+
+
+  /**
+   * 
+   * Fetch the contributed amount of the account in a public presale
+   * 
+   */
   const getContributedAmount = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
@@ -111,7 +184,39 @@ const PreSale = () => {
     fetchData();
   }, [shouldFetch, account]);
 
-  // get the total raised funds
+  /**
+   * 
+   * Fetch the contributed amount of the account in a whitelist presale
+   * 
+   */
+  const getWhitelistContributedAmount = async (accountAddress: Address) => {
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+      functionArguments: [accountAddress]
+    };
+    let res = await APTOS.view({ payload });
+    console.log('contributed amount: ', res);
+    return res;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getWhitelistContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
+        setWhitelistContributedAmount(result[0]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [shouldFetch, account]);
+
+  /**
+   * 
+   * Fetch the total raised funds
+   * 
+   */
   const getTotalRaisedFunds = async () => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
@@ -135,7 +240,39 @@ const PreSale = () => {
     fetchData();
   }, [shouldFetch, account]);
 
-  // get the remaining time of the presale
+  /**
+   * 
+   * Fetch the whitelist total raised funds
+   * 
+   */
+  const getWhitelistTotalRaisedFunds = async () => {
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
+    };
+    let res = await APTOS.view({ payload });
+    console.log('total raised funds: ', res);
+    return res;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getWhitelistTotalRaisedFunds(); // Call the returned function to trigger fetch
+        setWhitelistTotalRaisedFunds(result as any);
+        setWhitelistShouldFetch(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [shouldFetch, account]);
+
+  /**
+   *  
+   * Fetch the ramaining time of the presale
+   * 
+   */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getRemainingTime = async () => {
     const payload: InputViewFunctionData = {
@@ -158,7 +295,38 @@ const PreSale = () => {
     fetchData();
   }, [getRemainingTime]);
 
-  // get the total contributors
+  /**
+   * 
+   * Fetch the ramaining time of the whitelist presale
+   * 
+   */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getWhitelistRemainingTime = async () => {
+    const payload: InputViewFunctionData = {
+      function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
+    };
+    let res = await APTOS.view({ payload });
+    console.log('remaining time: ', res[0]);
+    return res[0];
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getWhitelistRemainingTime(); // Call the returned function to trigger fetch
+        setRemainingTime(result as any);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [getWhitelistRemainingTime]);
+
+  /**
+   * 
+   * Fetch the total contributors
+   * 
+   */
   const getTotalContributors = () => {
     const viewTotalContributors = async () => {
       const payload: InputViewFunctionData = {
@@ -188,10 +356,40 @@ const PreSale = () => {
     getTotalContributors();
   }, []);
 
-  // get the treasury address
+  /**
+   * 
+   * Fetch the total contributors in whitelist presale
+   * 
+   */
+  const getWhitelistTotalContributors = () => {
+    const viewTotalContributors = async () => {
+      const payload: InputViewFunctionData = {
+        function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`
+      };
+      let res = await APTOS.view({ payload });
+      console.log('total contributors number: ', res);
+    };
+    return viewTotalContributors;
+  };
+
+  const fetchWhitelistData = async () => {
+    const result = await getWhitelistTotalContributors();
+    setTotalContributors(result as any);
+  };
+
+  useEffect(() => {
+    getWhitelistTotalContributors();
+  }, []);
+
+  /**
+   * 
+   * Fetch the treasury address of the public presale
+   * 
+   */
   const getTreasuryAddress = () => {
     const viewTreasuryAddress = async () => {
       const payload: InputViewFunctionData = {
+        typeArguments: [`${PUBLIC_PRESALE}`],
         function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
       };
       let res = await APTOS.view({ payload });
@@ -209,6 +407,37 @@ const PreSale = () => {
     fetchData();
   }, []);
 
+  /**
+   * 
+   * Fetch the treasury address of the whitelist presale
+   * 
+   */
+  const getWhitelistTreasuryAddress = () => {
+    const viewTreasuryAddress = async () => {
+      const payload: InputViewFunctionData = {
+        typeArguments: [`${WHITELISTED_PRESALE}`],
+        function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
+      };
+      let res = await APTOS.view({ payload });
+      console.log('treasury address: ', res);
+    };
+    return viewTreasuryAddress;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getWhitelistTreasuryAddress();
+      setTreasuryAddress(result as any);
+    };
+
+    fetchData();
+  }, []);
+
+  /**
+   * 
+   * Fetch the total raised funds, contributed amount, and distributed funds of the account in a public presale
+   * 
+   */
   const onContribute = async () => {
     console.log(Date.now(), endTime, startTime, parseFloat(count))
     if (account && count && Date.now() < endTime && Date.now() >= startTime) {
@@ -224,6 +453,31 @@ const PreSale = () => {
     }
   };
 
+  /**
+   * 
+   * Fetch the total raised funds, contributed amount, and distributed funds of the account in a whitelist presale
+   * 
+   */
+  const onWhitelistContribute = async () => {
+    console.log(Date.now(), whitelistEndTime, whitelistStartTime, parseFloat(count))
+    if (account && whitelistCount && Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) {
+      try {
+        await contribute(account.address, parseFloat(count));
+        getWhitelistTotalRaisedFunds();
+        getWhitelistContributedAmount(account?.address);
+        setWhitelistShouldFetch(true);
+        setWhitelistCount("0");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  /**
+   * 
+   * Fetch the distributed funds of the account in a public presale
+   * 
+   */
   const getDistributedFunds = async () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
@@ -245,6 +499,37 @@ const PreSale = () => {
     }
   }, [account]);
 
+  /**
+   * 
+   * Fetch the distributed funds of the account in a whitelist presale
+   * 
+   */
+  const getWhitelistDistributedFunds = async () => {
+    try {
+      const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+      const event = new Events(aptosConfig);
+      const distributedFundsEvent = await event.getSaleFundsDistributedEvent();
+      const amounts = distributedFundsEvent
+        .filter(event => event.data.contributor === account?.address)
+        .map(event => event.data.amount);
+      setDistributedFunds(Number(amounts[amounts.length - 1]));
+      console.log('distributed funds: ', Number(amounts[amounts.length - 1]));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    if (account) {
+      getWhitelistDistributedFunds();
+      // getContributedAmount();
+    }
+  }, [account]);
+
+  /**
+   * 
+   * Fetch if the public presale is completed
+   * 
+   */
   const getPresaleFinalized = async () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
@@ -261,6 +546,29 @@ const PreSale = () => {
 
   useEffect(() => {
     getPresaleFinalized();
+  }, []);
+
+  /**
+   * 
+   * Fetch if the whitelist presale is completed
+   * 
+   */
+  const getWhitelistPresaleFinalized = async () => {
+    try {
+      const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+      const event = new Events(aptosConfig);
+      const finalizedEvent = await event.getPresaleFinalizedEvent();
+      console.log('finalized event: ', finalizedEvent);
+      let total_funds_raised = Number(finalizedEvent[finalizedEvent.length - 1].data.raised_funds);
+      console.log('total funds raised: ', total_funds_raised);
+      setFinalTotalRaisedFunds(total_funds_raised);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getWhitelistPresaleFinalized();
   }, []);
 
   useEffect(() => {
@@ -310,6 +618,17 @@ const PreSale = () => {
     return () => clearInterval(interval);
   }, []);
 
+
+  /**
+   * Helper functions
+  */
+
+  /**
+   * 
+   * @param number 
+   * @param decimals 
+   * @returns 
+   */
   function formatNumberWithDecimals(number: number, decimals: number | string): string {
     const parsedDecimals = typeof decimals === 'number' ? decimals : parseFloat(decimals);
 
@@ -325,6 +644,11 @@ const PreSale = () => {
     return trimmedResult;
   }
 
+  /**
+   * 
+   * @param seconds 
+   * @returns 
+   */
   function formatSeconds(seconds: number): string {
     let days = Math.floor(seconds / (3600 * 24));
     let hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -335,7 +659,11 @@ const PreSale = () => {
     return formattedTime;
   }
 
-  // format timestamp
+  /**
+   * 
+   * @param timestamp 
+   * @returns 
+   */
   function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
 
@@ -348,7 +676,12 @@ const PreSale = () => {
     return `${day} ${month} ${year} @ ${timeString.toLowerCase()}  UTC`;
   }
 
-  // format remaining time to date given two dates
+  /**
+   * 
+   * @param startTime 
+   * @param endTime 
+   * @returns 
+   */
   function formatRemainingTime(startTime: number, endTime: number): string {
     const remainingTime = endTime - startTime;
 

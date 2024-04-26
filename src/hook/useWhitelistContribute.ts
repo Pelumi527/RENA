@@ -1,7 +1,7 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { CONTRIBUTE, PUBLIC_PRESALE, RENA_PRESALE_TESTNET } from "../util/module-endpoints";
+import { CONTRIBUTE, PUBLIC_PRESALE, RENA_PRESALE_TESTNET, WHITELISTED_PRESALE } from "../util/module-endpoints";
 
-const useContribute = () => {
+const useWhitelistContribute = () => {
   const { signAndSubmitTransaction } = useWallet();
 
   const contribute = async (accountAddress: string, aptAmount: number) => {
@@ -10,7 +10,7 @@ const useContribute = () => {
       sender: accountAddress,
       data: {
         function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTE}`,
-        typeArguments: [PUBLIC_PRESALE],
+        typeArguments: [WHITELISTED_PRESALE],
         functionArguments: [(aptAmount as any) * 1e8],
       },
     });
@@ -21,4 +21,4 @@ const useContribute = () => {
   return contribute;
 };
 
-export default useContribute;
+export default useWhitelistContribute;

@@ -10,7 +10,7 @@ import { useAppSelector } from "../../state/hooks";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
-import { updateIsRenaListLoading, updateRenaBalance, updateRenegadesData, updateRenegadesRankData } from "../../state/renegades";
+import { updateDisplayAmount, updateIsRenaListLoading, updateRenaBalance, updateRenegadesData, updateRenegadesRankData } from "../../state/renegades";
 import { Link } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton";
 import { NFTtype } from "../../type/renegades";
@@ -40,6 +40,25 @@ const Renegades = () => {
   const isLoading = useAppSelector(
     (state) => state.renegadesState.isLoading
   );
+
+  useEffect(() => {
+    const handleScroll = () => {
+      console.log(window.scrollY);
+      if (window.scrollY > 1400) {
+        dispatch(updateDisplayAmount(60));
+      }else if(window.scrollY > 3000){
+        dispatch(updateDisplayAmount(90));
+      }else if(window.scrollY > 6000){
+        dispatch(updateDisplayAmount(120));
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const updateCookie = () => {
     const dontShowAgain = Cookies.get('dontShowAgain');
@@ -198,6 +217,7 @@ const Renegades = () => {
                 <RenegadesItem
                   onClick={() => dispatch(toggleItemModal([item]))}
                   key={index}
+                  index={index}
                   avatar={item.token_uri}
                   name={item.token_name}
                   rank={item?.rank}

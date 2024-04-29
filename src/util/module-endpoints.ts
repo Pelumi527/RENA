@@ -11,7 +11,7 @@ export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
 
 // type arguments
 export const PUBLIC_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::Info";
-export const WHITELISTED_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::whitelistInfo";
+export const WHITELISTED_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::WhitelistInfo";
 
 // entry functions
 export const CLAIM = "claim";

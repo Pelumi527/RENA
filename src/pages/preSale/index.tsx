@@ -164,6 +164,7 @@ const PreSale = () => {
   const getContributedAmount = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+      typeArguments: [`${PUBLIC_PRESALE}`],
       functionArguments: [accountAddress]
     };
     let res = await APTOS.view({ payload });
@@ -192,6 +193,7 @@ const PreSale = () => {
   const getWhitelistContributedAmount = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
+      typeArguments: [`${WHITELISTED_PRESALE}`],
       functionArguments: [accountAddress]
     };
     let res = await APTOS.view({ payload });
@@ -214,12 +216,13 @@ const PreSale = () => {
 
   /**
    * 
-   * Fetch the total raised funds
+   * Fetch the total raised funds of the public presale
    * 
    */
   const getTotalRaisedFunds = async () => {
     const payload: InputViewFunctionData = {
-      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
+      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`,
+      typeArguments: [`${PUBLIC_PRESALE}`]
     };
     let res = await APTOS.view({ payload });
     console.log('total raised funds: ', res);
@@ -242,12 +245,13 @@ const PreSale = () => {
 
   /**
    * 
-   * Fetch the whitelist total raised funds
+   * Fetch the total raised funds of the whitelist presale
    * 
    */
   const getWhitelistTotalRaisedFunds = async () => {
     const payload: InputViewFunctionData = {
-      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`
+      function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`,
+      typeArguments: [`${WHITELISTED_PRESALE}`]
     };
     let res = await APTOS.view({ payload });
     console.log('total raised funds: ', res);
@@ -270,13 +274,14 @@ const PreSale = () => {
 
   /**
    *  
-   * Fetch the ramaining time of the presale
+   * Fetch the ramaining time of the public presale
    * 
    */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getRemainingTime = async () => {
     const payload: InputViewFunctionData = {
-      function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
+      function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`,
+      typeArguments: [`${PUBLIC_PRESALE}`]
     };
     let res = await APTOS.view({ payload });
     console.log('remaining time: ', res[0]);
@@ -303,7 +308,8 @@ const PreSale = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getWhitelistRemainingTime = async () => {
     const payload: InputViewFunctionData = {
-      function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`
+      function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`,
+      typeArguments: [`${WHITELISTED_PRESALE}`]
     };
     let res = await APTOS.view({ payload });
     console.log('remaining time: ', res[0]);
@@ -324,13 +330,14 @@ const PreSale = () => {
 
   /**
    * 
-   * Fetch the total contributors
+   * Fetch the total contributors of the public presale
    * 
    */
   const getTotalContributors = () => {
     const viewTotalContributors = async () => {
       const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`
+        function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`,
+        typeArguments: [`${PUBLIC_PRESALE}`]
       };
       let res = await APTOS.view({ payload });
       console.log('total contributors number: ', res);
@@ -364,7 +371,8 @@ const PreSale = () => {
   const getWhitelistTotalContributors = () => {
     const viewTotalContributors = async () => {
       const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`
+        function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`,
+        typeArguments: [`${WHITELISTED_PRESALE}`]
       };
       let res = await APTOS.view({ payload });
       console.log('total contributors number: ', res);

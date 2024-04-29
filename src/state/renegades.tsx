@@ -41,9 +41,9 @@ export const dialogSlice = createSlice({
       state.renegadesData = action.payload;
     },
     updateRenaBalance: (state, action: PayloadAction<number>) => {
-      if (action.payload > 0) {
+      // if (action.payload > 0) {
         state.isBalanceLoading = false;
-      }
+      // }
       state.renaBalance = action.payload;
     },
     updateLastRenegadesData: (state, action: PayloadAction<NFTtype>) => {

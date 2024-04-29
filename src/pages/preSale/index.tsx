@@ -5,7 +5,7 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
 import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
-import { APTOS, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, PUBLIC_PRESALE, REMAINING_TIME, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS, WHITELISTED_PRESALE } from "../../util/module-endpoints";
+import { APTOS, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, ONE_RENEGADES, PUBLIC_PRESALE, REMAINING_TIME, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS, WHITELISTED_PRESALE } from "../../util/module-endpoints";
 import { Network } from 'aptos';
 import { Events } from '../../api';
 import useContribute from '../../hook/useContribute';
@@ -779,8 +779,8 @@ const PreSale = () => {
                   {
                     /* presale is completed */
                     presaleExists && (endTime < Date.now()) ?
-                      <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / 100000000), '8')}</p> :
-                      <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / 100000000), '8')}</p>
+                      <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / ONE_RENEGADES), '8')}</p> :
+                      <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / ONE_RENEGADES), '8')}</p>
                   }
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
                 </div>
@@ -824,7 +824,7 @@ const PreSale = () => {
                 <div className="flex items-center font-semibold text-18px] gap-4">
                   <p>{
                     presaleExists && (Date.now() > startTime) ?
-                      formatNumberWithDecimals(((contributedAmount as number) / 100000000), '8') :
+                      formatNumberWithDecimals(((contributedAmount as number) / ONE_RENEGADES), '8') :
                       0
                   }</p>
                   <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
@@ -836,7 +836,7 @@ const PreSale = () => {
                   <p>{
                     /* presale ended */
                     presaleExists && (endTime < Date.now()) ?
-                      formatNumberWithDecimals(((distributedFunds as number) / 100000000), '4') :
+                      formatNumberWithDecimals(((distributedFunds as number) / ONE_RENEGADES), '4') :
                       0
                   }</p>
                   <img src="/renegades/rena.svg" className="w-[18px] h-[18px]" />

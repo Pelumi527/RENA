@@ -4,10 +4,14 @@ import { AccountAddressInput, Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
 
 // module endpoints
-export const RENA_MODULE_TESTNET = "0x30604f2c399982920606bb2074d9721191c07e24549405da04a3f49ce4457186::core";
-export const RENA_PRESALE_TESTNET = "0x30604f2c399982920606bb2074d9721191c07e24549405da04a3f49ce4457186::presale";
+export const RENA_MODULE_TESTNET = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::core";
+export const RENA_PRESALE_TESTNET = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale";
 export const RENA_MODULE_MAINNET = "<address>::core";
 export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
+
+// type arguments
+export const PUBLIC_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::Info";
+export const WHITELISTED_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::whitelistInfo";
 
 // entry functions
 export const CLAIM = "claim";
@@ -27,11 +31,11 @@ export const CONTRIBUTED_AMOUNT = "contributed_amount";
 export const CONTRIBUTED_AMOUNT_FROM_ADDRESS = "contributed_amount_from_address";
 
 // coin endpoints
-export const RENA_COIN_TYPE_TESTNET = "0x30604f2c399982920606bb2074d9721191c07e24549405da04a3f49ce4457186::core::RenegadeCoin"
-export const LIQUID_COIN_OBJECT_TESTNET = "0x54fd8e035f5d5b414fb83a68f0a8300957ca5956737075da4349fdab6d255e12"
+export const RENA_COIN_TYPE_TESTNET = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::core::RenegadeCoin"
+export const LIQUID_COIN_OBJECT_TESTNET = "0x1783ac93f471488b3db1737b970b2e00f410d2f06c1629429808877ff04f231d"
 
-export const COLLECTION_ID = "0xb41252d851df7e8a0dd940b3bccd85397eac0af40fe6e432fe2739dd2bd29e54"
-export const COLLECTION_ADDRESS: AccountAddressInput = "0xb41252d851df7e8a0dd940b3bccd85397eac0af40fe6e432fe2739dd2bd29e54"
+export const COLLECTION_ID = "0xecacb27057d539555f6b1313e480963bddfab8cd659d73f17705cba6c7ae454b"
+export const COLLECTION_ADDRESS: AccountAddressInput = "0xecacb27057d539555f6b1313e480963bddfab8cd659d73f17705cba6c7ae454b"
 const aptosConfig = new AptosConfig({ network: Network.TESTNET });
 export const APTOS = new Aptos(aptosConfig);
 

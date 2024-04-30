@@ -40,16 +40,34 @@ const Renegades = () => {
   const isLoading = useAppSelector(
     (state) => state.renegadesState.isLoading
   );
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       console.log(window.scrollY);
       if (window.scrollY > 1400) {
         dispatch(updateDisplayAmount(60));
-      }else if(window.scrollY > 3000){
+      }
+      if (window.scrollY > 3000) {
         dispatch(updateDisplayAmount(90));
-      }else if(window.scrollY > 6000){
+      }
+      if (window.scrollY > 4000) {
         dispatch(updateDisplayAmount(120));
+      }
+      if (window.scrollY > 6000) {
+        dispatch(updateDisplayAmount(1000));
       }
     };
 
@@ -178,15 +196,15 @@ const Renegades = () => {
             :
             <div
               onClick={() => { Math.floor(renaBalance) != 0 && dispatch(toggleClaimModal(true)) }}
-              className={`flex w-full h-[110px] items-center cursor-pointer justify-center ${Math.floor(renaBalance) != 0
+              className={`flex w-full h-[113px] items-center cursor-pointer justify-center ${Math.floor(renaBalance) != 0
                 ? "bg-primary hover:bg-primary-hover"
                 : "bg-[#222]"
                 } border-2 rounded-[8px] mt-10`}
               style={{
-                backgroundImage: `url("/renegades/second.png")`,
+                backgroundImage: `url("${windowWidth <= 500 ? '/renegades/second-mobile.svg' : '/renegades/second.png'}")`,
                 backgroundRepeat: "no-repeat",
-                backgroundPosition: "left 80px center",
-                backgroundSize: "contain",
+                backgroundPosition: windowWidth <= 500 ? "" : "left 80px center",
+                backgroundSize: windowWidth <= 500 ? "252px 105px left" : "contain",
               }}
             >
               <div className="flex items-center">
@@ -200,8 +218,8 @@ const Renegades = () => {
                   </>
                 ) : (
                   <div className="flex flex-col items-center">
-                    <p className="font-medium text-[22px] sm:text-[26px] text-center">
-                      You don’t have any Renegades to claim
+                    <p className="font-medium text-[22px] sm:text-[26px] text-center leading-[120%]">
+                      You don’t have any <br className="sm:hidden block" /> Renegades to claim
                     </p>
                     <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                       <Link to={'/presale'}>Get $RENA to claim NFTs</Link>
@@ -249,20 +267,20 @@ const Renegades = () => {
         </div>
       </div>
       {selectedItems.length > 0 && (
-        <div className="fixed inset-x-0 bottom-0 bg-[#222] h-20 text-white p-4 gap-10 flex justify-center items-center shadow-md z-50">
+        <div className="fixed inset-x-0 bottom-0 bg-[#222] h-20 text-white p-4 sm:gap-10 flex justify-center items-center shadow-md z-50">
           <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 pr-2 sm:pr-0 sm:px-4 rounded"
             onClick={() => setSelectedItems([])}
           >
             Deselect all
           </button>
           <button
-            className={`${renegadesRankData.length == selectedItems.length && 'cursor-not-allowed text-[#c1c1c1]'} text-white font-bold py-2 px-4 rounded`}
+            className={`${renegadesRankData.length == selectedItems.length && 'cursor-not-allowed text-[#c1c1c1]'} text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
             onClick={() => setSelectedItems(renegadesRankData)}
           >
             Select all
           </button>
-          <PrimaryButton onClick={() => skip ? onLiqify() : dispatch(toggleItemModal(selectedItems))} className="w-[176px] z-20 relative !font-bold !h-[48px]">
+          <PrimaryButton onClick={() => skip ? onLiqify() : dispatch(toggleItemModal(selectedItems))} className="w-[141px] sm:w-[176px] z-20 relative !font-bold !h-[48px]">
             Liquify {selectedItems.length} NFT{selectedItems.length > 1 && 's'}
           </PrimaryButton>
         </div>

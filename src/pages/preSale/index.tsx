@@ -16,6 +16,7 @@ import { Address } from 'aptos/src/generated';
 import { toggleSidebar, toggleWalletPanel } from '../../state/dialog';
 import { useAppSelector } from '../../state/hooks';
 import { set } from 'lodash';
+import "./index.css";
 
 const PreSale = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const PreSale = () => {
   const [treasuryAddress, setTreasuryAddress] = useState<string>('');
 
   const [contributors, setContributors] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [shouldFetch, setShouldFetch] = useState(false);
   const [whitelistShouldFetch, setWhitelistShouldFetch] = useState(false);
@@ -75,6 +77,12 @@ const PreSale = () => {
 
   useEffect(() => {
     fetchPresale();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 4000);
   }, []);
 
   /**
@@ -127,7 +135,7 @@ const PreSale = () => {
   }
     // when it changes to true, we can show the presale is completed
     , []);
-  
+
   /**
    * 
    * Fetch the completion status of the whitelist presale
@@ -742,118 +750,129 @@ const PreSale = () => {
                         $RENA Presale
                       </p>
             }
-            <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
+            <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[670px]'} rounded-[8px] py-8 px-6`}>
               {
-                /* Presale is not created yet */
-                !presaleExists ?
-                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-                    <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
-                  </p>
-                  /* Presale is scheduled */
-                  : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
-                    /* add another check to see if the presale is scheduled or live */
-                    <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                      <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
-                      <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
-                    </p>
-                    /* Presale is live */
-                    : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
-                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
-                        <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
-                      </p>
-                      /* Presale is completed */
-                      : presaleExists && (endTime <= Date.now()) ?
-                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale has ENDED</p>
-                          <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
-                        </p>
-                        : null
-              }
-              {Date.now() < endTime && Date.now() >= startTime ?
-                <div className='flex justify-center items-center border-2 my-10 bg-[#2DCA63] bg-opacity-20 rounded-[8px] border-[#2DCA63] text-[22px] font-semibold w-[352px] h-[42px]'>
-                  You are eligible
-                </div>
-                :
-                <div className='flex flex-col justify-center items-center border-2 my-10 bg-[#FF4040] bg-opacity-20 rounded-[8px] border-[#FF4040] text-[22px] font-semibold w-[352px] h-[66px]'>
-                  You are not eligible
-                  <p className='text-[16px] font-semibold'>See requirements</p>
-                </div>
-              }
-              <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] mb-[56px]">
-                <p>Total Raised</p>
-                <div className="flex items-center font-semibold text-[22px] gap-4">
+                !loading &&
+                <>
                   {
-                    /* presale is completed */
-                    presaleExists && (endTime < Date.now()) ?
-                      <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / ONE_RENEGADES), '8')}</p> :
-                      <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / ONE_RENEGADES), '8')}</p>
+                    /* Presale is not created yet */
+                    !presaleExists ?
+                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+                        <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
+                      </p>
+                      /* Presale is scheduled */
+                      : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
+                        /* add another check to see if the presale is scheduled or live */
+                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
+                          <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
+                        </p>
+                        /* Presale is live */
+                        : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
+                          <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
+                            <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
+                          </p>
+                          /* Presale is completed */
+                          : presaleExists && (endTime <= Date.now()) ?
+                            <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale has ENDED</p>
+                              <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
+                            </p>
+                            : null
                   }
-                  <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
-                </div>
-              </div>
-              <div className="flex w-full items-center justify-between h-12 font-semibold text-[22px]">
-                <input
-                  type="text"
-                  placeholder="0.00"
-                  value={count}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    const regex = /^\d*\.?\d{0,4}$/;
-                    if (value === '' || regex.test(value)) {
-                      setCount(value);
+                  <div className='flex w-full'>
+                    {Date.now() < endTime && Date.now() >= startTime ?
+                      <div className='flex justify-center items-center border-2 my-10 bg-[#2DCA63] bg-opacity-20 rounded-[8px] border-[#2DCA63] text-[22px] font-semibold w-full sm:w-[352px] h-[42px]'>
+                        You are eligible
+                      </div>
+                      :
+                      <div className='flex flex-col justify-center items-center border-2 my-10 bg-[#FF4040] bg-opacity-20 rounded-[8px] border-[#FF4040] text-[22px] font-semibold w-full sm:w-[352px] h-[66px]'>
+                        You are not eligible
+                        <p className='text-[16px] font-semibold'>See requirements</p>
+                      </div>
                     }
-                  }}
-                  className={` ${Date.now() < endTime && Date.now() >= startTime ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
-                  disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
-                />
-                <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
-                  <p>APT</p>
-                  <img src="/presale/aptos.svg" className="w-[24px] h-[24px]" />
-                </div>
-              </div>
-              {connected ?
-                <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
-                  <p className="text-[18px] font-bold my-2">Send APT</p>
-                </PrimaryButton>
-                :
-                <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
-                  <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
-                </PrimaryButton>
+                  </div>
+                  <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] mb-[56px]">
+                    <p>Total Raised</p>
+                    <div className="flex items-center font-semibold text-[22px] gap-4">
+                      {
+                        /* presale is completed */
+                        presaleExists && (endTime < Date.now()) ?
+                          <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / ONE_RENEGADES), '8')}</p> :
+                          <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / ONE_RENEGADES), '8')}</p>
+                      }
+                      <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between h-12 font-semibold text-[22px]">
+                    <input
+                      type="text"
+                      placeholder="0.00"
+                      value={count}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const regex = /^\d*\.?\d{0,4}$/;
+                        if (value === '' || regex.test(value)) {
+                          setCount(value);
+                        }
+                      }}
+                      className={` ${Date.now() < endTime && Date.now() >= startTime ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
+                      disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
+                    />
+                    <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
+                      <p>APT</p>
+                      <img src="/presale/aptos.svg" className="w-[24px] h-[24px]" />
+                    </div>
+                  </div>
+                  {connected ?
+                    <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
+                      <p className="text-[18px] font-bold my-2">Send APT</p>
+                    </PrimaryButton>
+                    :
+                    <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
+                      <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
+                    </PrimaryButton>
+                  }
+                  <div className='flex flex-col items-start w-full gap-2'>
+                    <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> Minimum contribution is 1 APT</p>
+                    <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>
+                  </div>
+                  <div className="border-b border-[#666] w-full my-6" />
+                  <div className="flex w-full items-center justify-between h-[18px] font-semibold text-[18px]">
+                    <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
+                    <div className="flex items-center font-semibold text-18px] gap-4">
+                      <p>{
+                        presaleExists && (Date.now() > startTime) ?
+                          formatNumberWithDecimals(((contributedAmount as number) / ONE_RENEGADES), '8') :
+                          0
+                      }</p>
+                      <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between h-[18px] mt-6 mb-4 font-semibold text-[18px]">
+                    <p className="text-[18px] font-medium text-[#CCC]">My $RENA</p>
+                    <div className="flex items-center font-semibold text-[18px] gap-4">
+                      <p>{
+                        /* presale ended */
+                        presaleExists && (endTime < Date.now()) ?
+                          formatNumberWithDecimals(((distributedFunds as number) / ONE_RENEGADES), '4') :
+                          0
+                      }</p>
+                      <img src="/renegades/rena.svg" className="w-[18px] h-[18px]" />
+                    </div>
+                  </div>
+                </>
               }
-              <div className='flex flex-col items-start w-full gap-2'>
-                <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> Minimum contribution is 1 APT</p>
-                <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>
-              </div>
-              <div className="border-b border-[#666] w-full my-6" />
-              <div className="flex w-full items-center justify-between h-[18px] font-semibold text-[18px]">
-                <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
-                <div className="flex items-center font-semibold text-18px] gap-4">
-                  <p>{
-                    presaleExists && (Date.now() > startTime) ?
-                      formatNumberWithDecimals(((contributedAmount as number) / ONE_RENEGADES), '8') :
-                      0
-                  }</p>
-                  <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
-                </div>
-              </div>
-              <div className="flex w-full items-center justify-between h-[18px] mt-6 mb-4 font-semibold text-[18px]">
-                <p className="text-[18px] font-medium text-[#CCC]">My $RENA</p>
-                <div className="flex items-center font-semibold text-[18px] gap-4">
-                  <p>{
-                    /* presale ended */
-                    presaleExists && (endTime < Date.now()) ?
-                      formatNumberWithDecimals(((distributedFunds as number) / ONE_RENEGADES), '4') :
-                      0
-                  }</p>
-                  <img src="/renegades/rena.svg" className="w-[18px] h-[18px]" />
-                </div>
-              </div>
             </div>
-            <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6 mt-4">
-              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Public Presale</p>
-              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
+            <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[144px]'} mt-5 rounded-[8px] py-8 px-6`}>
+              {!loading &&
+                <>
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Public Presale</p>
+                  <p className="text-[20px] text-[#CCC] sm:text-[22px] leading-[38px] font-semibold">{formatRemainingTime((Date.now()), startTime)}</p>
+                </>
+              }
             </div>
 
           </div>

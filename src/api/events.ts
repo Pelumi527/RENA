@@ -158,6 +158,20 @@ export class Events {
     }
 
     /**
+     * Get the event for a whitelist presale created
+     */
+    // :!:WhitelistPresaleCreated
+    async getWhitelistPresaleCreatedEvent(): Promise<GetEventsResponse> {
+        const whitelistPresaleCreatedEvent =
+            await this.aptos.getModuleEventsByEventType({
+                eventType: `${RENA_PRESALE_TESTNET}::WhitelistInitialized`,
+                minimumLedgerVersion: 0,
+            });
+
+        return whitelistPresaleCreatedEvent;
+    }
+
+    /**
      * Get the event for a contribution made
      */
     // :!:Contributions

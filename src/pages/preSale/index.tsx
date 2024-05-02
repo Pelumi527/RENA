@@ -726,31 +726,57 @@ const PreSale = () => {
         <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }} className="w-full flex flex-col z-20 relative items-center sm:-mt-10">
           <div className="flex flex-col items-center w-full mt-20 sm:mt-[120px]">
             {
-              /* Presale is not created yet */
-              !presaleExists ?
-                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                  $RENA Presale
+              /* Whitelist presale is not created yet */
+              !whitelistPresaleExists ?
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
                 </p>
-                /* Presale is scheduled */
-                : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
-                  /* add another check to see if the presale is scheduled or live */
-                  <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                    Join the $RENA Presale
+                /* Whitelist presale is scheduled */
+                : whitelistPresaleExists && (whitelistStartTime > Date.now()) && (whitelistEndTime >= Date.now()) ?
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), whitelistStartTime)}</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(whitelistStartTime)}</p>
                   </p>
-                  /* Presale is live */
-                  : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
-                    <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                      Join the $RENA Presale
+                  /* Whitelist presale is live */
+                  : whitelistPresaleExists && (whitelistStartTime <= Date.now()) && (whitelistEndTime >= Date.now()) ?
+                    <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                      <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
+                      <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
+                      <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
                     </p>
-                    /* Presale is completed */
-                    : presaleExists && (endTime <= Date.now()) ?
-                      <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                        $RENA Presale
+                    /* Whitelist presale is completed */
+                    : whitelistPresaleExists && (whitelistEndTime <= Date.now()) ?
+                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
+                        <p className="text-[22px] font-semibold text-[#CCC]">Presale has ENDED</p>
                       </p>
                       :
-                      <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                        $RENA Presale
-                      </p>
+                      !presaleExists ?
+                        <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                          $RENA Presale
+                        </p>
+                        /* Presale is scheduled */
+                        : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
+                          /* add another check to see if the presale is scheduled or live */
+                          <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                            Join the $RENA Presale
+                          </p>
+                          /* Presale is live */
+                          : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
+                            <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                              Join the $RENA Presale
+                            </p>
+                            /* Presale is completed */
+                            : presaleExists && (endTime <= Date.now()) ?
+                              <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                                $RENA Presale
+                              </p>
+                              :
+                              <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                                $RENA Presale
+                              </p>
             }
             <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[670px]'} rounded-[8px] py-8 px-6`}>
               {
@@ -872,7 +898,7 @@ const PreSale = () => {
               {!loading &&
                 <>
                   <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Public Presale</p>
-                  <p className="text-[20px] text-[#CCC] sm:text-[22px] leading-[38px] font-semibold">{formatRemainingTime((Date.now()), startTime)}</p>
+                  <p className="text-[20px] text-[#CCC] sm:text-[22px] leading-[38px] font-semibold">{formatTimestamp(endTime)}</p>
                 </>
               }
             </div>

@@ -109,7 +109,8 @@ const PreSale = () => {
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
       const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
+        function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`,
+        typeArguments: [`${PUBLIC_PRESALE}`]
       };
       let res = await APTOS.view({ payload });
       console.log('is presale completed: ', res);
@@ -136,7 +137,8 @@ const PreSale = () => {
   const getIsWhitelistPresaleCompleted = () => {
     const viewIsCompleted = async () => {
       const payload: InputViewFunctionData = {
-        function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`
+        function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`,
+        typeArguments: [`${WHITELISTED_PRESALE}`]
       };
       let res = await APTOS.view({ payload });
       console.log('is whitelist presale completed: ', res);
@@ -397,8 +399,8 @@ const PreSale = () => {
   const getTreasuryAddress = () => {
     const viewTreasuryAddress = async () => {
       const payload: InputViewFunctionData = {
-        typeArguments: [`${PUBLIC_PRESALE}`],
-        function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
+        function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`,
+        typeArguments: [`${PUBLIC_PRESALE}`]
       };
       let res = await APTOS.view({ payload });
       console.log('treasury address: ', res);
@@ -423,8 +425,8 @@ const PreSale = () => {
   const getWhitelistTreasuryAddress = () => {
     const viewTreasuryAddress = async () => {
       const payload: InputViewFunctionData = {
-        typeArguments: [`${WHITELISTED_PRESALE}`],
-        function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`
+        function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`,
+        typeArguments: [`${WHITELISTED_PRESALE}`]
       };
       let res = await APTOS.view({ payload });
       console.log('treasury address: ', res);

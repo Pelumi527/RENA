@@ -51,6 +51,7 @@ const PreSale = () => {
   const [whitelistShouldFetch, setWhitelistShouldFetch] = useState(false);
 
   const contribute = useContribute();
+  const whitelistContribute = useWhitelistContribute();
 
   const config = new AptosConfig({ network: Network.TESTNET });
   const aptos = new Aptos(config);
@@ -480,7 +481,7 @@ const PreSale = () => {
     console.log(Date.now(), whitelistEndTime, whitelistStartTime, parseFloat(count))
     if (account && whitelistCount && Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) {
       try {
-        await contribute(account.address, parseFloat(count));
+        await whitelistContribute(account.address, parseFloat(count));
         getWhitelistTotalRaisedFunds();
         getWhitelistContributedAmount(account?.address);
         setWhitelistShouldFetch(true);
@@ -892,6 +893,7 @@ const PreSale = () => {
                     </div>
                   </div>
                 </>
+                
               }
             </div>
             <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[144px]'} mt-5 rounded-[8px] py-8 px-6`}>

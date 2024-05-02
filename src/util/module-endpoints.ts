@@ -4,14 +4,14 @@ import { AccountAddressInput, Aptos, AptosConfig } from "@aptos-labs/ts-sdk";
 import { Network } from "aptos";
 
 // module endpoints
-export const RENA_MODULE_TESTNET = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::core";
-export const RENA_PRESALE_TESTNET = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale";
+export const RENA_MODULE_TESTNET = "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::core";
+export const RENA_PRESALE_TESTNET = "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::presale";
 export const RENA_MODULE_MAINNET = "<address>::core";
 export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
 
 // type arguments
-export const PUBLIC_PRESALE = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::presale::Info";
-export const WHITELISTED_PRESALE = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::presale::WhitelistInfo";
+export const PUBLIC_PRESALE = "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::presale::Info";
+export const WHITELISTED_PRESALE = "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::presale::WhitelistInfo";
 
 // entry functions
 export const CLAIM = "claim";
@@ -31,11 +31,11 @@ export const CONTRIBUTED_AMOUNT = "contributed_amount";
 export const CONTRIBUTED_AMOUNT_FROM_ADDRESS = "contributed_amount_from_address";
 
 // coin endpoints
-export const RENA_COIN_TYPE_TESTNET = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::core::RenegadeCoin"
-export const LIQUID_COIN_OBJECT_TESTNET = "0x1783ac93f471488b3db1737b970b2e00f410d2f06c1629429808877ff04f231d"
+export const RENA_COIN_TYPE_TESTNET = "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::core::RenegadeCoin"
+export const LIQUID_COIN_OBJECT_TESTNET = "0xd39cfb3b072b49b70c8b2090bf838d9d1f3d637012036464d0cd8dc5b07dbd78"
 
-export const COLLECTION_ID = "0xecacb27057d539555f6b1313e480963bddfab8cd659d73f17705cba6c7ae454b"
-export const COLLECTION_ADDRESS: AccountAddressInput = "0xecacb27057d539555f6b1313e480963bddfab8cd659d73f17705cba6c7ae454b"
+export const COLLECTION_ID = "0x7c25742cd2cfd0c2bd171b775edcda3e89e4af9d7eedd13312afddcc189a495f"
+export const COLLECTION_ADDRESS: AccountAddressInput = "0x7c25742cd2cfd0c2bd171b775edcda3e89e4af9d7eedd13312afddcc189a495f"
 const aptosConfig = new AptosConfig({ network: Network.TESTNET });
 export const APTOS = new Aptos(aptosConfig);
 

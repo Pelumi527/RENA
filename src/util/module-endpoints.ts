@@ -10,8 +10,8 @@ export const RENA_MODULE_MAINNET = "<address>::core";
 export const RENA_PRESALE_MODULE_MAINNET = "<address>::presale";
 
 // type arguments
-export const PUBLIC_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::Info";
-export const WHITELISTED_PRESALE = "0xba092add8ca6e1291319c2f60da6542ff97261a235632cff4eb1de1076f670fc::presale::WhitelistInfo";
+export const PUBLIC_PRESALE = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::presale::Info";
+export const WHITELISTED_PRESALE = "0xa408eaf6de821be63ec47b5da16cbb5a3ab1af6a351d0bab7b6beddaf7802776::presale::WhitelistInfo";
 
 // entry functions
 export const CLAIM = "claim";

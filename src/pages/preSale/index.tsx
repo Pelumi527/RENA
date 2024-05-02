@@ -744,7 +744,33 @@ const PreSale = () => {
             }
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6">
               {
-                /* Presale is not created yet */
+                /* Whitelist presale is not created yet */
+                !whitelistPresaleExists ?
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
+                  </p> 
+                  /* Whitelist presale is scheduled */
+                  : whitelistPresaleExists && (whitelistStartTime > Date.now()) && (whitelistEndTime >= Date.now()) ?
+                    <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                      <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
+                      <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), whitelistStartTime)}</p>
+                      <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(whitelistStartTime)}</p>
+                    </p>
+                    /* Whitelist presale is live */
+                    : whitelistPresaleExists && (whitelistStartTime <= Date.now()) && (whitelistEndTime >= Date.now()) ?
+                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
+                        <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
+                      </p>
+                      /* Whitelist presale is completed */
+                      : whitelistPresaleExists && (whitelistEndTime <= Date.now()) ?
+                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
+                          <p className="text-[22px] font-semibold text-[#CCC]">Presale has ENDED</p>
+                        </p>
+                        :
                 !presaleExists ?
                   <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
                     <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
@@ -853,7 +879,7 @@ const PreSale = () => {
             </div>
             <div className="flex flex-col items-center w-[95%] sm:w-[400px] h-fit bg-[#111] border border-[#666] rounded-[8px] py-8 px-6 mt-4">
               <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Public Presale</p>
-              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
+              <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(endTime)}</p>
             </div>
 
           </div>

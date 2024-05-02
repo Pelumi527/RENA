@@ -51,6 +51,7 @@ const PreSale = () => {
   const [whitelistShouldFetch, setWhitelistShouldFetch] = useState(false);
 
   const contribute = useContribute();
+  const whitelistContribute = useWhitelistContribute();
 
   const config = new AptosConfig({ network: Network.TESTNET });
   const aptos = new Aptos(config);
@@ -480,7 +481,7 @@ const PreSale = () => {
     console.log(Date.now(), whitelistEndTime, whitelistStartTime, parseFloat(count))
     if (account && whitelistCount && Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) {
       try {
-        await contribute(account.address, parseFloat(count));
+        await whitelistContribute(account.address, parseFloat(count));
         getWhitelistTotalRaisedFunds();
         getWhitelistContributedAmount(account?.address);
         setWhitelistShouldFetch(true);
@@ -892,6 +893,27 @@ const PreSale = () => {
                     </div>
                   </div>
                 </>
+                  }}
+                  className={` ${Date.now() < endTime && Date.now() >= startTime ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
+                  disabled={Date.now() < endTime && Date.now() >= startTime ? false : true}
+                />
+                <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
+                  <p>APT</p>
+                  <img src="/presale/aptos.svg" className="w-[24px] h-[24px]" />
+                </div>
+              </div>
+              {connected && presaleExists ?
+                <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
+                  <p className="text-[18px] font-bold my-2">Send APT</p>
+                </PrimaryButton>
+                : connected && whitelistPresaleExists ?
+                <PrimaryButton onClick={onWhitelistContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
+                  <p className="text-[18px] font-bold my-2">Send APT</p>
+                </PrimaryButton>
+                :
+                <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
+                  <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
+                </PrimaryButton>
               }
             </div>
             <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[144px]'} mt-5 rounded-[8px] py-8 px-6`}>

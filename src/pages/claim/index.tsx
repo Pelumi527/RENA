@@ -6,7 +6,6 @@ import MainSection from "./mainSection";
 import SecondSection from "./secondSection";
 import ThirdSection from "./thirdSection";
 const Claim = () => {
-
   const [backgroundImage, setBackgroundImage] = useState("/home/bg-full.png");
 
   useEffect(() => {
@@ -18,16 +17,23 @@ const Claim = () => {
       }
     };
 
-    window.addEventListener('resize', updateBackground);
+    window.addEventListener("resize", updateBackground);
     updateBackground(); // Initial check
 
-    return () => window.removeEventListener('resize', updateBackground);
+    return () => window.removeEventListener("resize", updateBackground);
   }, []);
 
   return (
     <div className="parallax relative" id="cred-point">
       <Header className="bg-[#121212] bg-opacity-100" active={0} />
-      <div className="w-full flex flex-col h-[2400px] sm:h-[1720px] z-20 relative" style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }}>
+      <div
+        className="w-full flex flex-col h-[2400px] sm:h-[1720px] z-20 relative"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundPosition: "top",
+          backgroundSize: "cover",
+        }}
+      >
         <MainSection />
         <SecondSection />
         <ThirdSection />

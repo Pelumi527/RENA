@@ -11,7 +11,7 @@ const initialState: globalStates = {
   step: 0,
   initialized: false,
   visitorMode: false,
-  refresh: false
+  refresh: false,
 };
 
 export const globalSlice = createSlice({
@@ -38,5 +38,11 @@ export const globalSlice = createSlice({
   },
 });
 
-export const { resetGlobal, updateStep, updateInitialized, updateVisitorMode, updateRefresh } = globalSlice.actions;
+export const {
+  resetGlobal,
+  updateStep,
+  updateInitialized,
+  updateVisitorMode,
+  updateRefresh,
+} = globalSlice.actions;
 export default globalSlice.reducer;

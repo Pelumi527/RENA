@@ -1,7 +1,7 @@
 export const fetchGraphQL = async (
   operationsDoc: string,
   operationName: string,
-  variables: object
+  variables: object,
 ) => {
   const result = await fetch(process.env.REACT_APP_API_URL!, {
     method: "POST",
@@ -15,4 +15,4 @@ export const fetchGraphQL = async (
     },
   });
   return await result.json();
-}
+};

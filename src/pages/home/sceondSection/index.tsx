@@ -15,8 +15,13 @@ const SceondSection = () => {
             src="/home/avatar-home-mobile.svg"
             className="block md:hidden w-[194px] h-[194px] cursor-pointer mb-12 rounded-lg"
           />
-          <p className="text-[26px] md:text-[32px] font-bold text-center w-[85%]">The First Liquid NFT collection on Aptos</p>
-          <p className="text-[22px] md:text-[26px] font-semibold text-center">with 5,000 NFTs and $RENA to blaze a trail in the semi-fungible ecosystem with the Move language</p>
+          <p className="text-[26px] md:text-[32px] font-bold text-center w-[85%]">
+            The First Liquid NFT collection on Aptos
+          </p>
+          <p className="text-[22px] md:text-[26px] font-semibold text-center">
+            with 5,000 NFTs and $RENA to blaze a trail in the semi-fungible
+            ecosystem with the Move language
+          </p>
         </div>
       </div>
     </div>

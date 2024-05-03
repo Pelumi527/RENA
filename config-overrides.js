@@ -1,6 +1,6 @@
 module.exports = {
   // The Webpack config to use when compiling your react app for development or production.
-  webpack: function(config, env) {
+  webpack: function (config, env) {
     config.resolve.fallback = {
       url: false,
       assert: false,
@@ -10,8 +10,7 @@ module.exports = {
       os: false,
       buffer: false,
       stream: false,
-  };
+    };
     return config;
-  }
-
-}
+  },
+};

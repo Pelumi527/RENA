@@ -9,13 +9,28 @@ const Footer = () => {
           <div className="flex justify-between">
             <div className="flex sm:flex-row flex-col sm:items-center gap-[62px] sm:gap-[92px]">
               <div className="flex flex-col justify-between h-full">
-                <img src="/logo.svg" alt="cred" className="w-[156px] h-[88px] sm:w-[180px] sm:h-[103px]" />
-                <p className="hidden sm:block text-[16px] font-semibold text-[#666] text-center md:text-left">© {new Date().getFullYear()} Renegades</p>
+                <img
+                  src="/logo.svg"
+                  alt="cred"
+                  className="w-[156px] h-[88px] sm:w-[180px] sm:h-[103px]"
+                />
+                <p className="hidden sm:block text-[16px] font-semibold text-[#666] text-center md:text-left">
+                  © {new Date().getFullYear()} Renegades
+                </p>
               </div>
               <div className="flex flex-col gap-4">
-                <Link to={'/presale'}><p className="text-[18px] font-semibold">Get $RENA</p></Link>
-                <Link to={'/claim'}> <p className="text-[18px] font-semibold">Claim or Liquify NFT</p></Link>
-                <Link to={'/renegades'}><p className="text-[18px] font-semibold">My Renegades</p></Link>
+                <Link to={"/presale"}>
+                  <p className="text-[18px] font-semibold">Get $RENA</p>
+                </Link>
+                <Link to={"/claim"}>
+                  {" "}
+                  <p className="text-[18px] font-semibold">
+                    Claim or Liquify NFT
+                  </p>
+                </Link>
+                <Link to={"/renegades"}>
+                  <p className="text-[18px] font-semibold">My Renegades</p>
+                </Link>
                 <div className="hidden sm:flex justify-between h-8 w-[278px] font-semibold text-[16px] text-[#CCC] mt-[56px]">
                   {/* <p className="">Privacy policy</p>
                   <p className="">Terms of Service</p> */}
@@ -26,7 +41,9 @@ const Footer = () => {
               <JoinUs />
             </div>
           </div>
-          <p className="block sm:hidden text-[16px] font-semibold text-[#666] text-left md:text-left mt-[210px] mb-[55px]">© {new Date().getFullYear()} Renegades</p>
+          <p className="block sm:hidden text-[16px] font-semibold text-[#666] text-left md:text-left mt-[210px] mb-[55px]">
+            © {new Date().getFullYear()} Renegades
+          </p>
         </div>
       </div>
     </div>

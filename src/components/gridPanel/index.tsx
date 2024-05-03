@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import ActivedItem from "./activedItem";
 import InactivedItem from "./inactivedItem";
 
@@ -11,10 +11,10 @@ const GridPanel = () => {
       setWindowWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup function to remove the event listener
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -23,11 +23,25 @@ const GridPanel = () => {
   }, [windowWidth]);
 
   return (
-    <div style={{ width: '100vw', overflowX: 'hidden',  marginTop: '-100px' }}>
-      <div style={{ backgroundColor: '#121212', display: 'flex', minWidth: '110vw', flexWrap: 'wrap', overflow: 'hidden' }}>
-        {Array(26).fill(<ActivedItem />).concat(Array(10).fill(<InactivedItem />))}
+    <div style={{ width: "100vw", overflowX: "hidden", marginTop: "-100px" }}>
+      <div
+        style={{
+          backgroundColor: "#121212",
+          display: "flex",
+          minWidth: "110vw",
+          flexWrap: "wrap",
+          overflow: "hidden",
+        }}
+      >
+        {Array(26)
+          .fill(<ActivedItem />)
+          .concat(Array(10).fill(<InactivedItem />))}
         {items.map((isActive, index) =>
-          isActive ? <ActivedItem key={index} /> : <InactivedItem key={index} />
+          isActive ? (
+            <ActivedItem key={index} />
+          ) : (
+            <InactivedItem key={index} />
+          ),
         )}
       </div>
     </div>

@@ -8,11 +8,11 @@ import {
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../state/hooks";
 import { toggleWalletPanel, toggleConnectRequest } from "../state/dialog";
-import { initializeConnector } from '@web3-react/core'
+import { initializeConnector } from "@web3-react/core";
 
 const WalletButtons = () => {
   const { wallets } = useWallet();
-  
+
   return (
     <div className="mt-4 flex flex-col gap-4 pb-4">
       {wallets.map((wallet: Wallet) => {
@@ -22,12 +22,11 @@ const WalletButtons = () => {
   );
 };
 
-
 const WalletView = (wallet: Wallet) => {
   const { connect } = useWallet();
   const isWalletReady =
-  wallet.readyState === WalletReadyState.Installed ||
-  wallet.readyState === WalletReadyState.Loadable;
+    wallet.readyState === WalletReadyState.Installed ||
+    wallet.readyState === WalletReadyState.Loadable;
   const mobileSupport = wallet.deeplinkProvider;
   const dispatch = useAppDispatch();
 
@@ -78,17 +77,18 @@ const WalletView = (wallet: Wallet) => {
         onClick={() => onWalletConnectRequest(wallet.name)}
       >
         <img src={wallet.icon} alt="uri" className="w-10 h-10" />
-        <span className="text-left">{wallet.name} <br /> Desktop Only</span>
+        <span className="text-left">
+          {wallet.name} <br /> Desktop Only
+        </span>
       </button>
     );
   } else {
     // we are on desktop view
     return (
       <button
-        className={`flex justify-between items-center  text-white py-2 px-6 rounded ${isWalletReady
-          ? "hover:bg-gray-light-8"
-          : "cursor-not-allowed"
-          }`}
+        className={`flex justify-between items-center  text-white py-2 px-6 rounded ${
+          isWalletReady ? "hover:bg-gray-light-8" : "cursor-not-allowed"
+        }`}
         disabled={!isWalletReady}
         key={wallet.name}
         onClick={() => onWalletConnectRequest(wallet.name)}
@@ -97,7 +97,9 @@ const WalletView = (wallet: Wallet) => {
           <img src={wallet.icon} alt="uri" className="w-10 h-10" />
           {wallet.name}
         </div>
-        {isWalletReady && <p className="text-[14px] text-gray-light-7">Detected</p>}
+        {isWalletReady && (
+          <p className="text-[14px] text-gray-light-7">Detected</p>
+        )}
       </button>
     );
   }

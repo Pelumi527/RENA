@@ -9,8 +9,12 @@ const SixthSection = () => {
             src="/logo-white.svg"
             className="w-[301px] h-[174px] md:w-[431px] md:h-[248px] cursor-pointer mb-4"
           />
-          <p className=" text-[22px] sm:text-[26px] font-semibold text-center w-[95%] md:w-[899px] leading-7 mt-8 mb-7 sm:mb-1">Be apart of the first Liquid NFT collection on Aptos!</p>
-          <p className=" text-[22px] sm:text-[26px] font-semibold text-center w-[95%] md:w-[899px] leading-7 mb-8">Get $RENA and liquify your NFTs in a brand new way!</p>
+          <p className=" text-[22px] sm:text-[26px] font-semibold text-center w-[95%] md:w-[899px] leading-7 mt-8 mb-7 sm:mb-1">
+            Be apart of the first Liquid NFT collection on Aptos!
+          </p>
+          <p className=" text-[22px] sm:text-[26px] font-semibold text-center w-[95%] md:w-[899px] leading-7 mb-8">
+            Get $RENA and liquify your NFTs in a brand new way!
+          </p>
           <div className="">
             <SecondaryButton className="z-20 h-12 relative w-[200px]">
               <p className="text-[18px] h-6 font-bold">Get $RENA</p>

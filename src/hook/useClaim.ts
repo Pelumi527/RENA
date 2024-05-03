@@ -1,5 +1,11 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { APTOS, CLAIM, LIQUID_COIN_OBJECT_TESTNET, RENA_COIN_TYPE_TESTNET, RENA_MODULE_TESTNET } from "../util/module-endpoints";
+import {
+  APTOS,
+  CLAIM,
+  LIQUID_COIN_OBJECT_TESTNET,
+  RENA_COIN_TYPE_TESTNET,
+  RENA_MODULE_TESTNET,
+} from "../util/module-endpoints";
 import { useDispatch } from "react-redux";
 import { updateLRDLoading, updateLastRenegadesData } from "../state/renegades";
 
@@ -25,11 +31,12 @@ const useClaim = () => {
       });
 
       const tokenObject: any = result.changes.filter(
-        (change: any) => change.data && change.data.type === "0x4::token::Token"
+        (change: any) =>
+          change.data && change.data.type === "0x4::token::Token",
       )[0];
       const tokenObjectForName: any = result.changes.filter(
         (change: any) =>
-          change.data && change.data.type === "0x4::token::TokenIdentifiers"
+          change.data && change.data.type === "0x4::token::TokenIdentifiers",
       )[0];
       const address = tokenObject.address;
       const uri = tokenObject.data.data.uri;
@@ -42,7 +49,7 @@ const useClaim = () => {
           token_name: value,
           token_uri: uri,
           token_count: count,
-        })
+        }),
       );
     }
   };

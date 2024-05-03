@@ -8,7 +8,7 @@ import { OpenBlockWallet } from "@openblockhq/aptos-wallet-adapter";
 import { PetraWallet } from "petra-plugin-wallet-adapter";
 import { PontemWallet } from "@pontem/wallet-adapter-plugin";
 import { RiseWallet } from "@rise-wallet/wallet-adapter";
-import { OKXWallet } from '@okwallet/aptos-wallet-adapter'
+import { OKXWallet } from "@okwallet/aptos-wallet-adapter";
 import { TokenPocketWallet } from "@tp-lab/aptos-wallet-adapter";
 import { TrustWallet } from "@trustwallet/aptos-wallet-adapter";
 // import { MSafeWalletAdapter } from "msafe-plugin-wallet-adapter";
@@ -20,8 +20,8 @@ import {
 import { AutoConnectProvider, useAutoConnect } from "./AutoConnectProvider";
 import { FC, ReactNode } from "react";
 import face from "./lib/faceInitialization";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const wallets = [
@@ -53,9 +53,9 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
       autoConnect={true}
       onError={(error) => {
         toast.info("Wallet connection canceled", {
-          progressStyle: { backgroundColor: 'white' },
-          className: 'custom-toast-info',
-          theme: "colored"
+          progressStyle: { backgroundColor: "white" },
+          className: "custom-toast-info",
+          theme: "colored",
         });
       }}
     >

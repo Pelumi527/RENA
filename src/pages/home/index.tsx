@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import "./index.css";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
@@ -22,10 +22,10 @@ const Home = () => {
       }
     };
 
-    window.addEventListener('resize', updateBackground);
+    window.addEventListener("resize", updateBackground);
     updateBackground(); // Initial check
 
-    return () => window.removeEventListener('resize', updateBackground);
+    return () => window.removeEventListener("resize", updateBackground);
   }, []);
 
   return (
@@ -35,7 +35,14 @@ const Home = () => {
       </div>
       <Header />
       <MainSection />
-      <div className="w-full flex flex-col justify-between h-[4800px] sm:h-[4000px] z-20 relative" style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }}>
+      <div
+        className="w-full flex flex-col justify-between h-[4800px] sm:h-[4000px] z-20 relative"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundPosition: "top",
+          backgroundSize: "cover",
+        }}
+      >
         <div>
           <SceondSection />
           <ThirdSection />

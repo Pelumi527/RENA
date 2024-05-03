@@ -9,8 +9,18 @@ import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppSelector } from "../../state/hooks";
 import useTokenList from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
-import { RenegadeItemWithRarity, calculateRankings, getRaritiesForRenegadeItem } from '../../util/renegadeUtils';
-import { updateDisplayAmount, updateIsRenaListLoading, updateRenaBalance, updateRenegadesData, updateRenegadesRankData } from "../../state/renegades";
+import {
+  RenegadeItemWithRarity,
+  calculateRankings,
+  getRaritiesForRenegadeItem,
+} from "../../util/renegadeUtils";
+import {
+  updateDisplayAmount,
+  updateIsRenaListLoading,
+  updateRenaBalance,
+  updateRenegadesData,
+  updateRenegadesRankData,
+} from "../../state/renegades";
 import { Link } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton";
 import { NFTtype } from "../../type/renegades";
@@ -18,28 +28,34 @@ import { updateRefresh } from "../../state/global";
 import Cookies from "js-cookie";
 import useLiquify from "../../hook/useLiquify";
 
-const renegadesJsonData = require('../../metadata.json');
+const renegadesJsonData = require("../../metadata.json");
 
 const Renegades = () => {
   const { connected, account } = useWallet();
   const dispatch = useDispatch();
   const updateTokenList = useTokenList();
   const updateTokenBalance = useTokenBalance();
-  const renegadesData = useAppSelector((state) => state.renegadesState.renegadesData);
-  const renegadesRankData = useAppSelector((state) => state.renegadesState.renegadesRankData);
-  const isRenaListLoading = useAppSelector((state) => state.renegadesState.isRenaListLoading);
+  const renegadesData = useAppSelector(
+    (state) => state.renegadesState.renegadesData,
+  );
+  const renegadesRankData = useAppSelector(
+    (state) => state.renegadesState.renegadesRankData,
+  );
+  const isRenaListLoading = useAppSelector(
+    (state) => state.renegadesState.isRenaListLoading,
+  );
   const refresh = useAppSelector((state) => state.globalState.refresh);
-  const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
+  const [renegadesWithRarity, setRenegadesWithRarity] = useState<
+    RenegadeItemWithRarity[]
+  >([]);
   const [skip, setSkip] = useState(false);
   const [selectedItems, setSelectedItems] = useState<NFTtype[]>([]);
   const multistate = useAppSelector((state) => state.renegadesState.multistate);
   const liquify = useLiquify();
   const isBalanceLoading = useAppSelector(
-    (state) => state.renegadesState.isBalanceLoading
+    (state) => state.renegadesState.isBalanceLoading,
   );
-  const isLoading = useAppSelector(
-    (state) => state.renegadesState.isLoading
-  );
+  const isLoading = useAppSelector((state) => state.renegadesState.isLoading);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
@@ -47,10 +63,10 @@ const Renegades = () => {
       setWindowWidth(window.innerWidth);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -79,32 +95,37 @@ const Renegades = () => {
   }, []);
 
   const updateCookie = () => {
-    const dontShowAgain = Cookies.get('dontShowAgain');
+    const dontShowAgain = Cookies.get("dontShowAgain");
     console.log("dontShowAgain", dontShowAgain);
-    if (dontShowAgain === 'true') {
+    if (dontShowAgain === "true") {
       setSkip(true);
     }
-  }
+  };
 
   const toggleItemSelection = (itemId: NFTtype) => {
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.includes(itemId)
         ? prevSelectedItems.filter((id) => id !== itemId)
-        : [...prevSelectedItems, itemId]
+        : [...prevSelectedItems, itemId],
     );
   };
 
   useEffect(() => {
     const calculateAndSetRaritiesAndRankings = () => {
-      const itemsWithCalculatedRarities = renegadesJsonData.map((renegade: any) => {
-        const rarities = getRaritiesForRenegadeItem(renegadesJsonData, renegade.name);
-        return {
-          ...renegade,
-          overallRarity: rarities.overallRarity,
-        };
-      });
+      const itemsWithCalculatedRarities = renegadesJsonData.map(
+        (renegade: any) => {
+          const rarities = getRaritiesForRenegadeItem(
+            renegadesJsonData,
+            renegade.name,
+          );
+          return {
+            ...renegade,
+            overallRarity: rarities.overallRarity,
+          };
+        },
+      );
       const rankedItems = calculateRankings(itemsWithCalculatedRarities);
-      console.log('rankedItems', rankedItems)
+      console.log("rankedItems", rankedItems);
       setRenegadesWithRarity(rankedItems);
     };
     calculateAndSetRaritiesAndRankings();
@@ -113,13 +134,18 @@ const Renegades = () => {
   useEffect(() => {
     if (renegadesWithRarity.length > 0) {
       const rankedRenegades = calculateRankings(renegadesWithRarity);
-      const updatedRenegadesData = renegadesData.map(renegade => {
-        const foundRankedItem = rankedRenegades.find(rankedItem => rankedItem?.name?.trim() === renegade?.token_name?.trim());
-        if (foundRankedItem) {
-          return { ...renegade, rank: foundRankedItem.rank };
-        }
-        return renegade;
-      }).sort((a, b) => (a.rank || 0) - (b.rank || 0));
+      const updatedRenegadesData = renegadesData
+        .map((renegade) => {
+          const foundRankedItem = rankedRenegades.find(
+            (rankedItem) =>
+              rankedItem?.name?.trim() === renegade?.token_name?.trim(),
+          );
+          if (foundRankedItem) {
+            return { ...renegade, rank: foundRankedItem.rank };
+          }
+          return renegade;
+        })
+        .sort((a, b) => (a.rank || 0) - (b.rank || 0));
 
       if (updatedRenegadesData.length > 0) {
         console.log("updatedRenegadesData>>>>", updatedRenegadesData);
@@ -130,11 +156,11 @@ const Renegades = () => {
   }, [renegadesData, renegadesWithRarity, refresh]);
 
   const renaBalance = useAppSelector(
-    (state) => state.renegadesState.renaBalance
+    (state) => state.renegadesState.renaBalance,
   );
 
   useEffect(() => {
-    setSelectedItems([])
+    setSelectedItems([]);
     dispatch(updateRefresh(false));
   }, [refresh]);
 
@@ -152,7 +178,7 @@ const Renegades = () => {
       }
     } else {
       dispatch(updateRenaBalance(0));
-      dispatch(updateRenegadesData([]))
+      dispatch(updateRenegadesData([]));
     }
   };
 
@@ -163,7 +189,10 @@ const Renegades = () => {
   const onLiqify = async () => {
     if (account) {
       try {
-        await liquify(account.address, selectedItems.map((item) => item.token_data_id as string));
+        await liquify(
+          account.address,
+          selectedItems.map((item) => item.token_data_id as string),
+        );
         fetchEvents();
       } catch (error) {
         console.error(error);
@@ -179,9 +208,9 @@ const Renegades = () => {
         <div className="flex flex-col w-[90%] sm:w-[1100px]">
           <div className="mt-12 flex sm:flex-row flex-col justify-between sm:h-[47px] sm:items-end">
             <p className="font-bold text-[42px]">My Renegades</p>
-            {isBalanceLoading ?
+            {isBalanceLoading ? (
               <div className="bg-gray-loading w-[228px] h-[30px]" />
-              :
+            ) : (
               <div className="flex items-center">
                 <p className="text-[26px] font-semibold">$RENA Balance:</p>
                 <p className="text-[26px] text-primary font-bold ml-3 mr-2">
@@ -189,22 +218,28 @@ const Renegades = () => {
                 </p>
                 <img src="/renegades/rena.svg" className="mr-1" />
               </div>
-            }
+            )}
           </div>
-          {isBalanceLoading ?
+          {isBalanceLoading ? (
             <div className="h-[110px] w-full bg-gray-loading mt-10 rounded-[8px]" />
-            :
+          ) : (
             <div
-              onClick={() => { Math.floor(renaBalance) != 0 && dispatch(toggleClaimModal(true)) }}
-              className={`flex w-full h-[113px] items-center cursor-pointer justify-center ${Math.floor(renaBalance) != 0
-                ? "bg-primary hover:bg-primary-hover"
-                : "bg-[#222]"
-                } border-2 rounded-[8px] mt-10`}
+              onClick={() => {
+                Math.floor(renaBalance) != 0 &&
+                  dispatch(toggleClaimModal(true));
+              }}
+              className={`flex w-full h-[113px] items-center cursor-pointer justify-center ${
+                Math.floor(renaBalance) != 0
+                  ? "bg-primary hover:bg-primary-hover"
+                  : "bg-[#222]"
+              } border-2 rounded-[8px] mt-10`}
               style={{
-                backgroundImage: `url("${windowWidth <= 500 ? '/renegades/second-mobile.svg' : '/renegades/second.png'}")`,
+                backgroundImage: `url("${windowWidth <= 500 ? "/renegades/second-mobile.svg" : "/renegades/second.png"}")`,
                 backgroundRepeat: "no-repeat",
-                backgroundPosition: windowWidth <= 500 ? "" : "left 80px center",
-                backgroundSize: windowWidth <= 500 ? "252px 105px left" : "contain",
+                backgroundPosition:
+                  windowWidth <= 500 ? "" : "left 80px center",
+                backgroundSize:
+                  windowWidth <= 500 ? "252px 105px left" : "contain",
               }}
             >
               <div className="flex items-center">
@@ -212,23 +247,26 @@ const Renegades = () => {
                   <>
                     <p className="font-medium text-[22px] sm:text-[26px]">
                       You can claim{" "}
-                      <span className="font-bold ">{Math.floor(renaBalance)} NFT{renaBalance > 1 && "s"}</span>
+                      <span className="font-bold ">
+                        {Math.floor(renaBalance)} NFT{renaBalance > 1 && "s"}
+                      </span>
                     </p>
                     <Icon icon={"mingcute:right-line"} fontSize={25} />
                   </>
                 ) : (
                   <div className="flex flex-col items-center">
                     <p className="font-medium text-[22px] sm:text-[26px] text-center leading-[120%]">
-                      You don’t have any <br className="sm:hidden block" /> Renegades to claim
+                      You don’t have any <br className="sm:hidden block" />{" "}
+                      Renegades to claim
                     </p>
                     <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                      <Link to={'/presale'}>Get $RENA to claim NFTs</Link>
+                      <Link to={"/presale"}>Get $RENA to claim NFTs</Link>
                     </p>
                   </div>
                 )}
               </div>
             </div>
-          }
+          )}
           {renegadesRankData.length > 0 ? (
             <div className="flex mt-[48px] sm:mt-[58px] gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
               {renegadesRankData.map((item, index) => (
@@ -239,14 +277,20 @@ const Renegades = () => {
                   avatar={item.token_uri}
                   name={item.token_name}
                   rank={item?.rank}
-                  isSelected={!!item.token_data_id && selectedItems.includes(item)}
-                  onToggleSelected={() => item.token_data_id ? toggleItemSelection(item) : undefined}
+                  isSelected={
+                    !!item.token_data_id && selectedItems.includes(item)
+                  }
+                  onToggleSelected={() =>
+                    item.token_data_id ? toggleItemSelection(item) : undefined
+                  }
                 />
               ))}
             </div>
           ) : (
-            <div className={`flex flex-col mt-[120px] mb-[219px] items-center w-full`}>
-              {connected && !isBalanceLoading &&
+            <div
+              className={`flex flex-col mt-[120px] mb-[219px] items-center w-full`}
+            >
+              {connected && !isBalanceLoading && (
                 <>
                   <img
                     src="/renegades/avatar-default.png"
@@ -256,12 +300,12 @@ const Renegades = () => {
                     You don’t have any Renegades in your wallet
                   </p>
                   <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                    <Link to={'/presale'}>Get $RENA to get NFTs</Link>
+                    <Link to={"/presale"}>Get $RENA to get NFTs</Link>
                   </p>
                   <p className="text-[26px]">or</p>
                   <p className="text-[26px]">Get them on marketplaces</p>
                 </>
-              }
+              )}
             </div>
           )}
         </div>
@@ -275,13 +319,18 @@ const Renegades = () => {
             Deselect all
           </button>
           <button
-            className={`${renegadesRankData.length == selectedItems.length && 'cursor-not-allowed text-[#c1c1c1]'} text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
+            className={`${renegadesRankData.length == selectedItems.length && "cursor-not-allowed text-[#c1c1c1]"} text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
             onClick={() => setSelectedItems(renegadesRankData)}
           >
             Select all
           </button>
-          <PrimaryButton onClick={() => skip ? onLiqify() : dispatch(toggleItemModal(selectedItems))} className="w-[141px] sm:w-[176px] z-20 relative !font-bold !h-[48px]">
-            Liquify {selectedItems.length} NFT{selectedItems.length > 1 && 's'}
+          <PrimaryButton
+            onClick={() =>
+              skip ? onLiqify() : dispatch(toggleItemModal(selectedItems))
+            }
+            className="w-[141px] sm:w-[176px] z-20 relative !font-bold !h-[48px]"
+          >
+            Liquify {selectedItems.length} NFT{selectedItems.length > 1 && "s"}
           </PrimaryButton>
         </div>
       )}

@@ -13,7 +13,7 @@ const initialState: dialogStates = {
   bWalletPanel: false,
   bWalletHold: false,
   bClaimModal: false,
-  bItemModal: []
+  bItemModal: [],
 };
 
 export const dialogSlice = createSlice({
@@ -21,7 +21,7 @@ export const dialogSlice = createSlice({
   initialState,
   reducers: {
     toggleSidebar: (state, action: PayloadAction<number>) => {
-      console.log(action.payload)
+      console.log(action.payload);
       state.bSidebar = action.payload;
     },
     toggleWalletPanel: (state, action: PayloadAction<boolean>) => {
@@ -35,9 +35,9 @@ export const dialogSlice = createSlice({
     },
     toggleClaimModal: (state, action: PayloadAction<any>) => {
       state.bClaimModal = action.payload;
-    }
+    },
   },
-  extraReducers: (builder) => { },
+  extraReducers: (builder) => {},
 });
 
 export const {
@@ -45,7 +45,7 @@ export const {
   toggleWalletPanel,
   toggleConnectRequest,
   toggleItemModal,
-  toggleClaimModal
+  toggleClaimModal,
 } = dialogSlice.actions;
 
 export default dialogSlice.reducer;

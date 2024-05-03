@@ -1,21 +1,39 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable jsx-a11y/alt-text */
+import React, { useEffect, useState } from "react";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import Sidebar from "./sidebar/sidebar";
 import PrimaryButton from "../../components/primaryButton";
-import { Aptos, AptosConfig, GetEventsResponse, InputViewFunctionData } from "@aptos-labs/ts-sdk";
-import { APTOS, CONTRIBUTED_AMOUNT_FROM_ADDRESS, IS_COMPLETED, ONE_RENEGADES, PUBLIC_PRESALE, REMAINING_TIME, RENA_PRESALE_TESTNET, TOTAL_CONTRIBUTORS, TOTAL_RAISED_FUNDS, TREASURY_ADDRESS, WHITELISTED_PRESALE } from "../../util/module-endpoints";
-import { Network } from 'aptos';
-import { Events } from '../../api';
-import useContribute from '../../hook/useContribute';
-import useWhitelistContribute from '../../hook/useWhitelistContribute';
-import { Icon } from '@iconify/react';
-import { useDispatch } from 'react-redux';
-import { Address } from 'aptos/src/generated';
-import { toggleSidebar, toggleWalletPanel } from '../../state/dialog';
-import { useAppSelector } from '../../state/hooks';
-import { set } from 'lodash';
+import {
+  Aptos,
+  AptosConfig,
+  GetEventsResponse,
+  InputViewFunctionData,
+} from "@aptos-labs/ts-sdk";
+import {
+  APTOS,
+  CONTRIBUTED_AMOUNT_FROM_ADDRESS,
+  IS_COMPLETED,
+  ONE_RENEGADES,
+  PUBLIC_PRESALE,
+  REMAINING_TIME,
+  RENA_PRESALE_TESTNET,
+  TOTAL_CONTRIBUTORS,
+  TOTAL_RAISED_FUNDS,
+  TREASURY_ADDRESS,
+  WHITELISTED_PRESALE,
+} from "../../util/module-endpoints";
+import { Network } from "aptos";
+import { Events } from "../../api";
+import useContribute from "../../hook/useContribute";
+import useWhitelistContribute from "../../hook/useWhitelistContribute";
+import { Icon } from "@iconify/react";
+import { useDispatch } from "react-redux";
+import { Address } from "aptos/src/generated";
+import { toggleSidebar, toggleWalletPanel } from "../../state/dialog";
+import { useAppSelector } from "../../state/hooks";
+import { set } from "lodash";
 import "./index.css";
 
 const PreSale = () => {
@@ -28,22 +46,28 @@ const PreSale = () => {
   const [whitelistStartTime, setWhitelistStartTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
   const [whitelistEndTime, setWhitelistEndTime] = useState<number>(0);
-  const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
+  const [backgroundImage, setBackgroundImage] = useState(
+    "/presale/bg-presale.svg",
+  );
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
-  const [whitelistPresaleExists, setWhitelistPresaleExists] = useState<boolean>(false);
+  const [whitelistPresaleExists, setWhitelistPresaleExists] =
+    useState<boolean>(false);
   const [isEligible, setIsEligible] = useState<boolean>(false);
   const bSidebar = useAppSelector((state) => state.dialogState.bSidebar);
   const [contributedAmount, setContributedAmount] = useState<any>(null);
-  const [whitelistContributedAmount, setWhitelistContributedAmount] = useState<any>(null);
+  const [whitelistContributedAmount, setWhitelistContributedAmount] =
+    useState<any>(null);
   const [distributedFunds, setDistributedFunds] = useState<number>(0);
   const [presaleCompleted, setPresaleCompleted] = useState<boolean>(false);
-  const [whitelistPresaleCompleted, setWhitelistPresaleCompleted] = useState<boolean>(false);
+  const [whitelistPresaleCompleted, setWhitelistPresaleCompleted] =
+    useState<boolean>(false);
   const [remainingTime, setRemainingTime] = useState<number>(0);
   const [totalContributors, setTotalContributors] = useState<number>(0);
   const [totalRaisedFunds, setTotalRaisedFunds] = useState<number>(0);
-  const [whitelistTotalRaisedFunds, setWhitelistTotalRaisedFunds] = useState<number>(0);
+  const [whitelistTotalRaisedFunds, setWhitelistTotalRaisedFunds] =
+    useState<number>(0);
   const [finalTotalRaisedFunds, setFinalTotalRaisedFunds] = useState<number>(0);
-  const [treasuryAddress, setTreasuryAddress] = useState<string>('');
+  const [treasuryAddress, setTreasuryAddress] = useState<string>("");
 
   const [contributors, setContributors] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,13 +86,11 @@ const PreSale = () => {
    */
   const fetchPresale = async () => {
     try {
-      const presaleResource = await aptos.getAccountResource(
-        {
-          accountAddress: `0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867`,
-          resourceType: `${PUBLIC_PRESALE}`,
-        }
-      );
-      console.log('presale resource: ', presaleResource);
+      const presaleResource = await aptos.getAccountResource({
+        accountAddress: `0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867`,
+        resourceType: `${PUBLIC_PRESALE}`,
+      });
+      console.log("presale resource: ", presaleResource);
       // setContributors(presaleResource.data.contributors);
       setPresaleExists(true);
     } catch (e: any) {
@@ -88,19 +110,17 @@ const PreSale = () => {
   }, []);
 
   /**
-   * 
+   *
    * Fetch the private presale resource
-   * 
+   *
    */
   const fetchPrivatePresale = async () => {
     try {
-      const presaleResource = await aptos.getAccountResource(
-        {
-          accountAddress: `0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867`,
-          resourceType: `${WHITELISTED_PRESALE}`,
-        }
-      );
-      console.log('private presale resource: ', presaleResource);
+      const presaleResource = await aptos.getAccountResource({
+        accountAddress: `0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867`,
+        resourceType: `${WHITELISTED_PRESALE}`,
+      });
+      console.log("private presale resource: ", presaleResource);
       setWhitelistPresaleExists(true);
     } catch (e: any) {
       setWhitelistPresaleExists(false);
@@ -112,82 +132,85 @@ const PreSale = () => {
   }, []);
 
   /**
-   * 
+   *
    * Fetch the completion status of the public presale
-   * 
+   *
    */
   const getIsPresaleCompleted = () => {
     const viewIsCompleted = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`,
-        typeArguments: [`${PUBLIC_PRESALE}`]
+        typeArguments: [`${PUBLIC_PRESALE}`],
       };
       let res = await APTOS.view({ payload });
-      console.log('is presale completed: ', res);
+      console.log("is presale completed: ", res);
     };
     return viewIsCompleted;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getIsPresaleCompleted();
-      setPresaleCompleted(result as any);
-    };
+  useEffect(
+    () => {
+      const fetchData = async () => {
+        const result = await getIsPresaleCompleted();
+        setPresaleCompleted(result as any);
+      };
 
-    fetchData();
-  }
+      fetchData();
+    },
     // when it changes to true, we can show the presale is completed
-    , []);
+    [],
+  );
 
   /**
-   * 
+   *
    * Fetch the completion status of the whitelist presale
-   * 
+   *
    */
   const getIsWhitelistPresaleCompleted = () => {
     const viewIsCompleted = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${IS_COMPLETED}`,
-        typeArguments: [`${WHITELISTED_PRESALE}`]
+        typeArguments: [`${WHITELISTED_PRESALE}`],
       };
       let res = await APTOS.view({ payload });
-      console.log('is whitelist presale completed: ', res);
+      console.log("is whitelist presale completed: ", res);
     };
     return viewIsCompleted;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await getIsWhitelistPresaleCompleted();
-      setWhitelistPresaleCompleted(result as any);
-    };
+  useEffect(
+    () => {
+      const fetchData = async () => {
+        const result = await getIsWhitelistPresaleCompleted();
+        setWhitelistPresaleCompleted(result as any);
+      };
 
-    fetchData();
-  }
+      fetchData();
+    },
     // when it changes to true, we can show the presale is completed
-    , []);
-
+    [],
+  );
 
   /**
-   * 
+   *
    * Fetch the contributed amount of the account in a public presale
-   * 
+   *
    */
   const getContributedAmount = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
       typeArguments: [`${PUBLIC_PRESALE}`],
-      functionArguments: [accountAddress]
+      functionArguments: [accountAddress],
     };
     let res = await APTOS.view({ payload });
-    console.log('contributed amount: ', res);
+    console.log("contributed amount: ", res);
     return res;
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
+        const result = await getContributedAmount(account?.address ?? ""); // Call the returned function to trigger fetch
         setContributedAmount(result[0]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -198,26 +221,26 @@ const PreSale = () => {
   }, [shouldFetch, account]);
 
   /**
-   * 
+   *
    * Fetch if the signer is eligible to join the whitelist presale
-   * 
+   *
    */
   const getIsEligible = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::is_whitelisted`, // TODO: should not be hardcoded
-      functionArguments: [accountAddress]
+      functionArguments: [accountAddress],
     };
     let res = await APTOS.view({ payload });
-    console.log('is eligible: ', res);
+    console.log("is eligible: ", res);
     return res[res.length - 1];
-  }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getIsEligible(account?.address ?? ''); // Call the returned function to trigger fetch
-        setIsEligible((result as  boolean));
-        console.log('is eligible: ', result);
+        const result = await getIsEligible(account?.address ?? ""); // Call the returned function to trigger fetch
+        setIsEligible(result as boolean);
+        console.log("is eligible: ", result);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -227,25 +250,27 @@ const PreSale = () => {
   }, [shouldFetch, account]);
 
   /**
-   * 
+   *
    * Fetch the contributed amount of the account in a whitelist presale
-   * 
+   *
    */
   const getWhitelistContributedAmount = async (accountAddress: Address) => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${CONTRIBUTED_AMOUNT_FROM_ADDRESS}`,
       typeArguments: [`${WHITELISTED_PRESALE}`],
-      functionArguments: [accountAddress]
+      functionArguments: [accountAddress],
     };
     let res = await APTOS.view({ payload });
-    console.log('contributed amount: ', res);
+    console.log("contributed amount: ", res);
     return res;
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getWhitelistContributedAmount(account?.address ?? ''); // Call the returned function to trigger fetch
+        const result = await getWhitelistContributedAmount(
+          account?.address ?? "",
+        ); // Call the returned function to trigger fetch
         setWhitelistContributedAmount(result[0]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -256,17 +281,17 @@ const PreSale = () => {
   }, [shouldFetch, account]);
 
   /**
-   * 
+   *
    * Fetch the total raised funds of the public presale
-   * 
+   *
    */
   const getTotalRaisedFunds = async () => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`,
-      typeArguments: [`${PUBLIC_PRESALE}`]
+      typeArguments: [`${PUBLIC_PRESALE}`],
     };
     let res = await APTOS.view({ payload });
-    console.log('total raised funds: ', res);
+    console.log("total raised funds: ", res);
     return res;
   };
 
@@ -285,17 +310,17 @@ const PreSale = () => {
   }, [shouldFetch, account]);
 
   /**
-   * 
+   *
    * Fetch the total raised funds of the whitelist presale
-   * 
+   *
    */
   const getWhitelistTotalRaisedFunds = async () => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${TOTAL_RAISED_FUNDS}`,
-      typeArguments: [`${WHITELISTED_PRESALE}`]
+      typeArguments: [`${WHITELISTED_PRESALE}`],
     };
     let res = await APTOS.view({ payload });
-    console.log('total raised funds: ', res);
+    console.log("total raised funds: ", res);
     return res;
   };
 
@@ -314,18 +339,18 @@ const PreSale = () => {
   }, [whitelistShouldFetch, account]);
 
   /**
-   *  
+   *
    * Fetch the ramaining time of the public presale
-   * 
+   *
    */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getRemainingTime = async () => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`,
-      typeArguments: [`${PUBLIC_PRESALE}`]
+      typeArguments: [`${PUBLIC_PRESALE}`],
     };
     let res = await APTOS.view({ payload });
-    console.log('remaining time: ', res[0]);
+    console.log("remaining time: ", res[0]);
     return res[0];
   };
 
@@ -342,18 +367,18 @@ const PreSale = () => {
   }, [getRemainingTime]);
 
   /**
-   * 
+   *
    * Fetch the ramaining time of the whitelist presale
-   * 
+   *
    */
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getWhitelistRemainingTime = async () => {
     const payload: InputViewFunctionData = {
       function: `${RENA_PRESALE_TESTNET}::${REMAINING_TIME}`,
-      typeArguments: [`${WHITELISTED_PRESALE}`]
+      typeArguments: [`${WHITELISTED_PRESALE}`],
     };
     let res = await APTOS.view({ payload });
-    console.log('remaining time: ', res[0]);
+    console.log("remaining time: ", res[0]);
     return res[0];
   };
 
@@ -370,18 +395,18 @@ const PreSale = () => {
   }, [getWhitelistRemainingTime]);
 
   /**
-   * 
+   *
    * Fetch the total contributors of the public presale
-   * 
+   *
    */
   const getTotalContributors = () => {
     const viewTotalContributors = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`,
-        typeArguments: [`${PUBLIC_PRESALE}`]
+        typeArguments: [`${PUBLIC_PRESALE}`],
       };
       let res = await APTOS.view({ payload });
-      console.log('total contributors number: ', res);
+      console.log("total contributors number: ", res);
     };
     return viewTotalContributors;
   };
@@ -395,8 +420,8 @@ const PreSale = () => {
     console.log("bSidebar", bSidebar);
     if (bSidebar == 2) {
       setTimeout(() => {
-        dispatch(toggleSidebar(0))
-      }, 500)
+        dispatch(toggleSidebar(0));
+      }, 500);
     }
   }, [bSidebar]);
 
@@ -405,18 +430,18 @@ const PreSale = () => {
   }, []);
 
   /**
-   * 
+   *
    * Fetch the total contributors in whitelist presale
-   * 
+   *
    */
   const getWhitelistTotalContributors = () => {
     const viewTotalContributors = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TOTAL_CONTRIBUTORS}`,
-        typeArguments: [`${WHITELISTED_PRESALE}`]
+        typeArguments: [`${WHITELISTED_PRESALE}`],
       };
       let res = await APTOS.view({ payload });
-      console.log('total contributors number: ', res);
+      console.log("total contributors number: ", res);
     };
     return viewTotalContributors;
   };
@@ -431,18 +456,18 @@ const PreSale = () => {
   }, []);
 
   /**
-   * 
+   *
    * Fetch the treasury address of the public presale
-   * 
+   *
    */
   const getTreasuryAddress = () => {
     const viewTreasuryAddress = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`,
-        typeArguments: [`${PUBLIC_PRESALE}`]
+        typeArguments: [`${PUBLIC_PRESALE}`],
       };
       let res = await APTOS.view({ payload });
-      console.log('treasury address: ', res);
+      console.log("treasury address: ", res);
     };
     return viewTreasuryAddress;
   };
@@ -457,18 +482,18 @@ const PreSale = () => {
   }, []);
 
   /**
-   * 
+   *
    * Fetch the treasury address of the whitelist presale
-   * 
+   *
    */
   const getWhitelistTreasuryAddress = () => {
     const viewTreasuryAddress = async () => {
       const payload: InputViewFunctionData = {
         function: `${RENA_PRESALE_TESTNET}::${TREASURY_ADDRESS}`,
-        typeArguments: [`${WHITELISTED_PRESALE}`]
+        typeArguments: [`${WHITELISTED_PRESALE}`],
       };
       let res = await APTOS.view({ payload });
-      console.log('treasury address: ', res);
+      console.log("treasury address: ", res);
     };
     return viewTreasuryAddress;
   };
@@ -483,12 +508,12 @@ const PreSale = () => {
   }, []);
 
   /**
-   * 
+   *
    * Fetch the total raised funds, contributed amount, and distributed funds of the account in a public presale
-   * 
+   *
    */
   const onContribute = async () => {
-    console.log(Date.now(), endTime, startTime, parseFloat(count))
+    console.log(Date.now(), endTime, startTime, parseFloat(count));
     if (account && count && Date.now() < endTime && Date.now() >= startTime) {
       try {
         await contribute(account.address, parseFloat(count));
@@ -503,13 +528,24 @@ const PreSale = () => {
   };
 
   /**
-   * 
+   *
    * Fetch the total raised funds, contributed amount, and distributed funds of the account in a whitelist presale
-   * 
+   *
    */
   const onWhitelistContribute = async () => {
-    console.log("whitelist contribution: ", Date.now(), whitelistEndTime, whitelistStartTime, parseFloat(count))
-    if (account && whitelistCount && Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) {
+    console.log(
+      "whitelist contribution: ",
+      Date.now(),
+      whitelistEndTime,
+      whitelistStartTime,
+      parseFloat(count),
+    );
+    if (
+      account &&
+      whitelistCount &&
+      Date.now() < whitelistEndTime &&
+      Date.now() >= whitelistStartTime
+    ) {
       try {
         await whitelistContribute(account.address, parseFloat(count));
         getWhitelistTotalRaisedFunds();
@@ -523,9 +559,9 @@ const PreSale = () => {
   };
 
   /**
-   * 
+   *
    * Fetch the distributed funds of the account in a public presale
-   * 
+   *
    */
   const getDistributedFunds = async () => {
     try {
@@ -533,14 +569,14 @@ const PreSale = () => {
       const event = new Events(aptosConfig);
       const distributedFundsEvent = await event.getSaleFundsDistributedEvent();
       const amounts = distributedFundsEvent
-        .filter(event => event.data.contributor === account?.address)
-        .map(event => event.data.amount);
+        .filter((event) => event.data.contributor === account?.address)
+        .map((event) => event.data.amount);
       setDistributedFunds(Number(amounts[amounts.length - 1]));
-      console.log('distributed funds: ', Number(amounts[amounts.length - 1]));
+      console.log("distributed funds: ", Number(amounts[amounts.length - 1]));
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   useEffect(() => {
     if (account) {
       getDistributedFunds();
@@ -549,9 +585,9 @@ const PreSale = () => {
   }, [account]);
 
   /**
-   * 
+   *
    * Fetch the distributed funds of the account in a whitelist presale
-   * 
+   *
    */
   const getWhitelistDistributedFunds = async () => {
     try {
@@ -559,14 +595,14 @@ const PreSale = () => {
       const event = new Events(aptosConfig);
       const distributedFundsEvent = await event.getSaleFundsDistributedEvent();
       const amounts = distributedFundsEvent
-        .filter(event => event.data.contributor === account?.address)
-        .map(event => event.data.amount);
+        .filter((event) => event.data.contributor === account?.address)
+        .map((event) => event.data.amount);
       setDistributedFunds(Number(amounts[amounts.length - 1]));
-      console.log('distributed funds: ', Number(amounts[amounts.length - 1]));
+      console.log("distributed funds: ", Number(amounts[amounts.length - 1]));
     } catch (error) {
       console.error(error);
     }
-  }
+  };
   useEffect(() => {
     if (account) {
       getWhitelistDistributedFunds();
@@ -575,46 +611,50 @@ const PreSale = () => {
   }, [account]);
 
   /**
-   * 
+   *
    * Fetch if the public presale is completed
-   * 
+   *
    */
   const getPresaleFinalized = async () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
       const event = new Events(aptosConfig);
       const finalizedEvent = await event.getPresaleFinalizedEvent();
-      console.log('finalized event: ', finalizedEvent);
-      let total_funds_raised = Number(finalizedEvent[finalizedEvent.length - 1].data.raised_funds);
-      console.log('total funds raised: ', total_funds_raised);
+      console.log("finalized event: ", finalizedEvent);
+      let total_funds_raised = Number(
+        finalizedEvent[finalizedEvent.length - 1].data.raised_funds,
+      );
+      console.log("total funds raised: ", total_funds_raised);
       setFinalTotalRaisedFunds(total_funds_raised);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     getPresaleFinalized();
   }, []);
 
   /**
-   * 
+   *
    * Fetch if the whitelist presale is completed
-   * 
+   *
    */
   const getWhitelistPresaleFinalized = async () => {
     try {
       const aptosConfig = new AptosConfig({ network: Network.TESTNET });
       const event = new Events(aptosConfig);
       const finalizedEvent = await event.getPresaleFinalizedEvent();
-      console.log('finalized event: ', finalizedEvent);
-      let total_funds_raised = Number(finalizedEvent[finalizedEvent.length - 1].data.raised_funds);
-      console.log('total funds raised: ', total_funds_raised);
+      console.log("finalized event: ", finalizedEvent);
+      let total_funds_raised = Number(
+        finalizedEvent[finalizedEvent.length - 1].data.raised_funds,
+      );
+      console.log("total funds raised: ", total_funds_raised);
       setFinalTotalRaisedFunds(total_funds_raised);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     getWhitelistPresaleFinalized();
@@ -640,7 +680,7 @@ const PreSale = () => {
       } catch (error) {
         console.error(error);
       }
-    }
+    };
     fetchEvents();
   }, []);
 
@@ -653,10 +693,10 @@ const PreSale = () => {
       }
     };
 
-    window.addEventListener('resize', updateBackground);
+    window.addEventListener("resize", updateBackground);
     updateBackground();
 
-    return () => window.removeEventListener('resize', updateBackground);
+    return () => window.removeEventListener("resize", updateBackground);
   }, []);
 
   useEffect(() => {
@@ -673,36 +713,39 @@ const PreSale = () => {
     return () => clearInterval(interval);
   }, []);
 
-
   /**
    * Helper functions
-  */
+   */
 
   /**
-   * 
-   * @param number 
-   * @param decimals 
-   * @returns 
+   *
+   * @param number
+   * @param decimals
+   * @returns
    */
-  function formatNumberWithDecimals(number: number, decimals: number | string): string {
-    const parsedDecimals = typeof decimals === 'number' ? decimals : parseFloat(decimals);
+  function formatNumberWithDecimals(
+    number: number,
+    decimals: number | string,
+  ): string {
+    const parsedDecimals =
+      typeof decimals === "number" ? decimals : parseFloat(decimals);
 
     if (isNaN(parsedDecimals) || parsedDecimals < 0 || parsedDecimals > 100) {
-      throw new Error('Invalid decimals argument');
+      throw new Error("Invalid decimals argument");
     }
 
     const formattedResult = number.toFixed(parsedDecimals);
 
     // Remove trailing zeros from the decimal part
-    const trimmedResult = formattedResult.replace(/\.?0+$/, '');
+    const trimmedResult = formattedResult.replace(/\.?0+$/, "");
 
     return trimmedResult;
   }
 
   /**
-   * 
-   * @param seconds 
-   * @returns 
+   *
+   * @param seconds
+   * @returns
    */
   function formatSeconds(seconds: number): string {
     let days = Math.floor(seconds / (3600 * 24));
@@ -715,27 +758,30 @@ const PreSale = () => {
   }
 
   /**
-   * 
-   * @param timestamp 
-   * @returns 
+   *
+   * @param timestamp
+   * @returns
    */
   function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
 
-    const timeString = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    const day = date.toLocaleDateString('en-US', { day: '2-digit' });
-    const month = date.toLocaleDateString('en-US', { month: 'long' });
-    const year = date.toLocaleDateString('en-US', { year: 'numeric' });
+    const timeString = date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+    const day = date.toLocaleDateString("en-US", { day: "2-digit" });
+    const month = date.toLocaleDateString("en-US", { month: "long" });
+    const year = date.toLocaleDateString("en-US", { year: "numeric" });
 
     // dd/mm/yyyy @ hh:mm am/pm UTC
     return `${day} ${month} ${year} @ ${timeString.toLowerCase()}  UTC`;
   }
 
   /**
-   * 
-   * @param startTime 
-   * @param endTime 
-   * @returns 
+   *
+   * @param startTime
+   * @param endTime
+   * @returns
    */
   function formatRemainingTime(startTime: number, endTime: number): string {
     const remainingTime = endTime - startTime;
@@ -747,239 +793,427 @@ const PreSale = () => {
     const days = Math.floor(seconds / 86400);
 
     // Format the time components
-    const formattedDays = String(days).padStart(2, '0');
-    const formattedHours = String(hours).padStart(2, '0');
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(seconds % 60).padStart(2, '0');
+    const formattedDays = String(days).padStart(2, "0");
+    const formattedHours = String(hours).padStart(2, "0");
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(seconds % 60).padStart(2, "0");
 
     return `${formattedDays}d ${formattedHours}h ${formattedMinutes}m ${formattedSeconds}s`;
   }
-
 
   return (
     <div className="parallax relative" id="cred-point">
       <Header className="" active={2} />
       <div className="w-full h-full pb-16">
-        <div style={{ backgroundImage: `url(${backgroundImage})`, backgroundPosition: 'top', backgroundSize: 'cover' }} className="w-full flex flex-col z-20 relative items-center sm:-mt-10">
+        <div
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundPosition: "top",
+            backgroundSize: "cover",
+          }}
+          className="w-full flex flex-col z-20 relative items-center sm:-mt-10"
+        >
           <div className="flex flex-col items-center w-full mt-20 sm:mt-[120px]">
             {
               /* Whitelist presale is not created yet */
-              !whitelistPresaleExists ?
-              <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                $RENA Presale
-              </p>
-                /* Whitelist presale is scheduled */
-                
-                  /* Whitelist presale is live */
-                  
-                    /* Whitelist presale is completed */
-                    
-                      :
-                      !presaleExists ?
-                        <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                          $RENA Presale
-                        </p>
-                        /* Presale is scheduled */
-                        : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
-                          /* add another check to see if the presale is scheduled or live */
-                          <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                            Join the $RENA Presale
-                          </p>
-                          /* Presale is live */
-                          : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
-                            <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                              Join the $RENA Presale
-                            </p>
-                            /* Presale is completed */
-                            : presaleExists && (endTime <= Date.now()) ?
-                              <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                                $RENA Presale
-                              </p>
-                              :
-                              <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
-                                $RENA Presale
-                              </p>
+              !whitelistPresaleExists ? (
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  Join the $RENA Presale
+                </p>
+              ) : /* Whitelist presale is scheduled */
+
+              /* Whitelist presale is live */
+
+              /* Whitelist presale is completed */
+              whitelistPresaleExists && whitelistEndTime <= Date.now() ? (
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  Join the $RENA Presale
+                </p>
+              ) : !presaleExists ? (
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  $RENA Presale
+                </p>
+              ) : /* Presale is scheduled */
+              presaleExists &&
+                startTime > Date.now() &&
+                endTime >= Date.now() ? (
+                /* add another check to see if the presale is scheduled or live */
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  Join the $RENA Presale
+                </p>
+              ) : /* Presale is live */
+              presaleExists &&
+                startTime <= Date.now() &&
+                endTime >= Date.now() ? (
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  Join the $RENA Presale
+                </p>
+              ) : /* Presale is completed */
+              presaleExists && endTime <= Date.now() ? (
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  $RENA Presale
+                </p>
+              ) : (
+                <p className="font-bold text-[42px] lg:text-[58px] mb-9 text-center">
+                  $RENA Presale
+                </p>
+              )
             }
-            <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[670px]'} rounded-[8px] py-8 px-6`}>
-            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Whitelisted Presale</p>
-              {
-                
-                !loading &&
+            <div
+              className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? "border border-[#666] h-fit" : "shimmer h-[670px]"} rounded-[8px] py-8 px-6`}
+            >
+              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                Whitelisted Presale
+              </p>
+              {!loading && (
                 <>
                   {
-                      /* Whitelist presale is not created yet */
-                      !whitelistPresaleExists ?
-                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-                          <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
-                        </p>
-                      /* Whitelist presale is scheduled */
-                      : whitelistPresaleExists && (whitelistStartTime > Date.now()) && (whitelistEndTime >= Date.now()) ?
-                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), whitelistStartTime)}</p>
-                          <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(whitelistStartTime)}</p>
-                        </p>
-                        /* Whitelist presale is live */
-                        : whitelistPresaleExists && (whitelistStartTime <= Date.now()) && (whitelistEndTime >= Date.now()) ?
-                          <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), whitelistEndTime)}</p>
-                            <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(whitelistEndTime)}</p>
-                          </p>
-                        
-                    /* Presale is not created yet */
-                    : !presaleExists ?
+                    /* Whitelist presale is not created yet */
+                    !whitelistPresaleExists ? (
                       <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Date will be announced</p>
-                        <p className="text-[22px] font-semibold text-[#CCC]">on <a href="https://twitter.com/0xrenegades" target="_blank" rel="noopener noreferrer">@0xrenegades</a> on X</p>
-                      </p>
-                        /* Presale is scheduled */
-                        : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
-                          /* add another check to see if the presale is scheduled or live */
-                          <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
-                            <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
-                          </p>
-                          /* Presale is live */
-                          : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
-                            <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
-                              <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
-                            </p>
-                            /* Presale is completed */
-                            : presaleExists && (endTime <= Date.now()) ?
-                              <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                                <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale has ENDED</p>
-                                <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
-                              </p>
-                      /* Presale is scheduled */
-                      : presaleExists && (startTime > Date.now()) && (endTime >= Date.now()) ?
-                        /* add another check to see if the presale is scheduled or live */
-                        <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                          <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">{formatRemainingTime((Date.now()), startTime)}</p>
-                          <p className="text-[22px] font-semibold text-[#CCC]">{formatTimestamp(startTime)}</p>
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                          Date will be announced
                         </p>
-                        /* Presale is live */
-                        : presaleExists && (startTime <= Date.now()) && (endTime >= Date.now()) ?
-                          <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                            <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale is LIVE</p>
-                            <p className="text-[22px] font-semibold text-[#CCC]">Ends in {formatSeconds(remainingTime)}</p>
-                          </p>
-                          /* Presale is completed */
-                          : presaleExists && (endTime <= Date.now()) ?
-                            <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                              <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Presale has ENDED</p>
-                              <p className="text-[22px] font-semibold text-[#CCC]">Thank you for participating</p>
-                            </p>
-                            : null
+                        <p className="text-[22px] font-semibold text-[#CCC]">
+                          on{" "}
+                          <a
+                            href="https://twitter.com/0xrenegades"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            @0xrenegades
+                          </a>{" "}
+                          on X
+                        </p>
+                      </p>
+                    ) : /* Whitelist presale is scheduled */
+                    whitelistPresaleExists &&
+                      whitelistStartTime > Date.now() &&
+                      whitelistEndTime >= Date.now() ? (
+                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                          {formatRemainingTime(Date.now(), whitelistStartTime)}
+                        </p>
+                        <p className="text-[22px] font-semibold text-[#CCC]">
+                          {formatTimestamp(whitelistStartTime)}
+                        </p>
+                      </p>
+                    ) : /* Whitelist presale is live */
+                    whitelistPresaleExists &&
+                      whitelistStartTime <= Date.now() &&
+                      whitelistEndTime >= Date.now() ? (
+                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                        <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                          {formatRemainingTime(Date.now(), whitelistEndTime)}
+                        </p>
+                        <p className="text-[22px] font-semibold text-[#CCC]">
+                          {formatTimestamp(whitelistEndTime)}
+                        </p>
+                      </p>
+                    ) : /* Whitelist presale is completed */
+                    whitelistPresaleExists && whitelistEndTime <= Date.now() ? (
+                      <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                        <p className="text-[22px] font-semibold text-[#CCC]">
+                          Presale has ENDED
+                        </p>
+                      </p>
+                    ) : null
                   }
-                  <div className='flex w-full'>
-                    {isEligible ?
-                      <div className='flex justify-center items-center border-2 my-10 bg-[#2DCA63] bg-opacity-20 rounded-[8px] border-[#2DCA63] text-[22px] font-semibold w-full sm:w-[352px] h-[42px]'>
-                        You are eligible
-                      </div>
-                      : !isEligible ?
-                      <div className='flex flex-col justify-center items-center border-2 my-10 bg-[#FF4040] bg-opacity-20 rounded-[8px] border-[#FF4040] text-[22px] font-semibold w-full sm:w-[352px] h-[66px]'>
-                        You are not eligible
-                        <p className='text-[16px] font-semibold'>See requirements</p>
-                      </div>
-                      : null
+                  <div className="flex w-full">
+                    {
+                      /* Whitelist presale is completed */
+                      whitelistPresaleExists &&
+                      whitelistEndTime <= Date.now() ? (
+                        <></>
+                      ) : isEligible ? (
+                        <div className="flex justify-center items-center border-2 my-10 bg-[#2DCA63] bg-opacity-20 rounded-[8px] border-[#2DCA63] text-[22px] font-semibold w-full sm:w-[352px] h-[42px]">
+                          You are eligible
+                        </div>
+                      ) : !isEligible ? (
+                        <div className="flex flex-col justify-center items-center border-2 my-10 bg-[#FF4040] bg-opacity-20 rounded-[8px] border-[#FF4040] text-[22px] font-semibold w-full sm:w-[352px] h-[66px]">
+                          You are not eligible
+                          <p className="text-[16px] font-semibold">
+                            See requirements
+                          </p>
+                        </div>
+                      ) : null
                     }
                   </div>
-                  <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] mb-[56px]">
-                    <p>Total Raised</p>
-                    <div className="flex items-center font-semibold text-[22px] gap-4">
-                      {
-                        /* presale is completed */
-                        presaleExists && (endTime < Date.now()) ?
-                          <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / ONE_RENEGADES), '8')}</p> :
-                          /* whitelist presale is compoleted */
-                          whitelistPresaleExists && (whitelistEndTime < Date.now()) ?
-                            <p>{formatNumberWithDecimals(((finalTotalRaisedFunds as number) / ONE_RENEGADES), '8')}</p> :
-                            /* presale is live */
-                            presaleExists && (endTime > Date.now()) && (startTime <= Date.now()) ?
-                            <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / ONE_RENEGADES), '8')}</p> :
-                            /* whitelist presale is live */
-                            <p>{formatNumberWithDecimals(((totalRaisedFunds as number) / ONE_RENEGADES), '8')}</p>
-                      }
-                      <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
-                    </div>
-                  </div>
-                  <div className="flex w-full items-center justify-between h-12 font-semibold text-[22px]">
-                    <input
-                      type="text"
-                      placeholder="0.00"
-                      value={count}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        const regex = /^\d*\.?\d{0,4}$/;
-                        if (value === '' || regex.test(value)) {
-                          setCount(value);
-                        }
-                      }}
-                      className={` ${(Date.now() < endTime && Date.now() >= startTime) || (Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
-                      disabled={(Date.now() < endTime && Date.now() >= startTime) || (Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) ? false : true}
-                    />
-                    <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
-                      <p>APT</p>
-                      <img src="/presale/aptos.svg" className="w-[24px] h-[24px]" />
-                    </div>
-                  </div>
-                  {connected && presaleExists ?
-                      <PrimaryButton onClick={onContribute} className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
-                        <p className="text-[18px] font-bold my-2">Send APT</p>
-                      </PrimaryButton>
-                      : connected && whitelistPresaleExists ?
-                      <PrimaryButton onClick={onWhitelistContribute} className={`z-20 relative ${Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}>
-                        <p className="text-[18px] font-bold my-2">Send APT</p>
-                      </PrimaryButton>
-                      : 
-                      <PrimaryButton onClick={() => dispatch(toggleWalletPanel(true))} className="z-20 relative w-full !h-[48px] my-6">
-                        <p className="text-[18px] h-6 font-bold">Connect Wallet</p>
-                      </PrimaryButton>
-                    
+                  {
+                    /* Whitelist presale is completed */
+                    whitelistPresaleExists && whitelistEndTime <= Date.now() ? (
+                      <></>
+                    ) : (
+                      <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] mb-[56px]">
+                        <p>Total Raised</p>
+                        <div className="flex items-center font-semibold text-[22px] gap-4">
+                          {
+                            /* presale is completed */
+                            presaleExists && endTime < Date.now() ? (
+                              <p>
+                                {formatNumberWithDecimals(
+                                  (finalTotalRaisedFunds as number) /
+                                    ONE_RENEGADES,
+                                  "8",
+                                )}
+                              </p>
+                            ) : /* whitelist presale is compoleted */
+                            whitelistPresaleExists &&
+                              whitelistEndTime < Date.now() ? (
+                              <p>
+                                {formatNumberWithDecimals(
+                                  (finalTotalRaisedFunds as number) /
+                                    ONE_RENEGADES,
+                                  "8",
+                                )}
+                              </p>
+                            ) : /* presale is live */
+                            presaleExists &&
+                              endTime > Date.now() &&
+                              startTime <= Date.now() ? (
+                              <p>
+                                {formatNumberWithDecimals(
+                                  (totalRaisedFunds as number) / ONE_RENEGADES,
+                                  "8",
+                                )}
+                              </p>
+                            ) : (
+                              /* whitelist presale is live */
+                              <p>
+                                {formatNumberWithDecimals(
+                                  (totalRaisedFunds as number) / ONE_RENEGADES,
+                                  "8",
+                                )}
+                              </p>
+                            )
+                          }
+                          <img
+                            src="/presale/aptos.svg"
+                            className="w-[18px] h-[18px]"
+                          />
+                        </div>
+                      </div>
+                    )
                   }
-                  <div className='flex flex-col items-start w-full gap-2'>
-                    <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> Minimum contribution is 1 APT</p>
-                    <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold"><Icon icon={'mdi:dot'} /> $RENA will be distributed after the Presale</p>
-                  </div>
-                  <div className="border-b border-[#666] w-full my-6" />
-                  <div className="flex w-full items-center justify-between h-[18px] font-semibold text-[18px]">
-                    <p className="text-[18px] font-medium text-[#CCC]">My Contribution</p>
-                    <div className="flex items-center font-semibold text-18px] gap-4">
-                      <p>{
-                        presaleExists && (Date.now() > startTime) ?
-                          formatNumberWithDecimals(((contributedAmount as number) / ONE_RENEGADES), '8') :
-                          0
-                      }</p>
-                      <img src="/presale/aptos.svg" className="w-[18px] h-[18px]" />
-                    </div>
-                  </div>
-                  <div className="flex w-full items-center justify-between h-[18px] mt-6 mb-4 font-semibold text-[18px]">
-                    <p className="text-[18px] font-medium text-[#CCC]">My $RENA</p>
-                    <div className="flex items-center font-semibold text-[18px] gap-4">
-                      <p>{
-                        /* presale ended */
-                        presaleExists && (endTime < Date.now()) ?
-                          formatNumberWithDecimals(((distributedFunds as number) / ONE_RENEGADES), '4') :
-                          0
-                      }</p>
-                      <img src="/renegades/rena.svg" className="w-[18px] h-[18px]" />
-                    </div>
-                  </div>
+                  {
+                    /* Whitelist presale is completed */
+                    whitelistPresaleExists && whitelistEndTime <= Date.now() ? (
+                      <></>
+                    ) : (
+                      <div className="flex w-full items-center justify-between h-12 font-semibold text-[22px]">
+                        <input
+                          type="text"
+                          placeholder="0.00"
+                          value={count}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const regex = /^\d*\.?\d{0,4}$/;
+                            if (value === "" || regex.test(value)) {
+                              setCount(value);
+                            }
+                          }}
+                          className={` ${(Date.now() < endTime && Date.now() >= startTime) || (Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
+                          disabled={
+                            (Date.now() < endTime && Date.now() >= startTime) ||
+                            (Date.now() < whitelistEndTime &&
+                              Date.now() >= whitelistStartTime)
+                              ? false
+                              : true
+                          }
+                        />
+                        <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
+                          <p>APT</p>
+                          <img
+                            src="/presale/aptos.svg"
+                            className="w-[24px] h-[24px]"
+                          />
+                        </div>
+                      </div>
+                    )
+                  }
+                  {
+                    /* Whitelist presale is completed */
+                    whitelistPresaleExists && whitelistEndTime <= Date.now() ? (
+                      <></>
+                    ) : connected && presaleExists ? (
+                      <PrimaryButton
+                        onClick={onContribute}
+                        className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}
+                      >
+                        <p className="text-[18px] font-bold my-2">Send APT</p>
+                      </PrimaryButton>
+                    ) : connected && whitelistPresaleExists ? (
+                      <PrimaryButton
+                        onClick={onWhitelistContribute}
+                        className={`z-20 relative ${Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}
+                      >
+                        <p className="text-[18px] font-bold my-2">Send APT</p>
+                      </PrimaryButton>
+                    ) : (
+                      <PrimaryButton
+                        onClick={() => dispatch(toggleWalletPanel(true))}
+                        className="z-20 relative w-full !h-[48px] my-6"
+                      >
+                        <p className="text-[18px] h-6 font-bold">
+                          Connect Wallet
+                        </p>
+                      </PrimaryButton>
+                    )
+                  }
+                  {
+                    /* Whitelist presale is completed */
+                    whitelistPresaleExists && whitelistEndTime <= Date.now() ? (
+                      <></>
+                    ) : (
+                      <>
+                        <div className="flex flex-col items-start w-full gap-2">
+                          <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold">
+                            <Icon icon={"mdi:dot"} /> Minimum contribution is 1
+                            APT
+                          </p>
+                          <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold">
+                            <Icon icon={"mdi:dot"} /> $RENA will be distributed
+                            after the Presale
+                          </p>
+                        </div>
+                        <div className="border-b border-[#666] w-full my-6" />
+                        <div className="flex w-full items-center justify-between h-[18px] font-semibold text-[18px]">
+                          <p className="text-[18px] font-medium text-[#CCC]">
+                            My Contribution
+                          </p>
+                          <div className="flex items-center font-semibold text-18px] gap-4">
+                            <p>
+                              {presaleExists && Date.now() > startTime
+                                ? formatNumberWithDecimals(
+                                    (contributedAmount as number) /
+                                      ONE_RENEGADES,
+                                    "8",
+                                  )
+                                : 0}
+                            </p>
+                            <img
+                              src="/presale/aptos.svg"
+                              className="w-[18px] h-[18px]"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex w-full items-center justify-between h-[18px] mt-6 mb-4 font-semibold text-[18px]">
+                          <p className="text-[18px] font-medium text-[#CCC]">
+                            My $RENA
+                          </p>
+                          <div className="flex items-center font-semibold text-[18px] gap-4">
+                            <p>
+                              {
+                                /* presale ended */
+                                presaleExists && endTime < Date.now()
+                                  ? formatNumberWithDecimals(
+                                      (distributedFunds as number) /
+                                        ONE_RENEGADES,
+                                      "4",
+                                    )
+                                  : 0
+                              }
+                            </p>
+                            <img
+                              src="/renegades/rena.svg"
+                              className="w-[18px] h-[18px]"
+                            />
+                          </div>
+                        </div>
+                      </>
+                    )
+                  }
                 </>
-                
-              }
+              )}
             </div>
-            <div className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? 'border border-[#666] h-fit' : 'shimmer h-[144px]'} mt-5 rounded-[8px] py-8 px-6`}>
-              {!loading && !presaleExists ?
-                <>
-                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">Public Presale</p>
-                  <p className="text-[20px] text-[#CCC] sm:text-[22px] leading-[38px] font-semibold">{formatTimestamp(endTime)}</p>
-                </> 
-                : null
-              }
+            <div
+              className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? "border border-[#666] h-fit" : "shimmer h-[144px]"} mt-5 rounded-[8px] py-8 px-6`}
+            >
+              {!loading && !presaleExists ? (
+                /* Presale is not created yet */
+                <p>
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    Public Presale
+                  </p>
+                  <p className="text-[20px] text-[#CCC] sm:text-[22px] leading-[38px] font-semibold">
+                    {formatTimestamp(endTime)}
+                  </p>
+                  <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                    <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                      Date will be announced
+                    </p>
+                    <p className="text-[22px] font-semibold text-[#CCC]">
+                      on{" "}
+                      <a
+                        href="https://twitter.com/0xrenegades"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        @0xrenegades
+                      </a>{" "}
+                      on X
+                    </p>
+                  </p>
+                </p>
+              ) : /* Presale is scheduled */
+              presaleExists &&
+                startTime > Date.now() &&
+                endTime >= Date.now() ? (
+                /* add another check to see if the presale is scheduled or live */
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    {formatRemainingTime(Date.now(), startTime)}
+                  </p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">
+                    {formatTimestamp(startTime)}
+                  </p>
+                </p>
+              ) : /* Presale is live */
+              presaleExists &&
+                startTime <= Date.now() &&
+                endTime >= Date.now() ? (
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    Presale is LIVE
+                  </p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">
+                    Ends in {formatSeconds(remainingTime)}
+                  </p>
+                </p>
+              ) : /* Presale is completed */
+              presaleExists && endTime <= Date.now() ? (
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    Presale has ENDED
+                  </p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">
+                    Thank you for participating
+                  </p>
+                </p>
+              ) : /* Presale is live */
+              presaleExists &&
+                startTime <= Date.now() &&
+                endTime >= Date.now() ? (
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    Presale is LIVE
+                  </p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">
+                    Ends in {formatSeconds(remainingTime)}
+                  </p>
+                </p>
+              ) : /* Presale is completed */
+              presaleExists && endTime <= Date.now() ? (
+                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    Presale has ENDED
+                  </p>
+                  <p className="text-[22px] font-semibold text-[#CCC]">
+                    Thank you for participating
+                  </p>
+                </p>
+              ) : null}
             </div>
-
           </div>
           <Sidebar />
         </div>

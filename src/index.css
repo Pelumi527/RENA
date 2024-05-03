@@ -9,10 +9,10 @@ body {
   font-family: "Rajdhani";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #0C0C0C;
+  background: #0c0c0c;
   color: white;
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   display: none;
 }

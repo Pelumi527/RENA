@@ -1,5 +1,4 @@
 const ActivedItem = () => {
-
   return (
     <>
       <div className="relative w-[120px] h-[120px] hover:cursor-pointer">

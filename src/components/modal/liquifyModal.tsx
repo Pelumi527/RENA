@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { toggleItemModal } from "../../state/dialog";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
@@ -8,19 +8,19 @@ import useTokenBalance from "../../hook/useTokenBalance";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { Icon } from "@iconify/react";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 import {
   RenegadeItemWithRarity,
   calculateRankings,
   getRankForRenegadeItem,
   getRaritiesForRenegadeItem,
-  levelClass
-} from '../../util/renegadeUtils';
-import Checkbox from '../checkBox';
-import { updateRefresh } from '../../state/global';
-import { updateMultistate } from '../../state/renegades';
-import { Tooltip } from '@material-tailwind/react';
+  levelClass,
+} from "../../util/renegadeUtils";
+import Checkbox from "../checkBox";
+import { updateRefresh } from "../../state/global";
+import { updateMultistate } from "../../state/renegades";
+import { Tooltip } from "@material-tailwind/react";
 
 const LiquifyModal = () => {
   const dispatch = useAppDispatch();
@@ -32,16 +32,18 @@ const LiquifyModal = () => {
   const [isChecked, setIsChecked] = useState(false);
   const [proceed, setProceed] = useState(0);
   const [skip, setSkip] = useState(false);
-  const [renegadesWithRarity, setRenegadesWithRarity] = useState<RenegadeItemWithRarity[]>([]);
+  const [renegadesWithRarity, setRenegadesWithRarity] = useState<
+    RenegadeItemWithRarity[]
+  >([]);
   const [traitRarities, setTraitRarities] = useState<Record<string, any>>({});
   const [overallRarity, setOverallRarity] = useState<number>(0);
   const [currentRank, setCurrentRank] = useState<number | undefined>(undefined);
   const multistate = useAppSelector((state) => state.renegadesState.multistate);
-  const renegades: RenegadeItemWithRarity[] = require('../../metadata.json');
+  const renegades: RenegadeItemWithRarity[] = require("../../metadata.json");
 
   useEffect(() => {
     const calculateAndSetRaritiesAndRankings = () => {
-      const itemsWithCalculatedRarities = renegades.map(renegade => {
+      const itemsWithCalculatedRarities = renegades.map((renegade) => {
         const rarities = getRaritiesForRenegadeItem(renegades, renegade.name);
         return {
           ...renegade,
@@ -56,14 +58,19 @@ const LiquifyModal = () => {
 
   useEffect(() => {
     if (data[0]?.token_name) {
-      setCurrentRank(getRankForRenegadeItem(data[0]?.token_name, renegadesWithRarity));
+      setCurrentRank(
+        getRankForRenegadeItem(data[0]?.token_name, renegadesWithRarity),
+      );
     }
   }, [data, renegadesWithRarity]);
 
   useEffect(() => {
     if (data[0]?.token_name) {
       try {
-        const rarities = getRaritiesForRenegadeItem(renegades, data[0].token_name);
+        const rarities = getRaritiesForRenegadeItem(
+          renegades,
+          data[0].token_name,
+        );
         setTraitRarities(rarities.traitRarities);
         setOverallRarity(rarities.overallRarity);
       } catch (error) {
@@ -73,17 +80,19 @@ const LiquifyModal = () => {
   }, [data, renegades]);
 
   const dataItems = React.useMemo(() => {
-    return Object.entries(traitRarities).map(([traitType, [rarityScore, value]]) => ({
-      title: traitType,
-      description: value,
-      percentage: rarityScore.toFixed(2)
-    }));
+    return Object.entries(traitRarities).map(
+      ([traitType, [rarityScore, value]]) => ({
+        title: traitType,
+        description: value,
+        percentage: rarityScore.toFixed(2),
+      }),
+    );
   }, [traitRarities]);
 
   useEffect(() => {
-    const dontShowAgain = Cookies.get('dontShowAgain');
+    const dontShowAgain = Cookies.get("dontShowAgain");
     console.log("dontShowAgain", dontShowAgain);
-    if (dontShowAgain === 'true') {
+    if (dontShowAgain === "true") {
       setSkip(true);
     }
   }, [multistate]);
@@ -93,15 +102,15 @@ const LiquifyModal = () => {
     setIsChecked(newIsChecked);
 
     if (newIsChecked) {
-      Cookies.set('dontShowAgain', 'true', { expires: 365 });
+      Cookies.set("dontShowAgain", "true", { expires: 365 });
       setTimeout(() => {
-        dispatch(updateMultistate(true))
+        dispatch(updateMultistate(true));
       }, 500);
       setSkip(true);
     } else {
-      Cookies.remove('dontShowAgain');
+      Cookies.remove("dontShowAgain");
       setTimeout(() => {
-        dispatch(updateMultistate(false))
+        dispatch(updateMultistate(false));
       }, 500);
       setSkip(false);
     }
@@ -121,7 +130,10 @@ const LiquifyModal = () => {
   const onLiqify = async () => {
     if (account) {
       try {
-        await liquify(account.address, data.map((item: { token_data_id: string; }) => item.token_data_id));
+        await liquify(
+          account.address,
+          data.map((item: { token_data_id: string }) => item.token_data_id),
+        );
         fetchEvents();
         setProceed(2);
       } catch (error) {
@@ -130,92 +142,105 @@ const LiquifyModal = () => {
     }
   };
 
-  const animationClass = data.length > 0 ? "animate-slideInUp" : "animate-slideInDown";
+  const animationClass =
+    data.length > 0 ? "animate-slideInUp" : "animate-slideInDown";
 
   return (
     <div
-      className={`${data.length > 0 && "block"
-        } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
+      className={`${
+        data.length > 0 && "block"
+      } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
     >
-      {proceed == 1 || data.length > 1 ? proceed != 2 && (
-        <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[95%] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
-          <div className="flex flex-col w-full">
-            <div className="flex justify-between items-center">
-              <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
-                Proceed and liquify {data.length > 1 ? "NFTs" : data[0]?.token_name}?
-              </p>
-              <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
-                <Icon
-                  onClick={() => {
-                    dispatch(toggleItemModal([]));
-                    setProceed(0);
-                  }}
-                  icon={"iconoir:cancel"}
-                  fontSize={34}
-                  className=" cursor-pointer"
-                />
+      {proceed == 1 || data.length > 1
+        ? proceed != 2 && (
+            <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[95%] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
+              <div className="flex flex-col w-full">
+                <div className="flex justify-between items-center">
+                  <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
+                    Proceed and liquify{" "}
+                    {data.length > 1 ? "NFTs" : data[0]?.token_name}?
+                  </p>
+                  <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
+                    <Icon
+                      onClick={() => {
+                        dispatch(toggleItemModal([]));
+                        setProceed(0);
+                      }}
+                      icon={"iconoir:cancel"}
+                      fontSize={34}
+                      className=" cursor-pointer"
+                    />
+                  </div>
+                </div>
+                <div className="flex my-8 sm:my-12 items-center justify-center relative">
+                  {data.length > 1 && (
+                    <div className="absolute -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">
+                      + {data.length - 1} more
+                    </div>
+                  )}
+                  <img
+                    src={data[0]?.token_uri}
+                    className="w-[150px] h-[150px] rounded-[8px]"
+                  />
+                  <Icon
+                    icon={"solar:arrow-right-bold-duotone"}
+                    fontSize={34}
+                    className="text-primary ml-9 mr-[22px]"
+                  />
+                  <div className="flex flex-col">
+                    <img
+                      src="/renegades/rena.svg"
+                      className="w-[88px] h-[88pxpx]"
+                    />
+                    <p className="text-[20px] font-semibold text-center mt-2">
+                      $RENA
+                    </p>
+                  </div>
+                </div>
+                <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
+                  If you proceed you will lose the NFT{data.length > 1 && "s"},
+                  send {data.length > 1 ? "them" : "it"} back to the NFT pool
+                  and get {data.length > 1 ? "" : 1} $RENA. Are you sure you
+                  want to proceed?
+                </p>
+                <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
+                  <PrimaryButton
+                    onClick={onLiqify}
+                    className="block sm:hidden !font-bold w-full sm:w-[253px] h-12"
+                  >
+                    Liquify NFT and get 1 $RENA
+                  </PrimaryButton>
+                  <SecondaryButton
+                    onClick={() => {
+                      dispatch(toggleItemModal([]));
+                      setProceed(0);
+                    }}
+                    className="!font-bold w-full sm:w-[203px] h-12"
+                  >
+                    Cancel
+                  </SecondaryButton>
+                  <PrimaryButton
+                    onClick={onLiqify}
+                    className="hidden sm:block !font-bold w-full sm:w-[253px] !h-12"
+                  >
+                    Liquify {data.length > 1 && data.length} NFT
+                    {data.length > 1 && "s"} and get {data.length <= 1 && "1 "}
+                    $RENA
+                  </PrimaryButton>
+                </div>
+                <div className="flex items-center justify-center">
+                  <Checkbox isChecked={isChecked} onToggle={toggleCheckbox} />
+                  <p
+                    className="text-lg h-[25px] ml-1 font-semibold cursor-pointer"
+                    onClick={toggleCheckbox}
+                  >
+                    Don’t show this dialog again
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="flex my-8 sm:my-12 items-center justify-center relative">
-              {data.length > 1 &&
-                <div className="absolute -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">+ {data.length - 1} more</div>
-              }
-              <img
-                src={data[0]?.token_uri}
-                className="w-[150px] h-[150px] rounded-[8px]"
-              />
-              <Icon
-                icon={"solar:arrow-right-bold-duotone"}
-                fontSize={34}
-                className="text-primary ml-9 mr-[22px]"
-              />
-              <div className='flex flex-col'>
-                <img src="/renegades/rena.svg" className="w-[88px] h-[88pxpx]" />
-                <p className='text-[20px] font-semibold text-center mt-2'>$RENA</p>
-              </div>
-            </div>
-            <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
-              If you proceed you will lose the NFT{data.length > 1 && "s"}, send {data.length > 1 ? "them" : "it"} back to the NFT pool
-              and get {data.length > 1 ? "" : 1} $RENA. Are you sure you want to proceed?
-            </p>
-            <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
-              <PrimaryButton
-                onClick={onLiqify}
-                className="block sm:hidden !font-bold w-full sm:w-[253px] h-12"
-              >
-                Liquify NFT and get 1 $RENA
-              </PrimaryButton>
-              <SecondaryButton
-                onClick={() => {
-                  dispatch(toggleItemModal([]));
-                  setProceed(0);
-                }}
-                className="!font-bold w-full sm:w-[203px] h-12"
-              >
-                Cancel
-              </SecondaryButton>
-              <PrimaryButton
-                onClick={onLiqify}
-                className="hidden sm:block !font-bold w-full sm:w-[253px] !h-12"
-              >
-                Liquify {data.length > 1 && data.length} NFT{data.length > 1 && "s"} and get {data.length <= 1 && "1 "}$RENA
-              </PrimaryButton>
-            </div>
-            <div className="flex items-center justify-center">
-              <Checkbox
-                isChecked={isChecked}
-                onToggle={toggleCheckbox}
-              />
-              <p
-                className="text-lg h-[25px] ml-1 font-semibold cursor-pointer"
-                onClick={toggleCheckbox}
-              >
-                Don’t show this dialog again
-              </p>
-            </div>
-          </div>
-        </div>
-      ) : ""}
+          )
+        : ""}
       {proceed == 0 && data.length <= 1 && (
         <div className="relative w-full sm:w-[965px] h-[95%] sm:h-fit bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
           <div className="flex w-full justify-between">
@@ -241,8 +266,14 @@ const LiquifyModal = () => {
                       </div>
                     }
                   >
-                    <div className={`leading-[130%] text-[18px] font-bold flex items-center justify-center mb-[297px] ${currentRank && levelClass(currentRank)[0]}`}>
-                      <Icon icon={'ph:medal-fill'} fontSize={20} className={`mr-1 ${currentRank && levelClass(currentRank)[0]}`} />
+                    <div
+                      className={`leading-[130%] text-[18px] font-bold flex items-center justify-center mb-[297px] ${currentRank && levelClass(currentRank)[0]}`}
+                    >
+                      <Icon
+                        icon={"ph:medal-fill"}
+                        fontSize={20}
+                        className={`mr-1 ${currentRank && levelClass(currentRank)[0]}`}
+                      />
                       Rank {currentRank}
                       <p className="text-[#666] font-semibold">/5000</p>
                     </div>
@@ -280,7 +311,9 @@ const LiquifyModal = () => {
                         <p className="text-[18px] leading-5 text-[#FFF] font-bold">
                           {item.description}
                         </p>
-                        <p className="text-[18px] text-[#CCC] font-semibold">{item.percentage + "%"}</p>
+                        <p className="text-[18px] text-[#CCC] font-semibold">
+                          {item.percentage + "%"}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -292,7 +325,7 @@ const LiquifyModal = () => {
                 Liquify NFT to retrieve your 1 $RENA
               </p>
               <button
-                onClick={() => skip ? onLiqify() : setProceed(1)}
+                onClick={() => (skip ? onLiqify() : setProceed(1))}
                 className="mt-3 rounded-[4px] w-full sm:w-[200px] h-12 text-[17px] sm:text-[18px] text-[#121221] bg-[#FFF] font-bold"
               >
                 Liquify NFT
@@ -342,12 +375,16 @@ const LiquifyModal = () => {
             >
               <div className="flex flex-col items-center">
                 <img src="/renegades/rena.svg" className="w-[88px] h-[88px]" />
-                <p className="text-[26px] font-bold mt-1">{data.length} $RENA</p>
+                <p className="text-[26px] font-bold mt-1">
+                  {data.length} $RENA
+                </p>
                 <p className="text-[22px] font-bold mt-3 leading-[24px] text-center ">
                   Hooray! You’ve got your $RENA back!
                 </p>
                 <p className="text-[18px] font-semibold text-center">
-                  If you want you can use {data.length > 1 ? "them" : "it"} to claim {data.length > 1 ? "" : "a"} new Renegades NFT{data.length > 1 && "s"}!
+                  If you want you can use {data.length > 1 ? "them" : "it"} to
+                  claim {data.length > 1 ? "" : "a"} new Renegades NFT
+                  {data.length > 1 && "s"}!
                 </p>
               </div>
               <SecondaryButton

@@ -17,8 +17,9 @@ const LoadingImage: React.FC<Props> = ({ className, url, width, height }) => {
   }
   return (
     <div
-      className={`${isLoading ? "bg-gray-loading w-full h-[153px] sm:h-[194px]" : ""
-        } rounded-md `}
+      className={`${
+        isLoading ? "bg-gray-loading w-full h-[153px] sm:h-[194px]" : ""
+      } rounded-md `}
     >
       <img
         src={url}

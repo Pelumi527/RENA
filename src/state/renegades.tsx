@@ -28,7 +28,7 @@ const initialState: dialogStates = {
   isLRDLoading: false,
   aptConts: 0,
   multistate: false,
-  displayAmount : 30
+  displayAmount: 30,
 };
 
 export const dialogSlice = createSlice({
@@ -44,7 +44,7 @@ export const dialogSlice = createSlice({
     },
     updateRenaBalance: (state, action: PayloadAction<number>) => {
       // if (action.payload > 0) {
-        state.isBalanceLoading = false;
+      state.isBalanceLoading = false;
       // }
       state.renaBalance = action.payload;
     },
@@ -71,7 +71,7 @@ export const dialogSlice = createSlice({
       state.displayAmount = action.payload;
     },
   },
-  extraReducers: (builder) => { },
+  extraReducers: (builder) => {},
 });
 
 export const {
@@ -84,6 +84,6 @@ export const {
   updateAptConts,
   updateIsRenaListLoading,
   updateMultistate,
-  updateDisplayAmount
+  updateDisplayAmount,
 } = dialogSlice.actions;
 export default dialogSlice.reducer;

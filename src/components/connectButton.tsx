@@ -20,20 +20,26 @@ const ConnectButton: React.FC<Props> = ({ className }) => {
     // setTimeout(() => {
     //   navigate('/')
     // }, 2000)
-  }
+  };
 
   return (
     <>
       {connected ? (
-        <div className={`flex flex-col w-[176px] h-fit border-x border-t border-[#fff] rounded-t-[4px] relative z-[100] ${!isOpenDropDown && 'border-b rounded-b'} `}>
+        <div
+          className={`flex flex-col w-[176px] h-fit border-x border-t border-[#fff] rounded-t-[4px] relative z-[100] ${!isOpenDropDown && "border-b rounded-b"} `}
+        >
           <button
             className={`flex justify-between px-6 items-center h-12 bg-[#FFF] bg-opacity-0 hover:bg-opacity-10 font-semibold bg-black ${className}`}
             onClick={() => {
               toggleOpen(!isOpenDropDown);
             }}
           >
-            <p className="text-[18px] text-[#FFF] font-bold">{account?.address.slice(0, 6)}...{account?.address.slice(-4)}</p>
-            <span className="text-xs">&nbsp;&nbsp;&nbsp;{isOpenDropDown ? "▲" : "▼"}</span>
+            <p className="text-[18px] text-[#FFF] font-bold">
+              {account?.address.slice(0, 6)}...{account?.address.slice(-4)}
+            </p>
+            <span className="text-xs">
+              &nbsp;&nbsp;&nbsp;{isOpenDropDown ? "▲" : "▼"}
+            </span>
           </button>
           {isOpenDropDown && (
             <div

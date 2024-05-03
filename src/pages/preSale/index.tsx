@@ -29,7 +29,6 @@ const PreSale = () => {
   const [endTime, setEndTime] = useState<number>(0);
   const [whitelistEndTime, setWhitelistEndTime] = useState<number>(0);
   const [backgroundImage, setBackgroundImage] = useState("/presale/bg-presale.svg");
-  const [presaleEvent, setPresaleEvent] = useState<GetEventsResponse | null>(null);
   const [presaleExists, setPresaleExists] = useState<boolean>(false);
   const [whitelistPresaleExists, setWhitelistPresaleExists] = useState<boolean>(false);
   const [isEligible, setIsEligible] = useState<boolean>(false);
@@ -312,7 +311,7 @@ const PreSale = () => {
     };
 
     fetchData();
-  }, [shouldFetch, account]);
+  }, [whitelistShouldFetch, account]);
 
   /**
    *  

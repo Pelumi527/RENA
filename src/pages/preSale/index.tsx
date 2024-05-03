@@ -1129,7 +1129,7 @@ const PreSale = () => {
             <div
               className={`flex flex-col items-center w-[95%] sm:w-[400px] bg-[#111] ${!loading ? "border border-[#666] h-fit" : "shimmer h-[144px]"} mt-5 rounded-[8px] py-8 px-6`}
             >
-              {!loading && !presaleExists ? (
+              {!presaleExists ? (
                 /* Presale is not created yet */
                 <p>
                   <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
@@ -1162,11 +1162,167 @@ const PreSale = () => {
                 /* add another check to see if the presale is scheduled or live */
                 <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
                   <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
+                    Public Presale
+                  </p>
+                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
                     {formatRemainingTime(Date.now(), startTime)}
                   </p>
                   <p className="text-[22px] font-semibold text-[#CCC]">
                     {formatTimestamp(startTime)}
                   </p>
+                  <div className="flex w-full items-center justify-between h-[26px] font-semibold text-[22px] mb-[56px]">
+                    <p>Total Raised</p>
+                    <div className="flex items-center font-semibold text-[22px] gap-4">
+                      {
+                        /* presale is completed */
+                        presaleExists && endTime < Date.now() ? (
+                          <p>
+                            {formatNumberWithDecimals(
+                              (finalTotalRaisedFunds as number) / ONE_RENEGADES,
+                              "8",
+                            )}
+                          </p>
+                        ) : /* whitelist presale is compoleted */
+                        whitelistPresaleExists &&
+                          whitelistEndTime < Date.now() ? (
+                          <p>
+                            {formatNumberWithDecimals(
+                              (finalTotalRaisedFunds as number) / ONE_RENEGADES,
+                              "8",
+                            )}
+                          </p>
+                        ) : /* presale is live */
+                        presaleExists &&
+                          endTime > Date.now() &&
+                          startTime <= Date.now() ? (
+                          <p>
+                            {formatNumberWithDecimals(
+                              (totalRaisedFunds as number) / ONE_RENEGADES,
+                              "8",
+                            )}
+                          </p>
+                        ) : (
+                          /* whitelist presale is live */
+                          <p>
+                            {formatNumberWithDecimals(
+                              (totalRaisedFunds as number) / ONE_RENEGADES,
+                              "8",
+                            )}
+                          </p>
+                        )
+                      }
+                      <img
+                        src="/presale/aptos.svg"
+                        className="w-[18px] h-[18px]"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between h-12 font-semibold text-[22px]">
+                    <input
+                      type="text"
+                      placeholder="0.00"
+                      value={count}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const regex = /^\d*\.?\d{0,4}$/;
+                        if (value === "" || regex.test(value)) {
+                          setCount(value);
+                        }
+                      }}
+                      className={` ${(Date.now() < endTime && Date.now() >= startTime) || (Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime) ? "" : "opacity-50"} font-medium w-[199px] sm:w-[259px] px-6 h-12 rounded-[4px] border bg-[#FFF] bg-opacity-10 hover:bg-opacity-20 border-transparent focus:outline-none focus:border-gray-300`}
+                      disabled={
+                        (Date.now() < endTime && Date.now() >= startTime) ||
+                        (Date.now() < whitelistEndTime &&
+                          Date.now() >= whitelistStartTime)
+                          ? false
+                          : true
+                      }
+                    />
+                    <div className="flex items-center font-semibold text-[26px] gap-2 sm:gap-4">
+                      <p>APT</p>
+                      <img
+                        src="/presale/aptos.svg"
+                        className="w-[24px] h-[24px]"
+                      />
+                    </div>
+                  </div>
+                  {connected && presaleExists ? (
+                    <PrimaryButton
+                      onClick={onContribute}
+                      className={`z-20 relative ${Date.now() < endTime && Date.now() >= startTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}
+                    >
+                      <p className="text-[18px] font-bold my-2">Send APT</p>
+                    </PrimaryButton>
+                  ) : connected && whitelistPresaleExists ? (
+                    <PrimaryButton
+                      onClick={onWhitelistContribute}
+                      className={`z-20 relative ${Date.now() < whitelistEndTime && Date.now() >= whitelistStartTime ? "" : "cursor-not-allowed bg-opacity-50 hover:bg-opacity-50"} py-1 w-full !h-fit my-6`}
+                    >
+                      <p className="text-[18px] font-bold my-2">Send APT</p>
+                    </PrimaryButton>
+                  ) : (
+                    <PrimaryButton
+                      onClick={() => dispatch(toggleWalletPanel(true))}
+                      className="z-20 relative w-full !h-[48px] my-6"
+                    >
+                      <p className="text-[18px] h-6 font-bold">
+                        Connect Wallet
+                      </p>
+                    </PrimaryButton>
+                  )}
+                  <>
+                    <div className="flex flex-col items-start w-full gap-2">
+                      <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold">
+                        <Icon icon={"mdi:dot"} /> Minimum contribution is 1 APT
+                      </p>
+                      <p className="flex items-center text-[15px] sm:text-[18px] h-6 font-semibold">
+                        <Icon icon={"mdi:dot"} /> $RENA will be distributed
+                        after the Presale
+                      </p>
+                    </div>
+                    <div className="border-b border-[#666] w-full my-6" />
+                    <div className="flex w-full items-center justify-between h-[18px] font-semibold text-[18px]">
+                      <p className="text-[18px] font-medium text-[#CCC]">
+                        My Contribution
+                      </p>
+                      <div className="flex items-center font-semibold text-18px] gap-4">
+                        <p>
+                          {presaleExists && Date.now() > startTime
+                            ? formatNumberWithDecimals(
+                                (contributedAmount as number) / ONE_RENEGADES,
+                                "8",
+                              )
+                            : 0}
+                        </p>
+                        <img
+                          src="/presale/aptos.svg"
+                          className="w-[18px] h-[18px]"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex w-full items-center justify-between h-[18px] mt-6 mb-4 font-semibold text-[18px]">
+                      <p className="text-[18px] font-medium text-[#CCC]">
+                        My $RENA
+                      </p>
+                      <div className="flex items-center font-semibold text-[18px] gap-4">
+                        <p>
+                          {
+                            /* presale ended */
+                            presaleExists && endTime < Date.now()
+                              ? formatNumberWithDecimals(
+                                  (distributedFunds as number) / ONE_RENEGADES,
+                                  "4",
+                                )
+                              : 0
+                          }
+                        </p>
+                        <img
+                          src="/renegades/rena.svg"
+                          className="w-[18px] h-[18px]"
+                        />
+                      </div>
+                    </div>
+                  </>
                 </p>
               ) : /* Presale is live */
               presaleExists &&
@@ -1188,18 +1344,6 @@ const PreSale = () => {
                   </p>
                   <p className="text-[22px] font-semibold text-[#CCC]">
                     Thank you for participating
-                  </p>
-                </p>
-              ) : /* Presale is live */
-              presaleExists &&
-                startTime <= Date.now() &&
-                endTime >= Date.now() ? (
-                <p className="flex flex-col items-center w-[95%] sm:w-[400px]">
-                  <p className="text-[28px] sm:text-[32px] leading-[38px] font-bold">
-                    Presale is LIVE
-                  </p>
-                  <p className="text-[22px] font-semibold text-[#CCC]">
-                    Ends in {formatSeconds(remainingTime)}
                   </p>
                 </p>
               ) : /* Presale is completed */

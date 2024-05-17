@@ -87,13 +87,13 @@ const ThirdSection = () => {
               </div>
             </div>
           </div>
-          <div className="sm:flex w-full justify-center mt-14 hidden">
+          {/* <div className="sm:flex w-full justify-center mt-14 hidden">
             <PrimaryButton className="z-20 relative w-[200px]">
               <Link to={"/presale"}>
                 <p className="text-[18px] h-6 font-bold">Get $RENA</p>
               </Link>
             </PrimaryButton>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -259,9 +259,9 @@ const Renegades = () => {
                       You don’t have any <br className="sm:hidden block" />{" "}
                       Renegades to claim
                     </p>
-                    <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                    {/* <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                       <Link to={"/presale"}>Get $RENA to claim NFTs</Link>
-                    </p>
+                    </p> */}
                   </div>
                 )}
               </div>
@@ -299,9 +299,9 @@ const Renegades = () => {
                   <p className="text-[26px] my-[24px] text-center">
                     You don’t have any Renegades in your wallet
                   </p>
-                  <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                  {/* <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                     <Link to={"/presale"}>Get $RENA to get NFTs</Link>
-                  </p>
+                  </p> */}
                   <p className="text-[26px]">or</p>
                   <p className="text-[26px]">Get them on marketplaces</p>
                 </>

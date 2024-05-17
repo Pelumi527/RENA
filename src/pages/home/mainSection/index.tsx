@@ -15,11 +15,11 @@ const MainSection = () => {
           NFTs via a mix of fungible & non-fungible tokens, based on Aptos Token
         </p>
         <div className="flex w-full justify-center mt-10">
-          <PrimaryButton className="z-20 relative w-[200px]">
+          {/* <PrimaryButton className="z-20 relative w-[200px]">
             <Link to={"/presale"}>
               <p className="text-[18px] h-6 font-bold">Get $RENA</p>
             </Link>
-          </PrimaryButton>
+          </PrimaryButton> */}
         </div>
       </div>
     </div>

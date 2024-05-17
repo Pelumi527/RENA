@@ -30,13 +30,13 @@ const Header: React.FC<Props> = ({ className, active }) => {
           />
         </div>
         <div className="hidden xl:flex items-center justify-end">
-          <p
+          {/* <p
             onClick={() => navigate("/presale")}
             className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active == 2 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
             style={{ zIndex: 100 }}
           >
             Presale
-          </p>
+          </p> */}
           <p
             onClick={() => navigate("/claim")}
             className={` hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 text-[22px] font-white font-semibold cursor-pointer ${active == 0 && "text-primary"}`}
@@ -57,11 +57,11 @@ const Header: React.FC<Props> = ({ className, active }) => {
           </p>
           <div className="ml-12 mr-6 flex h-12">
             <ConnectButton />
-            <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">
+            {/* <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">
               <Link to={"/presale"}>
                 <p className="text-[18px] h-6 font-bold">Get $RENA</p>
               </Link>
-            </SecondaryButton>
+            </SecondaryButton> */}
           </div>
           <div style={{ zIndex: 100 }} className="flex">
             <JoinUs />

@@ -16,9 +16,9 @@ const SixthSection = () => {
             Get $RENA and liquify your NFTs in a brand new way!
           </p>
           <div className="">
-            <SecondaryButton className="z-20 h-12 relative w-[200px]">
+            {/* <SecondaryButton className="z-20 h-12 relative w-[200px]">
               <p className="text-[18px] h-6 font-bold">Get $RENA</p>
-            </SecondaryButton>
+            </SecondaryButton> */}
           </div>
         </div>
       </div>

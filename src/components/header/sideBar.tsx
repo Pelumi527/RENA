@@ -54,14 +54,14 @@ const SideBar = () => {
           <div className="flex flex-col justify-between flex-grow">
             <div />
             <div className="flex flex-col gap-8 flex-shrink-0">
-              <Link to={"/presale"}>
+              {/* <Link to={"/presale"}>
                 <p
                   onClick={() => dispatch(toggleSidebar(2))}
                   className="text-[26px] font-semibold text-center leading-[30px]"
                 >
                   Presale
                 </p>
-              </Link>
+              </Link> */}
               <Link to={"/claim"}>
                 <p
                   onClick={() => dispatch(toggleSidebar(2))}
@@ -80,11 +80,11 @@ const SideBar = () => {
               </Link>
             </div>
             <div className="flex flex-col w-full items-center flex-shrink-0">
-              <Link to={"/presale"}>
+              {/* <Link to={"/presale"}>
                 <button className="w-[176px] mb-6 h-12 bg-[#FFF] text-[#121221] font-bold text-[18px] rounded-[4px]">
                   Get $RENA
                 </button>
-              </Link>
+              </Link> */}
               <ConnectButton />
               <div className="mt-14">
                 <JoinUs />

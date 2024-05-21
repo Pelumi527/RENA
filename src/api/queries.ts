@@ -9,7 +9,7 @@ import {
 import {
   COLLECTION_ADDRESS,
   COLLECTION_ID,
-  RENA_MODULE_TESTNET,
+  RENA_MODULE_MAINNET,
 } from "../util/module-endpoints";
 
 type TokenResponse = {

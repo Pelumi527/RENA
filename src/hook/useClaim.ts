@@ -2,9 +2,9 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   APTOS,
   CLAIM,
-  LIQUID_COIN_OBJECT_TESTNET,
-  RENA_COIN_TYPE_TESTNET,
-  RENA_MODULE_TESTNET,
+  LIQUID_COIN_OBJECT_MAINNET,
+  RENA_COIN_TYPE_MAINNET,
+  RENA_MODULE_MAINNET,
 } from "../util/module-endpoints";
 import { useDispatch } from "react-redux";
 import { updateLRDLoading, updateLastRenegadesData } from "../state/renegades";
@@ -17,9 +17,9 @@ const useClaim = () => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
-        function: `${RENA_MODULE_TESTNET}::${CLAIM}`,
-        typeArguments: [RENA_COIN_TYPE_TESTNET],
-        functionArguments: [LIQUID_COIN_OBJECT_TESTNET, count],
+        function: `${RENA_MODULE_MAINNET}::${CLAIM}`,
+        typeArguments: [RENA_COIN_TYPE_MAINNET],
+        functionArguments: [LIQUID_COIN_OBJECT_MAINNET, count],
       },
     });
     console.log(res);

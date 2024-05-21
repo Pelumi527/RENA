@@ -1,10 +1,10 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   APTOS,
-  LIQUID_COIN_OBJECT_TESTNET,
+  LIQUID_COIN_OBJECT_MAINNET,
   LIQUIFY_WITH_ADDRESS,
-  RENA_COIN_TYPE_TESTNET,
-  RENA_MODULE_TESTNET,
+  RENA_COIN_TYPE_MAINNET,
+  RENA_MODULE_MAINNET,
 } from "../util/module-endpoints";
 import { updateRefresh } from "../state/global";
 import { useDispatch } from "react-redux";
@@ -16,9 +16,9 @@ const useLiquify = () => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
-        function: `${RENA_MODULE_TESTNET}::${LIQUIFY_WITH_ADDRESS}`,
+        function: `${RENA_MODULE_MAINNET}::${LIQUIFY_WITH_ADDRESS}`,
         typeArguments: [],
-        functionArguments: [LIQUID_COIN_OBJECT_TESTNET, tokens],
+        functionArguments: [LIQUID_COIN_OBJECT_MAINNET, tokens],
       },
     });
     console.log(res);

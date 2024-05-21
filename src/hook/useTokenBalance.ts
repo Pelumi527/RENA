@@ -2,7 +2,7 @@ import { useDispatch } from "react-redux";
 import {
   APTOS,
   ONE_RENEGADES,
-  RENA_COIN_TYPE_TESTNET,
+  RENA_COIN_TYPE_MAINNET,
 } from "../util/module-endpoints";
 import { updateRenaBalance } from "../state/renegades";
 import { InputViewFunctionData } from "@aptos-labs/ts-sdk";
@@ -13,7 +13,7 @@ const useTokenBalance = () => {
   const updateTokenBalance = async (accountAddress: string) => {
     const payload: InputViewFunctionData = {
       function: "0x1::coin::balance",
-      typeArguments: [RENA_COIN_TYPE_TESTNET],
+      typeArguments: [RENA_COIN_TYPE_MAINNET],
       functionArguments: [accountAddress],
     };
     const res = await APTOS.view({

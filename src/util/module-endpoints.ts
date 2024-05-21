@@ -37,6 +37,8 @@ export const WHITELISTED_PRESALE =
  */
 
 // module endpoints
+export const RENA_PRESALE_MAINNET = "0x4ed27736e724e403f9b4645ffef0ae86fd149503f45b37c428ffabd7e46e5b05::core";
+
 export const RENA_MODULE_MAINNET = "0x4ed27736e724e403f9b4645ffef0ae86fd149503f45b37c428ffabd7e46e5b05::core";
 // Coin endpoint
 export const RENA_COIN_TYPE_MAINNET = "0x4ed27736e724e403f9b4645ffef0ae86fd149503f45b37c428ffabd7e46e5b05::core::RenegadeCoin";

@@ -1,15 +1,10 @@
 import {
-  AccountAddress,
   AccountAddressInput,
   Aptos,
-  AptosConfig,
-  GetEventsResponse,
-  Hex,
+  AptosConfig
 } from "@aptos-labs/ts-sdk";
 import {
-  COLLECTION_ADDRESS,
-  COLLECTION_ID,
-  RENA_MODULE_MAINNET,
+  COLLECTION_ADDRESS
 } from "../util/module-endpoints";
 
 type TokenResponse = {

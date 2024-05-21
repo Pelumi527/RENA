@@ -274,7 +274,7 @@ const Renegades = () => {
                   onClick={() => dispatch(toggleItemModal([item]))}
                   key={index}
                   index={index}
-                  avatar={item.token_uri}
+                  avatar={(item.token_uri as string).replace(/["']/g, "")}
                   name={item.token_name}
                   rank={item?.rank}
                   isSelected={

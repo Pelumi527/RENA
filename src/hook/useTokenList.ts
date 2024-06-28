@@ -4,8 +4,9 @@ import {
   updateRenegadesData,
   updateRenegadesRankData,
 } from "../state/renegades";
+import { useQuery } from "react-query";
 
-const useTokenList = () => {
+export const useTokenList = () => {
   const dispatch = useDispatch();
 
   const updateTokenList = async (accountAddress: string) => {
@@ -20,12 +21,29 @@ const useTokenList = () => {
       dispatch(updateRenegadesRankData([]));
     } else {
       dispatch(
-        updateRenegadesData(res.map((data: any) => data.current_token_data)),
+        updateRenegadesData(res.map((data: any) => data.current_token_data))
       );
     }
   };
 
   return updateTokenList;
 };
-
-export default useTokenList;
+export const useUserRenegadesData = ({
+  accountAddress,
+}: {
+  accountAddress?: string;
+}) => {
+  const getUserTokenOwned = async () => {
+    if (!accountAddress) {
+      return;
+    }
+    return await APTOS.getAccountOwnedTokensFromCollectionAddress({
+      accountAddress,
+      collectionAddress: COLLECTION_ADDRESS,
+    });
+  };
+  return useQuery({
+    queryKey: ["getUserTokenOwned", accountAddress],
+    queryFn: () => getUserTokenOwned(),
+  });
+};

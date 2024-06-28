@@ -7,7 +7,7 @@ import RenegadesItem from "./renegadesItem";
 import { useDispatch } from "react-redux";
 import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppSelector } from "../../state/hooks";
-import useTokenList from "../../hook/useTokenList";
+import { useTokenList, useUserRenegadesData } from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import {
   RenegadeItemWithRarity,
@@ -27,8 +27,9 @@ import { NFTtype } from "../../type/renegades";
 import { updateRefresh } from "../../state/global";
 import Cookies from "js-cookie";
 import useLiquify from "../../hook/useLiquify";
+import LiquifyModal from "../../components/modal/liquifyModal";
 
-const renegadesJsonData = require("../../metadata.json");
+export const renegadesJsonData = require("../../metadata.json");
 
 const Renegades = () => {
   const { connected, account } = useWallet();
@@ -57,7 +58,6 @@ const Renegades = () => {
   );
   const isLoading = useAppSelector((state) => state.renegadesState.isLoading);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -201,10 +201,10 @@ const Renegades = () => {
   };
 
   return (
-    <div className="parallax relative" id="cred-point">
+    <div className="relative parallax" id="cred-point">
       <img src="/renegades/vector.png" className="absolute sm:left-20" />
       <Header className="" active={1} />
-      <div className="w-full flex flex-col z-20 relative items-center">
+      <div className="relative z-20 flex flex-col items-center w-full">
         <div className="flex flex-col w-[90%] sm:w-[1100px]">
           <div className="mt-12 flex sm:flex-row flex-col justify-between sm:h-[47px] sm:items-end">
             <p className="font-bold text-[42px]">My Renegades</p>
@@ -256,7 +256,7 @@ const Renegades = () => {
                 ) : (
                   <div className="flex flex-col items-center">
                     <p className="font-medium text-[22px] sm:text-[26px] text-center leading-[120%]">
-                      You don’t have any <br className="sm:hidden block" />{" "}
+                      You don’t have any <br className="block sm:hidden" />{" "}
                       Renegades to claim
                     </p>
                     {/* <p className="text-[22px] sm:text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
@@ -313,7 +313,7 @@ const Renegades = () => {
       {selectedItems.length > 0 && (
         <div className="fixed inset-x-0 bottom-0 bg-[#222] h-20 text-white p-4 sm:gap-10 flex justify-center items-center shadow-md z-50">
           <button
-            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 pr-2 sm:pr-0 sm:px-4 rounded"
+            className="py-2 pr-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 sm:pr-0 sm:px-4"
             onClick={() => setSelectedItems([])}
           >
             Deselect all
@@ -334,6 +334,7 @@ const Renegades = () => {
           </PrimaryButton>
         </div>
       )}
+       <LiquifyModal />
       <Footer />
     </div>
   );

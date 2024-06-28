@@ -14,6 +14,7 @@ interface Props {
   onClick?: () => void;
   isSelected: boolean;
   onToggleSelected: () => void;
+  isStaking?: boolean;
 }
 
 const RenegadesItem = ({
@@ -24,70 +25,96 @@ const RenegadesItem = ({
   isSelected,
   onToggleSelected,
   index,
+  isStaking = false,
 }: Props) => {
   const isLoading = useAppSelector(
-    (state) => state.renegadesState.isRenaLoading,
+    (state) => state.renegadesState.isRenaLoading
   );
   const displayAmount = useAppSelector(
-    (state) => state.renegadesState.displayAmount,
+    (state) => state.renegadesState.displayAmount
   );
   return (
     <>
       {index <= displayAmount - 1 ? (
-        <div
-          onClick={onClick}
-          className="relative w-[153px] h-[216px] sm:w-[194px] sm:h-[261px] cursor-pointer flex flex-col items-center"
-        >
+        <div>
           <div
-            className="absolute top-0 right-0 p-2 z-[200]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Checkbox isChecked={isSelected} onToggle={onToggleSelected} />
-          </div>
-          <div
-            className={`overflow-hidden rounded-[8px] w-[153px] sm:w-[194px] relative`}
-          >
-            <LoadingImage
-              url={avatar}
-              className="w-full h-[153px] sm:h-[194px] rounded-[8px] object-cover transition-transform duration-300 ease-in-out hover:scale-[120%]"
-            />
-            {isSelected && (
-              <div
-                className={`absolute top-0 left-0 w-full h-full bg-[#000] bg-opacity-40 rounded-[8px] z-[100] ${isSelected ? "border-[5px] border-primary" : ""}`}
-              ></div>
-            )}
-          </div>
-          {isLoading ? (
-            <div className="w-[141px] h-[26px] bg-gray-loading mt-4" />
-          ) : (
-            <p className="text-[18px] sm:text-[22px] font-semibold text-center mt-4">
-              {name}
-            </p>
-          )}
-          <Tooltip
-            animate={{
-              mount: { scale: 1, y: 0 },
-              unmount: { scale: 0, y: 25 },
-            }}
-            className="z-[100]"
-            content={
-              <div className="w-fit h-fit text-[14px] font-medium p-2 bg-[#000] border border-[#626262] rounded-[4px] z-[100] relative">
-                {rank && levelClass(rank)[1]}
-              </div>
-            }
+            onClick={onClick}
+            className="relative w-[153px] h-[216px] sm:w-[194px] sm:h-[261px] cursor-pointer flex flex-col items-center"
           >
             <div
-              className={`text-[15px] font-bold flex items-center justify-center ${rank && levelClass(rank)[0]}`}
+              className="absolute top-0 right-0 p-2 z-[200]"
+              onClick={(e) => e.stopPropagation()}
             >
-              <Icon
-                icon={"ph:medal-fill"}
-                fontSize={16}
-                className={`mr-1 ${rank && levelClass(rank)[0]}`}
-              />
-              Rank {rank}
-              <p className="text-[#666] font-semibold">/5000</p>
+              <Checkbox isChecked={isSelected} onToggle={onToggleSelected} />
             </div>
-          </Tooltip>
+            <div
+              className={`overflow-hidden rounded-[8px] w-[153px] sm:w-[194px] relative`}
+            >
+              <LoadingImage
+                url={avatar}
+                className="w-full h-[153px] sm:h-[194px] rounded-[8px] object-cover transition-transform duration-300 ease-in-out hover:scale-[120%]"
+              />
+              {isSelected && (
+                <div
+                  className={`absolute top-0 left-0 w-full h-full bg-[#000] bg-opacity-40 rounded-[8px] z-[100] ${
+                    isSelected ? "border-[5px] border-primary" : ""
+                  }`}
+                ></div>
+              )}
+            </div>
+            {isLoading ? (
+              <div className="w-[141px] h-[26px] bg-gray-loading mt-4" />
+            ) : (
+              <p className="text-[18px] sm:text-[22px] font-semibold text-center mt-4">
+                {name}
+              </p>
+            )}
+            <Tooltip
+              animate={{
+                mount: { scale: 1, y: 0 },
+                unmount: { scale: 0, y: 25 },
+              }}
+              className="z-[100]"
+              content={
+                <div className="w-fit h-fit text-[14px] font-medium p-2 bg-[#000] border border-[#626262] rounded-[4px] z-[100] relative">
+                  {rank && levelClass(rank)[1]}
+                </div>
+              }
+            >
+              <div
+                className={`text-[15px] font-bold flex items-center justify-center ${
+                  rank && levelClass(rank)[0]
+                }`}
+              >
+                <Icon
+                  icon={"ph:medal-fill"}
+                  fontSize={16}
+                  className={`mr-1 ${rank && levelClass(rank)[0]}`}
+                />
+                Rank {rank}
+                <p className="text-[#666] font-semibold">/5000</p>
+              </div>
+            </Tooltip>
+          </div>
+          {isStaking && (
+            <div className="px-2 py-2 mx-4 mt-8 border-2 rounded shadow-md border-gray/40">
+              <div className="flex justify-between">
+                <h1 className="text-[16px] font-semibold">Staked</h1>
+                <p className="text-[16px] font-semibold text-primary">
+                  10 days
+                </p>
+              </div>
+              <div className="flex justify-between">
+                <h1 className="text-[16px] font-semibold">Earned</h1>
+                <p className="text-[16px] font-semibold text-primary">
+                  100 pts
+                </p>
+              </div>
+              <p className="text-[13px] font-semibold text-gray-light">
+                Earning 10pts/day
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="relative w-[153px] h-[216px] sm:w-[194px] sm:h-[261px] cursor-pointer flex flex-col items-center">

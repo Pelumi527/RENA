@@ -6,7 +6,9 @@ import {
 } from "@aptos-labs/ts-sdk";
 import {
   RENA_MODULE_MAINNET,
+  RENA_MODULE_TESTNET,
   RENA_PRESALE_MAINNET,
+  RENA_PRESALE_TESTNET,
 } from "../util/module-endpoints";
 
 export class Events {
@@ -27,7 +29,7 @@ export class Events {
     account_address: AccountAddress;
   }): Promise<GetEventsResponse> {
     const collectionCreatedEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::CollectionCreated`,
+      eventType: `${RENA_MODULE_TESTNET}::CollectionCreated`,
       minimumLedgerVersion: 0,
     });
 
@@ -43,7 +45,7 @@ export class Events {
   }): Promise<GetEventsResponse> {
     const liquidTokensCreatedEvent =
       await this.aptos.getModuleEventsByEventType({
-        eventType: `${RENA_MODULE_MAINNET}::LiquidTokensCreated`,
+        eventType: `${RENA_MODULE_TESTNET}::LiquidTokensCreated`,
         minimumLedgerVersion: 0,
       });
 
@@ -58,7 +60,7 @@ export class Events {
     account_address: AccountAddress;
   }): Promise<GetEventsResponse> {
     const liquidCoinCreatedEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::LiquidCoinCreated`,
+      eventType: `${RENA_MODULE_TESTNET}::LiquidCoinCreated`,
       minimumLedgerVersion: 0,
     });
 
@@ -73,7 +75,7 @@ export class Events {
     account_address: AccountAddress;
   }): Promise<GetEventsResponse> {
     const feeUpdatedEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::FeeUpdated`,
+      eventType: `${RENA_MODULE_TESTNET}::FeeUpdated`,
       minimumLedgerVersion: 0,
     });
 
@@ -86,7 +88,7 @@ export class Events {
   // :!:AllClaim
   async getAllClaimEvents(): Promise<GetEventsResponse> {
     const allClaimsEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::Claimed`,
+      eventType: `${RENA_MODULE_TESTNET}::Claimed`,
       minimumLedgerVersion: 0,
     });
 
@@ -99,7 +101,7 @@ export class Events {
   // :!:AllLiquify
   async getAllLiquifyEvents(): Promise<GetEventsResponse> {
     const allLiquifyEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::Liquified`,
+      eventType: `${RENA_MODULE_TESTNET}::Liquified`,
       minimumLedgerVersion: 0,
     });
 
@@ -114,7 +116,7 @@ export class Events {
     account_address: AccountAddress;
   }): Promise<GetEventsResponse> {
     const claimEvent = await this.aptos.getAccountEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::Claimed`,
+      eventType: `${RENA_MODULE_TESTNET}::Claimed`,
       minimumLedgerVersion: 0,
       accountAddress: args.account_address,
     });
@@ -130,7 +132,7 @@ export class Events {
     account_address: AccountAddress;
   }): Promise<GetEventsResponse> {
     const liquifyEvent = await this.aptos.getAccountEventsByEventType({
-      eventType: `${RENA_MODULE_MAINNET}::Liquified`,
+      eventType: `${RENA_MODULE_TESTNET}::Liquified`,
       minimumLedgerVersion: 0,
       accountAddress: args.account_address,
     });
@@ -144,7 +146,7 @@ export class Events {
   // :!:PresaleCreated
   async getPresaleCreatedEvent(): Promise<GetEventsResponse> {
     const preSaleCreatedEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_PRESALE_MAINNET}::PresaleInitialized`,
+      eventType: `${RENA_PRESALE_TESTNET}::PresaleInitialized`,
       minimumLedgerVersion: 0,
     });
 
@@ -158,7 +160,7 @@ export class Events {
   async getWhitelistPresaleCreatedEvent(): Promise<GetEventsResponse> {
     const whitelistPresaleCreatedEvent =
       await this.aptos.getModuleEventsByEventType({
-        eventType: `${RENA_PRESALE_MAINNET}::WhitelistInitialized`,
+        eventType: `${RENA_PRESALE_TESTNET}::WhitelistInitialized`,
         minimumLedgerVersion: 0,
       });
 
@@ -171,7 +173,7 @@ export class Events {
   // :!:Contributions
   async getContributionsEvent(): Promise<GetEventsResponse> {
     const contributionsEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_PRESALE_MAINNET}::Contributed`,
+      eventType: `${RENA_PRESALE_TESTNET}::Contributed`,
       minimumLedgerVersion: 0,
     });
 
@@ -185,7 +187,7 @@ export class Events {
   async getContributionsUpdatedEvent(): Promise<GetEventsResponse> {
     const contributionsUpdatedEvent =
       await this.aptos.getModuleEventsByEventType({
-        eventType: `${RENA_PRESALE_MAINNET}::ContributionUpdated`,
+        eventType: `${RENA_PRESALE_TESTNET}::ContributionUpdated`,
         minimumLedgerVersion: 0,
       });
 
@@ -198,7 +200,7 @@ export class Events {
   // :!:PresaleFinalized
   async getPresaleFinalizedEvent(): Promise<GetEventsResponse> {
     const preSaleFinalizedEvent = await this.aptos.getModuleEventsByEventType({
-      eventType: `${RENA_PRESALE_MAINNET}::PresaleFinalized`,
+      eventType: `${RENA_PRESALE_TESTNET}::PresaleFinalized`,
       minimumLedgerVersion: 0,
     });
 
@@ -212,7 +214,7 @@ export class Events {
   async getSaleFundsDistributedEvent(): Promise<GetEventsResponse> {
     const saleFundsDistributedEvent =
       await this.aptos.getModuleEventsByEventType({
-        eventType: `${RENA_PRESALE_MAINNET}::ShareDistributed`,
+        eventType: `${RENA_PRESALE_TESTNET}::ShareDistributed`,
         minimumLedgerVersion: 0,
       });
 

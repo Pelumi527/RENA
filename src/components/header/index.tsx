@@ -29,14 +29,14 @@ const Header: React.FC<Props> = ({ className, active }) => {
             className="h-[106px] md:h-[118px] cursor-pointer w-[182px] md:w-[205px]"
           />
         </div>
-        <div className="hidden xl:flex items-center justify-end">
-          {/* <p
-            onClick={() => navigate("/presale")}
+        <div className="items-center justify-end hidden xl:flex">
+          <p
+            onClick={() => navigate("/staking")}
             className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active == 2 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
             style={{ zIndex: 100 }}
           >
-            Presale
-          </p> */}
+            Staking
+          </p>
           <p
             onClick={() => navigate("/claim")}
             className={` hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 text-[22px] font-white font-semibold cursor-pointer ${active == 0 && "text-primary"}`}
@@ -55,7 +55,7 @@ const Header: React.FC<Props> = ({ className, active }) => {
           >
             My Renegades
           </p>
-          <div className="ml-12 mr-6 flex h-12">
+          <div className="flex h-12 ml-12 mr-6">
             <ConnectButton />
             {/* <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">
               <Link to={"/presale"}>
@@ -67,7 +67,7 @@ const Header: React.FC<Props> = ({ className, active }) => {
             <JoinUs />
           </div>
         </div>
-        <div className="block xl:hidden relative z-20">
+        <div className="relative z-20 block xl:hidden">
           <Icon
             onClick={() => {
               dispatch(toggleSidebar(1));

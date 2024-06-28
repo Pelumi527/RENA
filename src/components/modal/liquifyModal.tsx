@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { toggleItemModal } from "../../state/dialog";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import useLiquify from "../../hook/useLiquify";
-import useTokenList from "../../hook/useTokenList";
+import {useTokenList} from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
@@ -155,7 +155,7 @@ const LiquifyModal = () => {
         ? proceed != 2 && (
             <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[95%] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
               <div className="flex flex-col w-full">
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
                     Proceed and liquify{" "}
                     {data.length > 1 ? "NFTs" : data[0]?.token_name}?
@@ -168,11 +168,11 @@ const LiquifyModal = () => {
                       }}
                       icon={"iconoir:cancel"}
                       fontSize={34}
-                      className=" cursor-pointer"
+                      className="cursor-pointer "
                     />
                   </div>
                 </div>
-                <div className="flex my-8 sm:my-12 items-center justify-center relative">
+                <div className="relative flex items-center justify-center my-8 sm:my-12">
                   {data.length > 1 && (
                     <div className="absolute -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">
                       + {data.length - 1} more
@@ -203,7 +203,7 @@ const LiquifyModal = () => {
                   and get {data.length > 1 ? "" : 1} $RENA. Are you sure you
                   want to proceed?
                 </p>
-                <div className="flex justify-center gap-4 sm:gap-6 my-6 items-center w-full sm:flex-row flex-col">
+                <div className="flex flex-col items-center justify-center w-full gap-4 my-6 sm:gap-6 sm:flex-row">
                   <PrimaryButton
                     onClick={onLiqify}
                     className="block sm:hidden !font-bold w-full sm:w-[253px] h-12"
@@ -243,7 +243,7 @@ const LiquifyModal = () => {
         : ""}
       {proceed == 0 && data.length <= 1 && (
         <div className="relative w-full sm:w-[965px] h-[95%] sm:h-fit bg-[#222] border-gray-light-3 rounded-[8px] py-6 px-4 sm:px-6 overflow-y-scroll">
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between w-full">
             <img
               src={data[0]?.token_uri}
               className="hidden sm:block w-[328px] h-[328px] sm:w-[497px] sm:h-[497px] rounded-lg"
@@ -287,7 +287,7 @@ const LiquifyModal = () => {
                     }}
                     icon={"iconoir:cancel"}
                     fontSize={34}
-                    className=" cursor-pointer"
+                    className="cursor-pointer "
                   />
                 </div>
               </div>
@@ -299,7 +299,7 @@ const LiquifyModal = () => {
               </div>
               <div className="mt-[30px] border-b border-[#666] pb-4">
                 {dataItems.length > 0 && (
-                  <div className="flex flex-wrap gap-y-2 justify-between">
+                  <div className="flex flex-wrap justify-between gap-y-2">
                     {dataItems.map((item, index) => (
                       <div
                         key={index}
@@ -336,7 +336,7 @@ const LiquifyModal = () => {
       )}
       {/* {proceed == 2 &&
         < div className="relative w-[566px] h-[221px] bg-[#222] border-gray-light-3 rounded-[8px] p-6">
-          <div className="flex flex-col w-full items-center">
+          <div className="flex flex-col items-center w-full">
             <p className="text-[26px] font-semibold leading-[130%]">Sign transaction in wallet</p>
             <p className="text-[18px] font-semibold mt-10">Please sign the transaction in your wallet</p>
             <SecondaryButton onClick={() => { dispatch(toggleItemModal(false)); setLiquify(0) }} className="!font-bold w-[203px] h-12 mt-6">Cancel</SecondaryButton>
@@ -353,7 +353,7 @@ const LiquifyModal = () => {
           className="relative w-full sm:w-[566px] h-[522px] sm:h-[425px] bg-[#222] border-gray-light-3 rounded-[8px] px-6 py-4 overflow-y-scroll sm:overflow-hidden"
         >
           <div className="flex flex-col w-full mb-6">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
                 Success!
               </p>
@@ -366,7 +366,7 @@ const LiquifyModal = () => {
                   }}
                   icon={"iconoir:cancel"}
                   fontSize={34}
-                  className=" cursor-pointer"
+                  className="cursor-pointer "
                 />
               </div>
             </div>

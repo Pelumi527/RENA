@@ -15,6 +15,9 @@ export const RENA_MODULE_TESTNET =
 export const RENA_PRESALE_TESTNET =
   "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::presale";
 
+export const RENA_STAKING_TESTNET = "0xce06dd72899bc314cf458ab1c6ae47011df6ba62176135c6d78ef6fafb38bdd5::stake"
+export const RENA_STAKING_ESCROW_TESTNET = "0xe6e2227df14b480c8b3984b6bd3fa00d733271d7ec888c5dd1c975614c8757a9"
+
 // coin endpoints
 export const RENA_COIN_TYPE_TESTNET =
   "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::core::RenegadeCoin";
@@ -46,7 +49,7 @@ export const RENA_COIN_TYPE_MAINNET = "0x4ed27736e724e403f9b4645ffef0ae86fd14950
 export const LIQUID_COIN_OBJECT_MAINNET = "0xfc8d56201d24f63e82dfff5cca064d0754d3cce3cadeb4a1d242b3d81cda42ef";
 // Collection address
 export const COLLECTION_ADDRESS: AccountAddressInput =
-  "0x42b36fc7193af0e745e5cc2e9c12179fe8ba5197321479675975bbc17b5f63e7";
+  "0x7c25742cd2cfd0c2bd171b775edcda3e89e4af9d7eedd13312afddcc189a495f";
 
 
   
@@ -56,7 +59,7 @@ export const COLLECTION_ADDRESS: AccountAddressInput =
  * 
  */
 
-const aptosConfig = new AptosConfig({ network: Network.MAINNET });
+const aptosConfig = new AptosConfig({ network: Network.TESTNET });
 export const APTOS = new Aptos(aptosConfig);
 
 // entry functions
@@ -64,6 +67,8 @@ export const CLAIM = "claim";
 export const LIQUIFY = "liquify";
 export const CONTRIBUTE = "contribute";
 export const LIQUIFY_WITH_ADDRESS = "liquify_rena";
+export const STAKE = "stake"
+export const UNSTAKE = "unstake"
 
 // view functions
 export const TREASURY_ADDRESS = "treasury_address";
@@ -78,6 +83,6 @@ export const CONTRIBUTED_AMOUNT_FROM_ADDRESS =
   "contributed_amount_from_address";
 
 export const COLLECTION_ID =
-  "0x42b36fc7193af0e745e5cc2e9c12179fe8ba5197321479675975bbc17b5f63e7";
+  "0x7c25742cd2cfd0c2bd171b775edcda3e89e4af9d7eedd13312afddcc189a495f";
 
 export const ONE_RENEGADES = 100_000_000;

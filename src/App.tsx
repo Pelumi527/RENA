@@ -8,22 +8,28 @@ import Renegades from "./pages/renegades";
 import LiquifyModal from "./components/modal/liquifyModal";
 import ClaimModal from "./components/modal/claimModal";
 import SideBar from "./components/header/sideBar";
+import Staking from "./pages/staking";
+
+import { QueryClientProvider, QueryClient } from "react-query";
 // import PreSale from "./pages/preSale";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/claim" element={<Claim />} />
-        <Route path="/renegades" element={<Renegades />} />
-        {/* <Route path="/presale" element={<PreSale />} /> */}
-      </Routes>
-      <WalletModal />
-      <LiquifyModal />
-      <ClaimModal />
-      <SideBar />
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/claim" element={<Claim />} />
+          <Route path="/renegades" element={<Renegades />} />
+          <Route path="/staking" element={<Staking />} />
+        </Routes>
+        <WalletModal />
+        <ClaimModal />
+        <SideBar />
+      </div>
+    </QueryClientProvider>
   );
 }
 

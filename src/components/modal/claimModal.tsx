@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import PrimaryButton from "../primaryButton";
 import SecondaryButton from "../secondaryButton";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import useTokenList from "../../hook/useTokenList";
+import { useTokenList } from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import useClaim from "../../hook/useClaim";
 import LoadingImageClaim from "../loadingImageClaim";
@@ -127,7 +127,7 @@ const ClaimModal = () => {
         className="custom-background-position relative w-full sm:w-[566px] h-[95%] sm:h-fit bg-[#222] border-gray-light-3 rounded-t-[8px] sm:rounded-[8px] py-4 px-6"
       >
         <div className="flex flex-col w-full">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <p className="text-[26px] font-semibold text-[#FFF] leading-[130%]">
               {proceed == 0
                 ? "Claim a Renegade"
@@ -138,12 +138,12 @@ const ClaimModal = () => {
                 onClick={onClose}
                 icon={"iconoir:cancel"}
                 fontSize={34}
-                className=" cursor-pointer"
+                className="cursor-pointer "
               />
             </div>
           </div>
           <div className={`flex flex-col items-center justify-between mt-8`}>
-            <div className="flex flex-col items-center relative">
+            <div className="relative flex flex-col items-center">
               {proceed > 0 || isLRDLoading ? (
                 <>
                   <LoadingImageClaim
@@ -195,7 +195,7 @@ const ClaimModal = () => {
             </div>
             {Math.floor(renaBalance) > 0 && (
               <>
-                <div className="flex h-12 justify-center gap-4 items-center mt-9">
+                <div className="flex items-center justify-center h-12 gap-4 mt-9">
                   <div
                     className={`w-[72px] h-full ${count <= 1 ? "bg-primary-disable" : "bg-primary"}  rounded-[4px] flex items-center justify-center cursor-pointer`}
                     onClick={decrementValue}
@@ -228,14 +228,14 @@ const ClaimModal = () => {
                   <p>You can claim max</p>
                   <span
                     onClick={() => setCount(Math.floor(renaBalance))}
-                    className="text-primary cursor-pointer"
+                    className="cursor-pointer text-primary"
                   >
                     {Math.floor(renaBalance) as number} Renegades
                   </span>
                 </div>
               </>
             )}
-            <div className="flex sm:flex-row flex-col justify-center gap-4 sm:gap-6 mt-8 mb-2 w-full">
+            <div className="flex flex-col justify-center w-full gap-4 mt-8 mb-2 sm:flex-row sm:gap-6">
               {Math.floor(renaBalance) > 0 && (
                 <PrimaryButton
                   onClick={onClaim}

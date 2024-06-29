@@ -7,6 +7,8 @@ interface dialogStates {
   bItemModal: any;
   bClaimModal: any;
   openStakingModal: boolean;
+  isSigningTransaction: boolean;
+  isTransactionSuccess: boolean;
 }
 
 const initialState: dialogStates = {
@@ -16,6 +18,8 @@ const initialState: dialogStates = {
   bClaimModal: false,
   bItemModal: [],
   openStakingModal: false,
+  isSigningTransaction: false,
+  isTransactionSuccess: false,
 };
 
 export const dialogSlice = createSlice({
@@ -23,7 +27,6 @@ export const dialogSlice = createSlice({
   initialState,
   reducers: {
     toggleSidebar: (state, action: PayloadAction<number>) => {
-      console.log(action.payload);
       state.bSidebar = action.payload;
     },
     toggleWalletPanel: (state, action: PayloadAction<boolean>) => {
@@ -41,6 +44,12 @@ export const dialogSlice = createSlice({
     toggleStakingModal: (state, action: PayloadAction<boolean>) => {
       state.openStakingModal = action.payload;
     },
+    updateIsSigningTransaction: (state, action: PayloadAction<boolean>) => {
+      state.isSigningTransaction = action.payload;
+    },
+    updateIsTransactionSuccess: (state, action: PayloadAction<boolean>) => {
+      state.isTransactionSuccess = action.payload;
+    },
   },
   extraReducers: (builder) => {},
 });
@@ -51,7 +60,9 @@ export const {
   toggleConnectRequest,
   toggleItemModal,
   toggleClaimModal,
-  toggleStakingModal
+  toggleStakingModal,
+  updateIsSigningTransaction,
+  updateIsTransactionSuccess
 } = dialogSlice.actions;
 
 export default dialogSlice.reducer;

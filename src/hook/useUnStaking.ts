@@ -1,24 +1,21 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   APTOS,
-  LIQUID_COIN_OBJECT_MAINNET,
-  LIQUIFY_WITH_ADDRESS,
-  RENA_COIN_TYPE_MAINNET,
-  RENA_MODULE_MAINNET,
   RENA_STAKING_TESTNET,
   STAKE,
+  UNSTAKE,
 } from "../util/module-endpoints";
 import { updateRefresh } from "../state/global";
 import { useDispatch } from "react-redux";
 
-const useStaking = () => {
+const useUnStaking = () => {
   const { signAndSubmitTransaction } = useWallet();
   const dispatch = useDispatch();
-  const stake = async (accountAddress: string, tokens?: string[]) => {
+  const Unstake = async (accountAddress: string, tokens?: string[]) => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
-        function: `${RENA_STAKING_TESTNET}::${STAKE}`,
+        function: `${RENA_STAKING_TESTNET}::${UNSTAKE}`,
         typeArguments: [],
         functionArguments: [tokens],
       },
@@ -28,12 +25,11 @@ const useStaking = () => {
       const result = await APTOS.waitForTransaction({
         transactionHash: res.hash,
       });
-      //dispatch(updateRefresh(true));
       return result;
     }
   };
 
-  return stake;
+  return Unstake;
 };
 
-export default useStaking;
+export default useUnStaking;

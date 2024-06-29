@@ -28,10 +28,10 @@ const SideBar = () => {
     <>
       {show && (
         <div
-          className={`${animationClass} fixed inset-0 w-full bg-primary z-[100] flex flex-col px-5 pt-10 pb-12`}
+          className={`${animationClass} fixed inset-0 w-full bg-primary z-[300] flex flex-col px-5 pt-10 pb-12`}
         >
           <div className="flex flex-col w-full">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="flex items-center" style={{ zIndex: 100 }}>
                 <img
                   onClick={() => {
@@ -53,15 +53,15 @@ const SideBar = () => {
           </div>
           <div className="flex flex-col justify-between flex-grow">
             <div />
-            <div className="flex flex-col gap-8 flex-shrink-0">
-              {/* <Link to={"/presale"}>
+            <div className="flex flex-col flex-shrink-0 gap-8">
+              <Link to={"/staking"}>
                 <p
                   onClick={() => dispatch(toggleSidebar(2))}
                   className="text-[26px] font-semibold text-center leading-[30px]"
                 >
-                  Presale
+                  Staking
                 </p>
-              </Link> */}
+              </Link>
               <Link to={"/claim"}>
                 <p
                   onClick={() => dispatch(toggleSidebar(2))}
@@ -79,7 +79,7 @@ const SideBar = () => {
                 </p>
               </Link>
             </div>
-            <div className="flex flex-col w-full items-center flex-shrink-0">
+            <div className="flex flex-col items-center flex-shrink-0 w-full">
               {/* <Link to={"/presale"}>
                 <button className="w-[176px] mb-6 h-12 bg-[#FFF] text-[#121221] font-bold text-[18px] rounded-[4px]">
                   Get $RENA

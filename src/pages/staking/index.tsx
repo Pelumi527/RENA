@@ -4,17 +4,20 @@ import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import RenegadesItem from "../renegades/renegadesItem";
 import { useAppSelector } from "../../state/hooks";
 import { useDispatch } from "react-redux";
-import { toggleItemModal, toggleStakingModal } from "../../state/dialog";
+import {
+  toggleItemModal,
+  toggleStakingModal,
+  updateIsSigningTransaction,
+  updateIsTransactionSuccess,
+} from "../../state/dialog";
 import { NFTtype } from "../../type/renegades";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import PrimaryButton from "../../components/primaryButton";
 import Cookies from "js-cookie";
-import useLiquify from "../../hook/useLiquify";
 import StakingModal from "../../components/modal/stakingModal";
-import { useUserRenegadesData } from "../../hook/useTokenList";
-import { updateRenegadesData } from "../../state/renegades";
 import { useRenegadeRankData, useRenegadesRankStakedToken } from "../../hook";
-import { log } from "console";
+import useStaking from "../../hook/useStaking";
+import useUnStaking from "../../hook/useUnStaking";
 
 enum PAGE_VIEW {
   STAKED,
@@ -28,10 +31,13 @@ const Staking = () => {
   const [skip, setSkip] = useState(false);
   const [pageView, setPageView] = useState<PAGE_VIEW>(PAGE_VIEW.STAKED);
   const { connected, account } = useWallet();
-  const liquify = useLiquify();
+  const stake = useStaking();
+  const unStake = useUnStaking();
   const isBalanceLoading = useAppSelector(
     (state) => state.renegadesState.isBalanceLoading
   );
+  const multistate = useAppSelector((state) => state.renegadesState.multistate);
+  const data = useAppSelector((state) => state.dialogState.bItemModal);
   const toggleItemSelection = (itemId: NFTtype) => {
     setSelectedItems((prevSelectedItems) =>
       prevSelectedItems.includes(itemId)
@@ -49,13 +55,62 @@ const Staking = () => {
 
   const renegadesRankData = useRenegadeRankData({
     accountAddress: account?.address,
-  }).data;
+  });
 
   const renegadesRankStakedData = useRenegadesRankStakedToken({
     accountAddress: account?.address,
-  }).data;
+  });
 
+  const onStake = async () => {
+    if (account) {
+      try {
+        dispatch(updateIsSigningTransaction(true));
+        const response = await stake(
+          account?.address,
+          data.map((item: { token_data_id: string }) => item.token_data_id)
+        );
+        if (response?.success) {
+          dispatch(updateIsSigningTransaction(false));
+          dispatch(updateIsTransactionSuccess(true));
+          renegadesRankData.refetch()
+          renegadesRankStakedData.refetch()
+        }
+      } catch (error) {
+        dispatch(updateIsSigningTransaction(false));
+        dispatch(updateIsTransactionSuccess(false));
+      }
+    }
+  };
 
+  const onUnStake = async () => {
+    if (account) {
+      try {
+        dispatch(updateIsSigningTransaction(true));
+        const response = await unStake(
+          account.address,
+          data.map((item: { token_data_id: string }) => item.token_data_id)
+        );
+        if (response?.success) {
+          dispatch(updateIsSigningTransaction(false));
+          dispatch(updateIsTransactionSuccess(true));
+          renegadesRankData.refetch()
+          renegadesRankStakedData.refetch()
+        }
+      } catch (error) {
+        dispatch(updateIsSigningTransaction(false));
+        dispatch(updateIsTransactionSuccess(false));
+      }
+    }
+  };
+
+  const onStakeOrUnStake = async () => {
+    if (pageView == PAGE_VIEW.STAKED) {
+      await onUnStake();
+    }
+    if (pageView == PAGE_VIEW.UNSTAKED) {
+      await onStake();
+    }
+  };
 
   const openStakingModal = () => {
     dispatch(toggleStakingModal(true));
@@ -63,38 +118,31 @@ const Staking = () => {
     setSelectedItems([]);
   };
 
-  const onLiqify = async () => {
-    if (account) {
-      try {
-        await liquify(
-          account.address,
-          selectedItems.map((item) => item.token_data_id as string)
-        );
-        //fetchEvents();
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  };
+  useEffect(() => {
+    updateCookie();
+  }, [multistate]);
+
   return (
     <main className="relative parallax" id="cred-point">
       <img src="/renegades/vector.png" className="absolute sm:left-20" />
       <Header className="" active={2} />
-      <div className="relative px-40">
-        <div className="flex justify-between">
+      <div className="relative px-[9px] md:px-40">
+        <div className="flex flex-col items-start justify-between md:flex-row">
           <h1 className="text-[42px] font-bold">Staking</h1>
-          <div className="flex justify-evenly items-center w-[60%]">
-            <div className="flex items-center justify-center">
-              <h1 className="text-[26px] font-semibold  mr-4">Total Staked:</h1>
-              <span className="text-[26px] text-primary font-bold">{renegadesRankStakedData?.length}</span>
+          <div className="md:flex-row md:justify-evenly md:items-center md:w-[60%] flex flex-col items-start justify-start">
+            <div className="flex items-center justify-start md:justify-center md:item-center">
+              <h1 className="text-[26px] font-semibold mr-4">Total Staked:</h1>
+              <span className="text-[26px] text-primary font-bold">
+                {renegadesRankStakedData.data?.length}
+              </span>
             </div>
-            <div className="flex items-center justify-center">
-              <h1 className="text-[26px] font-semibold  mr-4">Earning:</h1>
+            <div className="flex items-center justify-start md:justify-center">
+              <h1 className="text-[26px] font-semibold mr-4">Earning:</h1>
               <span className="text-[26px] text-primary font-bold">
                 0 pts/day
               </span>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-start md:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Total earned:</h1>
               <span className="text-[26px] text-primary font-bold">0 pts</span>
             </div>
@@ -123,9 +171,10 @@ const Staking = () => {
               </TabList>
               <TabPanels className="mt-10">
                 <TabPanel>
-                  {renegadesRankStakedData && renegadesRankStakedData?.length > 0 ? (
-                    <div className="flex mt-[48px] sm:mt-[58px] z-10 gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
-                      {renegadesRankStakedData.map((item, index) => (
+                  {renegadesRankStakedData.data &&
+                  renegadesRankStakedData.data?.length > 0 ? (
+                    <div className="flex mt-[48px] sm:mt-[58px] z-10 gap-2 md:gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
+                      {renegadesRankStakedData.data.map((item, index) => (
                         <RenegadesItem
                           onClick={() => {}}
                           key={index}
@@ -137,7 +186,8 @@ const Staking = () => {
                           name={item.token_name}
                           rank={item?.rank}
                           isSelected={
-                            !!item?.token_data_id && selectedItems.includes(item)
+                            !!item?.token_data_id &&
+                            selectedItems.includes(item)
                           }
                           onToggleSelected={() =>
                             item.token_data_id
@@ -152,18 +202,18 @@ const Staking = () => {
                     <div
                       className={`flex flex-col mt-[120px] mb-[219px] items-center w-full`}
                     >
-                      {connected && !isBalanceLoading && (
+                      {connected && !renegadesRankStakedData.isLoading && (
                         <>
                           <img
                             src="/renegades/avatar-default.png"
                             className="w-[140px] h-[140px] rounded-lg"
                           />
                           <p className="text-[26px] my-[24px] text-center">
-                            You don’t have any Renegades in your wallet
+                            You don’t have any staked Renegades
                           </p>
-                          {/* <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                    <Link to={"/presale"}>Get $RENA to get NFTs</Link>
-                  </p> */}
+                          <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                            Get $RENA to get NFTs
+                          </p>
                           <p className="text-[26px]">or</p>
                           <p className="text-[26px]">
                             Get them on marketplaces
@@ -174,9 +224,10 @@ const Staking = () => {
                   )}
                 </TabPanel>
                 <TabPanel>
-                  {renegadesRankData && renegadesRankData.length > 0 ? (
+                  {renegadesRankData.data &&
+                  renegadesRankData.data.length > 0 ? (
                     <div className="flex mt-[48px] sm:mt-[58px] z-10 gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
-                      {renegadesRankData.map(
+                      {renegadesRankData.data.map(
                         (item, index) => (
                           console.log(item),
                           "itennn",
@@ -209,7 +260,7 @@ const Staking = () => {
                     <div
                       className={`flex flex-col mt-[120px] mb-[219px] items-center w-full`}
                     >
-                      {connected && !isBalanceLoading && (
+                      {connected && !renegadesRankData.isLoading && (
                         <>
                           <img
                             src="/renegades/avatar-default.png"
@@ -218,9 +269,9 @@ const Staking = () => {
                           <p className="text-[26px] my-[24px] text-center">
                             You don’t have any Renegades in your wallet
                           </p>
-                          {/* <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
-                    <Link to={"/presale"}>Get $RENA to get NFTs</Link>
-                  </p> */}
+                          <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                            Get $RENA to get NFTs
+                          </p>
                           <p className="text-[26px]">or</p>
                           <p className="text-[26px]">
                             Get them on marketplaces
@@ -243,18 +294,34 @@ const Staking = () => {
           >
             Deselect all
           </button>
-          <button
-            className={`${
-              renegadesRankData &&
-              renegadesRankData.length == selectedItems.length &&
-              "cursor-not-allowed text-[#c1c1c1]"
-            } text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
-            onClick={() => setSelectedItems(renegadesRankData ?? [])}
-          >
-            Select all
-          </button>
+          {pageView == PAGE_VIEW.UNSTAKED ? (
+            <button
+              className={`${
+                renegadesRankData.data &&
+                renegadesRankData.data.length == selectedItems.length &&
+                "cursor-not-allowed text-[#c1c1c1]"
+              } text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
+              onClick={() => setSelectedItems(renegadesRankData.data ?? [])}
+            >
+              Select all
+            </button>
+          ) : (
+            <button
+              className={`${
+                renegadesRankStakedData.data &&
+                renegadesRankStakedData.data.length == selectedItems.length &&
+                "cursor-not-allowed text-[#c1c1c1]"
+              } text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
+              onClick={() =>
+                setSelectedItems(renegadesRankStakedData.data ?? [])
+              }
+            >
+              Select all
+            </button>
+          )}
+
           <PrimaryButton
-            onClick={() => (skip ? onLiqify() : openStakingModal())}
+            onClick={() => (skip ? onStakeOrUnStake : openStakingModal())}
             className="w-[141px] sm:w-[176px] z-20 relative !font-bold !h-[48px]"
           >
             {pageView == PAGE_VIEW.STAKED ? "Unstake" : "Stake"}{" "}

@@ -31,7 +31,11 @@ const Header: React.FC<Props> = ({ className, active }) => {
         </div>
         <div className="items-center justify-end hidden xl:flex">
           <p
-            onClick={() => navigate("/staking")}
+            onClick={() => {
+              connected
+                ? navigate("/staking")
+                : dispatch(toggleWalletPanel(true));
+            }}
             className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active == 2 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
             style={{ zIndex: 100 }}
           >

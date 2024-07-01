@@ -134,8 +134,8 @@ const Staking = () => {
     <main className="relative parallax" id="cred-point">
       <img src="/renegades/vector.png" className="absolute sm:left-20" />
       <Header className="" active={2} />
-      <div className="relative px-[9px] md:px-40">
-        <div className="flex flex-col items-start justify-between md:flex-row">
+      <div className="relative px-[9px] md:px-40 md:mt-[50px]">
+        <div className="flex flex-col items-start justify-between md:flex-row md:items-center">
           <h1 className="text-[42px] font-bold">Staking</h1>
           <div className="md:flex-row md:justify-evenly md:items-center md:w-[60%] flex flex-col items-start justify-start">
             <div className="flex items-center justify-start md:justify-center md:item-center">

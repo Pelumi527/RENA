@@ -44,7 +44,6 @@ const RenegadesItem = ({
     tokenAddress: renaAddress,
   });
 
-  console.log(stakeTime.data[0], "stakeTime");
   return (
     <>
       {index <= displayAmount - 1 ? (
@@ -112,9 +111,9 @@ const RenegadesItem = ({
             <div className="px-2 py-2 mx-4 mt-8 border-2 rounded shadow-md border-gray/40">
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Staked</h1>
-                <p className="text-[16px] font-semibold text-primary">
-                  {Math.floor(stakeTime.data[0] / 86400)} days
-                </p>
+                {stakeTime.data ? <p className="text-[16px] font-semibold text-primary">
+                 {Math.floor(stakeTime?.data[0] / 86400)} days
+                </p> : <p></p>}
               </div>
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Earned</h1>

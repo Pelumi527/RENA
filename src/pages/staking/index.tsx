@@ -244,7 +244,7 @@ const Staking = () => {
                               ? toggleItemSelection(item)
                               : undefined
                           }
-                          renaAddress={item.token_data_id}
+                          renaAddress={item?.token_data_id}
                         />
                       ))}
                     </div>

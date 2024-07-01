@@ -82,11 +82,11 @@ export const useRenegadesRankStakedToken = ({
       const renegadesData = await Promise.all(
         stakedToken[0].data.map(async (staked: any) => {
           return await APTOS.getDigitalAssetData({
-            digitalAssetAddress: String(staked.key) ?? ""
+            digitalAssetAddress: String(staked.key) ?? "",
           });
         })
       );
-      console.log(renegadesData, "renegadesData22", stakedToken)
+      console.log(renegadesData, "renegadesData22", stakedToken);
       const itemsWithCalculatedRarities = renegadesJsonData.map(
         (renegade: any) => {
           const rarities = getRaritiesForRenegadeItem(
@@ -130,20 +130,77 @@ export const useUserRenaStakeTime = ({
   tokenAddress,
 }: {
   accountAddress?: string;
-  tokenAddress:string
+  tokenAddress: string;
 }) => {
   const getUserRENAStakeTime = async () => {
-   
-    return await APTOS.view({
-       payload: {
-          function: `${RENA_STAKING_TESTNET}::stake_time`,
-          typeArguments: [],
-          functionArguments: [accountAddress, tokenAddress],
-        },
-    }) as any
+    if (!tokenAddress && !accountAddress) {
+      return;
+    }
+    return (await APTOS.view({
+      payload: {
+        function: `${RENA_STAKING_TESTNET}::stake_time`,
+        typeArguments: [],
+        functionArguments: [accountAddress, tokenAddress],
+      },
+    })) as any;
   };
   return useQuery({
     queryKey: ["getUserRENAStakeTime", accountAddress, tokenAddress],
     queryFn: () => getUserRENAStakeTime(),
+  });
+};
+
+export const useUserRenaStakePoint = ({
+  accountAddress,
+  tokenAddress,
+}: {
+  accountAddress?: string;
+  tokenAddress: string;
+}) => {
+  const getUserRENAStakePoint = async () => {
+    return (await APTOS.view({
+      payload: {
+        function: `${RENA_STAKING_TESTNET}::stake_points`,
+        typeArguments: [],
+        functionArguments: [accountAddress, tokenAddress],
+      },
+    })) as any;
+  };
+  return useQuery({
+    queryKey: ["getUserRENAStakePoint", accountAddress, tokenAddress],
+    queryFn: () => getUserRENAStakePoint(),
+  });
+};
+
+export const useUserRenaTotalStakePoint = ({
+  accountAddress,
+  tokenAddress,
+}: {
+  accountAddress?: string;
+  tokenAddress?: string[];
+}) => {
+  const getUserRENATotalStakePoint = async () => {
+    const stakePointPerRene = (await APTOS.view({
+      payload: {
+        function: `${RENA_STAKING_TESTNET}::stake_points_vector`,
+        typeArguments: [],
+        functionArguments: [accountAddress, tokenAddress],
+      },
+    })) as [
+      {
+        data: [{ key: string; value: string }];
+      }
+    ];
+
+    const totalStakePoint = stakePointPerRene[0].data.reduce(
+      (accumulator, currentValue) => accumulator + Number(currentValue.value),
+      0
+    );
+
+    return totalStakePoint;
+  };
+  return useQuery({
+    queryKey: ["getUserRENATotalStakePoint", accountAddress, tokenAddress],
+    queryFn: () => getUserRENATotalStakePoint(),
   });
 };

@@ -15,7 +15,11 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import PrimaryButton from "../../components/primaryButton";
 import Cookies from "js-cookie";
 import StakingModal from "../../components/modal/stakingModal";
-import { useRenegadeRankData, useRenegadesRankStakedToken } from "../../hook";
+import {
+  useRenegadeRankData,
+  useRenegadesRankStakedToken,
+  useUserRenaTotalStakePoint,
+} from "../../hook";
 import useStaking from "../../hook/useStaking";
 import useUnStaking from "../../hook/useUnStaking";
 
@@ -109,6 +113,13 @@ const Staking = () => {
     }
   };
 
+  const totalRenaStakePoint = useUserRenaTotalStakePoint({
+    accountAddress: account?.address,
+    tokenAddress: renegadesRankStakedData.data
+      ? renegadesRankStakedData.data.map((data) => data.token_data_id)
+      : [],
+  });
+
   const openStakingModal = () => {
     dispatch(toggleStakingModal(true));
     dispatch(toggleItemModal(selectedItems));
@@ -135,13 +146,17 @@ const Staking = () => {
             </div>
             <div className="flex items-center justify-start md:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Earning:</h1>
-              <span className="text-[26px] text-primary font-bold">
-                0 pts/day
-              </span>
+              {renegadesRankStakedData.data?.length && (
+                <span className="text-[26px] text-primary font-bold">
+                  {renegadesRankStakedData.data.length * 10}
+                </span>
+              )}
             </div>
             <div className="flex items-center justify-start md:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Total earned:</h1>
-              <span className="text-[26px] text-primary font-bold">0 pts</span>
+              <span className="text-[26px] text-primary font-bold">
+                {totalRenaStakePoint.data} pts
+              </span>
             </div>
           </div>
         </div>
@@ -153,7 +168,7 @@ const Staking = () => {
                   onClick={() => {
                     setPageView(PAGE_VIEW.STAKED);
                   }}
-                  className="px-12 py-2 text-lg font-bold border-2 border-r-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-gray-dark-1"
+                  className="px-12 py-2 text-lg font-bold border-2 border-r-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   STAKED
                 </Tab>
@@ -161,7 +176,7 @@ const Staking = () => {
                   onClick={() => {
                     setPageView(PAGE_VIEW.UNSTAKED);
                   }}
-                  className="px-12 py-2 -ml-2 text-lg font-bold border-2 border-l-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-gray-dark-1"
+                  className="px-12 py-2 -ml-2 text-lg font-bold border-2 border-l-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   UNSTAKED
                 </Tab>

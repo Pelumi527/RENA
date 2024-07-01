@@ -5,7 +5,7 @@ import { levelClass } from "../../util/renegadeUtils";
 import Checkbox from "../../components/checkBox";
 import React from "react";
 import { Tooltip } from "@material-tailwind/react";
-import { useUserRenaStakeTime } from "../../hook";
+import { useUserRenaStakePoint, useUserRenaStakeTime } from "../../hook";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface Props {
@@ -43,6 +43,12 @@ const RenegadesItem = ({
     accountAddress: account?.address,
     tokenAddress: renaAddress,
   });
+
+  const stakePoint = useUserRenaStakePoint({
+    accountAddress: account?.address,
+    tokenAddress: renaAddress
+  })
+
 
   return (
     <>
@@ -117,9 +123,9 @@ const RenegadesItem = ({
               </div>
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Earned</h1>
-                <p className="text-[16px] font-semibold text-primary">
-                  0 pts
-                </p>
+                {stakePoint.data && <p className="text-[16px] font-semibold text-primary">
+                  {stakePoint.data[0]}
+                </p>}
               </div>
               <p className="text-[13px] font-semibold text-gray-light">
                 Earning 10pts/day

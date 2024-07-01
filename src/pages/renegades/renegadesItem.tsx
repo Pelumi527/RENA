@@ -5,6 +5,8 @@ import { levelClass } from "../../util/renegadeUtils";
 import Checkbox from "../../components/checkBox";
 import React from "react";
 import { Tooltip } from "@material-tailwind/react";
+import { useUserRenaStakeTime } from "../../hook";
+import { useWallet } from "@aptos-labs/wallet-adapter-react";
 
 interface Props {
   avatar?: string;
@@ -15,6 +17,7 @@ interface Props {
   isSelected: boolean;
   onToggleSelected: () => void;
   isStaking?: boolean;
+  renaAddress: string;
 }
 
 const RenegadesItem = ({
@@ -26,6 +29,7 @@ const RenegadesItem = ({
   onToggleSelected,
   index,
   isStaking = false,
+  renaAddress,
 }: Props) => {
   const isLoading = useAppSelector(
     (state) => state.renegadesState.isRenaLoading
@@ -33,6 +37,14 @@ const RenegadesItem = ({
   const displayAmount = useAppSelector(
     (state) => state.renegadesState.displayAmount
   );
+
+  const { account } = useWallet();
+  const stakeTime = useUserRenaStakeTime({
+    accountAddress: account?.address,
+    tokenAddress: renaAddress,
+  });
+
+  console.log(stakeTime.data[0], "stakeTime");
   return (
     <>
       {index <= displayAmount - 1 ? (
@@ -101,13 +113,13 @@ const RenegadesItem = ({
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Staked</h1>
                 <p className="text-[16px] font-semibold text-primary">
-                  10 days
+                  {Math.floor(stakeTime.data[0] / 86400)} days
                 </p>
               </div>
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Earned</h1>
                 <p className="text-[16px] font-semibold text-primary">
-                  100 pts
+                  0 pts
                 </p>
               </div>
               <p className="text-[13px] font-semibold text-gray-light">

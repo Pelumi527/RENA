@@ -33,9 +33,6 @@ const Staking = () => {
   const { connected, account } = useWallet();
   const stake = useStaking();
   const unStake = useUnStaking();
-  const isBalanceLoading = useAppSelector(
-    (state) => state.renegadesState.isBalanceLoading
-  );
   const multistate = useAppSelector((state) => state.renegadesState.multistate);
   const data = useAppSelector((state) => state.dialogState.bItemModal);
   const toggleItemSelection = (itemId: NFTtype) => {
@@ -72,8 +69,8 @@ const Staking = () => {
         if (response?.success) {
           dispatch(updateIsSigningTransaction(false));
           dispatch(updateIsTransactionSuccess(true));
-          renegadesRankData.refetch()
-          renegadesRankStakedData.refetch()
+          renegadesRankData.refetch();
+          renegadesRankStakedData.refetch();
         }
       } catch (error) {
         dispatch(updateIsSigningTransaction(false));
@@ -93,8 +90,8 @@ const Staking = () => {
         if (response?.success) {
           dispatch(updateIsSigningTransaction(false));
           dispatch(updateIsTransactionSuccess(true));
-          renegadesRankData.refetch()
-          renegadesRankStakedData.refetch()
+          renegadesRankData.refetch();
+          renegadesRankStakedData.refetch();
         }
       } catch (error) {
         dispatch(updateIsSigningTransaction(false));
@@ -104,10 +101,10 @@ const Staking = () => {
   };
 
   const onStakeOrUnStake = async () => {
-    if (pageView == PAGE_VIEW.STAKED) {
+    if (pageView === PAGE_VIEW.STAKED) {
       await onUnStake();
     }
-    if (pageView == PAGE_VIEW.UNSTAKED) {
+    if (pageView === PAGE_VIEW.UNSTAKED) {
       await onStake();
     }
   };
@@ -195,6 +192,7 @@ const Staking = () => {
                               : undefined
                           }
                           isStaking={true}
+                          renaAddress={item.token_data_id}
                         />
                       ))}
                     </div>
@@ -227,34 +225,28 @@ const Staking = () => {
                   {renegadesRankData.data &&
                   renegadesRankData.data.length > 0 ? (
                     <div className="flex mt-[48px] sm:mt-[58px] z-10 gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
-                      {renegadesRankData.data.map(
-                        (item, index) => (
-                          console.log(item),
-                          "itennn",
-                          (
-                            <RenegadesItem
-                              onClick={() => dispatch(toggleItemModal([item]))}
-                              key={index}
-                              index={index}
-                              avatar={(item.token_uri as string).replace(
-                                /["']/g,
-                                ""
-                              )}
-                              name={item.token_name}
-                              rank={item?.rank}
-                              isSelected={
-                                !!item.token_data_id &&
-                                selectedItems.includes(item)
-                              }
-                              onToggleSelected={() =>
-                                item.token_data_id
-                                  ? toggleItemSelection(item)
-                                  : undefined
-                              }
-                            />
-                          )
-                        )
-                      )}
+                      {renegadesRankData.data.map((item, index) => (
+                        <RenegadesItem
+                          onClick={() => dispatch(toggleItemModal([item]))}
+                          key={index}
+                          index={index}
+                          avatar={(item.token_uri as string).replace(
+                            /["']/g,
+                            ""
+                          )}
+                          name={item.token_name}
+                          rank={item?.rank}
+                          isSelected={
+                            !!item.token_data_id && selectedItems.includes(item)
+                          }
+                          onToggleSelected={() =>
+                            item.token_data_id
+                              ? toggleItemSelection(item)
+                              : undefined
+                          }
+                          renaAddress={item.token_data_id}
+                        />
+                      ))}
                     </div>
                   ) : (
                     <div
@@ -294,11 +286,11 @@ const Staking = () => {
           >
             Deselect all
           </button>
-          {pageView == PAGE_VIEW.UNSTAKED ? (
+          {pageView === PAGE_VIEW.UNSTAKED ? (
             <button
               className={`${
                 renegadesRankData.data &&
-                renegadesRankData.data.length == selectedItems.length &&
+                renegadesRankData.data.length === selectedItems.length &&
                 "cursor-not-allowed text-[#c1c1c1]"
               } text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
               onClick={() => setSelectedItems(renegadesRankData.data ?? [])}
@@ -309,7 +301,7 @@ const Staking = () => {
             <button
               className={`${
                 renegadesRankStakedData.data &&
-                renegadesRankStakedData.data.length == selectedItems.length &&
+                renegadesRankStakedData.data.length === selectedItems.length &&
                 "cursor-not-allowed text-[#c1c1c1]"
               } text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
               onClick={() =>
@@ -324,12 +316,12 @@ const Staking = () => {
             onClick={() => (skip ? onStakeOrUnStake : openStakingModal())}
             className="w-[141px] sm:w-[176px] z-20 relative !font-bold !h-[48px]"
           >
-            {pageView == PAGE_VIEW.STAKED ? "Unstake" : "Stake"}{" "}
+            {pageView === PAGE_VIEW.STAKED ? "Unstake" : "Stake"}{" "}
             {selectedItems.length} NFT{selectedItems.length > 1 && "s"}
           </PrimaryButton>
         </div>
       )}
-      <StakingModal isStaking={pageView == PAGE_VIEW.UNSTAKED} />
+      <StakingModal isStaking={pageView === PAGE_VIEW.UNSTAKED} />
     </main>
   );
 };

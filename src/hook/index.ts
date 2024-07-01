@@ -124,3 +124,26 @@ export const useRenegadesRankStakedToken = ({
     queryFn: () => getStakedToken(),
   });
 };
+
+export const useUserRenaStakeTime = ({
+  accountAddress,
+  tokenAddress,
+}: {
+  accountAddress?: string;
+  tokenAddress:string
+}) => {
+  const getUserRENAStakeTime = async () => {
+   
+    return await APTOS.view({
+       payload: {
+          function: `${RENA_STAKING_TESTNET}::stake_time`,
+          typeArguments: [],
+          functionArguments: [accountAddress, tokenAddress],
+        },
+    }) as any
+  };
+  return useQuery({
+    queryKey: ["getUserRENAStakeTime", accountAddress, tokenAddress],
+    queryFn: () => getUserRENAStakeTime(),
+  });
+};

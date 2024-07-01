@@ -283,6 +283,7 @@ const Renegades = () => {
                   onToggleSelected={() =>
                     item.token_data_id ? toggleItemSelection(item) : undefined
                   }
+                  renaAddress={item.token_data_id as string}
                 />
               ))}
             </div>

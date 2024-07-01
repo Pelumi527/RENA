@@ -146,11 +146,13 @@ const Staking = () => {
             </div>
             <div className="flex items-center justify-start md:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Earning:</h1>
-              {renegadesRankStakedData.data?.length && (
+              {renegadesRankStakedData.data?.length ? (
                 <span className="text-[26px] text-primary font-bold">
                   {renegadesRankStakedData.data.length * 10}
-                </span>
-              )}
+                </span> 
+              ) : <span className="text-[26px] text-primary font-bold">
+                  0
+                </span>}
             </div>
             <div className="flex items-center justify-start md:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Total earned:</h1>

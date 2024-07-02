@@ -4,7 +4,7 @@ import {
   AptosConfig
 } from "@aptos-labs/ts-sdk";
 import {
-  COLLECTION_ADDRESS
+  COLLECTION_ADDRESS_MAINNET
 } from "../util/module-endpoints";
 
 type TokenResponse = {
@@ -120,7 +120,7 @@ export class Queries {
       await this.aptos.getAccountOwnedTokensFromCollectionAddress({
         accountAddress,
         // collectionAddress
-        collectionAddress: COLLECTION_ADDRESS,
+        collectionAddress: COLLECTION_ADDRESS_MAINNET,
       });
 
     return response;

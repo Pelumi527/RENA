@@ -14,7 +14,7 @@ const useTokenBalance = () => {
   const updateTokenBalance = async (accountAddress: string) => {
     const payload: InputViewFunctionData = {
       function: "0x1::coin::balance",
-      typeArguments: [RENA_COIN_TYPE_TESTNET],
+      typeArguments: [RENA_COIN_TYPE_MAINNET],
       functionArguments: [accountAddress],
     };
     const res = await APTOS.view({

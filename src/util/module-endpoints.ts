@@ -16,7 +16,7 @@ export const RENA_PRESALE_TESTNET =
   "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::presale";
 
 export const RENA_STAKING_TESTNET = "0xce06dd72899bc314cf458ab1c6ae47011df6ba62176135c6d78ef6fafb38bdd5::stake"
-export const RENA_STAKING_ESCROW_TESTNET = "0xe6e2227df14b480c8b3984b6bd3fa00d733271d7ec888c5dd1c975614c8757a9"
+
 
 // coin endpoints
 export const RENA_COIN_TYPE_TESTNET =
@@ -31,7 +31,8 @@ export const PUBLIC_PRESALE =
 export const WHITELISTED_PRESALE =
   "0x9d96f1762f4993964668d7a89c20fe10e0978bac92a1c1c839b2da5005096867::presale::WhitelistInfo";
 
-
+export const COLLECTION_ADDRESS_TESTNET: AccountAddressInput =
+  "0x7c25742cd2cfd0c2bd171b775edcda3e89e4af9d7eedd13312afddcc189a495f";
 
 /**
  * 
@@ -48,9 +49,11 @@ export const RENA_COIN_TYPE_MAINNET = "0x4ed27736e724e403f9b4645ffef0ae86fd14950
 // Liquid coin object
 export const LIQUID_COIN_OBJECT_MAINNET = "0xfc8d56201d24f63e82dfff5cca064d0754d3cce3cadeb4a1d242b3d81cda42ef";
 // Collection address
-export const COLLECTION_ADDRESS: AccountAddressInput =
-  "0x7c25742cd2cfd0c2bd171b775edcda3e89e4af9d7eedd13312afddcc189a495f";
 
+export const COLLECTION_ADDRESS_MAINNET: AccountAddressInput =
+  "0x42b36fc7193af0e745e5cc2e9c12179fe8ba5197321479675975bbc17b5f63e7";
+
+  export const RENA_STAKING_MAINNET = "0x4ed27736e724e403f9b4645ffef0ae86fd149503f45b37c428ffabd7e46e5b05::stake"
 
   
 /**
@@ -59,7 +62,7 @@ export const COLLECTION_ADDRESS: AccountAddressInput =
  * 
  */
 
-const aptosConfig = new AptosConfig({ network: Network.TESTNET });
+const aptosConfig = new AptosConfig({ network: Network.MAINNET });
 export const APTOS = new Aptos(aptosConfig);
 
 // entry functions

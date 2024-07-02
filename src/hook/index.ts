@@ -1,8 +1,7 @@
-import { useDispatch } from "react-redux";
 import {
   APTOS,
-  COLLECTION_ADDRESS,
-  RENA_STAKING_ESCROW_TESTNET,
+  COLLECTION_ADDRESS_MAINNET,
+  RENA_STAKING_MAINNET,
   RENA_STAKING_TESTNET,
 } from "../util/module-endpoints";
 import { getRaritiesForRenegadeItem } from "../util/renegadeUtils";
@@ -21,7 +20,7 @@ export const useRenegadeRankData = ({
     }
     const res = await APTOS.getAccountOwnedTokensFromCollectionAddress({
       accountAddress: accountAddress,
-      collectionAddress: COLLECTION_ADDRESS,
+      collectionAddress: COLLECTION_ADDRESS_MAINNET,
     });
     const renegadesData = res.map((data: any) => data.current_token_data);
     const itemsWithCalculatedRarities = renegadesJsonData.map(
@@ -68,17 +67,11 @@ export const useRenegadesRankStakedToken = ({
     try {
       const stakedToken = (await APTOS.view({
         payload: {
-          function: `${RENA_STAKING_TESTNET}::staked_tokens`,
+          function: `${RENA_STAKING_MAINNET}::staked_tokens`,
           typeArguments: [],
           functionArguments: [accountAddress],
         },
       })) as any;
-      //   const res = await APTOS.getAccountOwnedTokensFromCollectionAddress({
-      //     accountAddress: RENA_STAKING_ESCROW_TESTNET,
-      //     collectionAddress: COLLECTION_ADDRESS,
-      //   });
-      //   console.log(res, "11");
-      //   console.log(stakedToken[0].data, "2");
       const renegadesData = await Promise.all(
         stakedToken[0].data.map(async (staked: any) => {
           return await APTOS.getDigitalAssetData({
@@ -138,7 +131,7 @@ export const useUserRenaStakeTime = ({
     }
     return (await APTOS.view({
       payload: {
-        function: `${RENA_STAKING_TESTNET}::stake_time`,
+        function: `${RENA_STAKING_MAINNET}::stake_time`,
         typeArguments: [],
         functionArguments: [accountAddress, tokenAddress],
       },
@@ -160,7 +153,7 @@ export const useUserRenaStakePoint = ({
   const getUserRENAStakePoint = async () => {
     return (await APTOS.view({
       payload: {
-        function: `${RENA_STAKING_TESTNET}::stake_points`,
+        function: `${RENA_STAKING_MAINNET}::stake_points`,
         typeArguments: [],
         functionArguments: [accountAddress, tokenAddress],
       },
@@ -182,7 +175,7 @@ export const useUserRenaTotalStakePoint = ({
   const getUserRENATotalStakePoint = async () => {
     const stakePointPerRene = (await APTOS.view({
       payload: {
-        function: `${RENA_STAKING_TESTNET}::stake_points_vector`,
+        function: `${RENA_STAKING_MAINNET}::stake_points_vector`,
         typeArguments: [],
         functionArguments: [accountAddress, tokenAddress],
       },

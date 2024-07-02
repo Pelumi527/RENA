@@ -10,7 +10,6 @@ const useWhitelistContribute = () => {
   const { signAndSubmitTransaction } = useWallet();
 
   const contribute = async (accountAddress: string, aptAmount: number) => {
-    console.log("input==============>", accountAddress, aptAmount);
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {

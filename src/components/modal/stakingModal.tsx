@@ -237,7 +237,7 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
         open={isSigningTransaction}
         as="div"
         className="relative z-[250] focus:outline-none"
-        onClose={close}
+        onClose={() => {}}
         __demoMode
       >
         <DialogBackdrop

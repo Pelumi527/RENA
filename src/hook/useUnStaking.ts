@@ -2,8 +2,6 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   APTOS,
   RENA_STAKING_MAINNET,
-  RENA_STAKING_TESTNET,
-  STAKE,
   UNSTAKE,
 } from "../util/module-endpoints";
 import { updateRefresh } from "../state/global";

@@ -132,7 +132,7 @@ const Staking = () => {
 
   return (
     <main className="relative parallax" id="cred-point">
-      <img src="/renegades/vector.png" className="absolute sm:left-20" />
+      <img src="/renegades/vector.png" className="absolute sm:left-20" alt="background-image" />
       <Header className="" active={2} />
       <div className="relative px-[9px] md:px-10 lg:px-40 lg:mt-[50px]">
         <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
@@ -224,6 +224,7 @@ const Staking = () => {
                           <img
                             src="/renegades/avatar-default.png"
                             className="w-[140px] h-[140px] rounded-lg"
+                            alt="default-avatar"
                           />
                           <p className="text-[26px] my-[24px] text-center">
                             You don’t have any staked Renegades
@@ -276,6 +277,7 @@ const Staking = () => {
                           <img
                             src="/renegades/avatar-default.png"
                             className="w-[140px] h-[140px] rounded-lg"
+                             alt="default-avatar"
                           />
                           <p className="text-[26px] my-[24px] text-center">
                             You don’t have any Renegades in your wallet

@@ -72,6 +72,9 @@ export const useRenegadesRankStakedToken = ({
           functionArguments: [accountAddress],
         },
       })) as any;
+      if (!stakedToken[0].data) {
+        return;
+      }
       const renegadesData = await Promise.all(
         stakedToken[0].data.map(async (staked: any) => {
           return await APTOS.getDigitalAssetData({
@@ -79,7 +82,7 @@ export const useRenegadesRankStakedToken = ({
           });
         })
       );
-      console.log(renegadesData, "renegadesData22", stakedToken);
+
       const itemsWithCalculatedRarities = renegadesJsonData.map(
         (renegade: any) => {
           const rarities = getRaritiesForRenegadeItem(
@@ -121,14 +124,18 @@ export const useRenegadesRankStakedToken = ({
 export const useUserRenaStakeTime = ({
   accountAddress,
   tokenAddress,
+  isStaking
 }: {
   accountAddress?: string;
   tokenAddress: string;
+  isStaking?:boolean
 }) => {
   const getUserRENAStakeTime = async () => {
-    if (!tokenAddress && !accountAddress) {
+    if (!isStaking || !tokenAddress || !accountAddress) {
       return;
     }
+    console.log("getUserRENAStakeTime", "running", isStaking)
+
     return (await APTOS.view({
       payload: {
         function: `${RENA_STAKING_MAINNET}::stake_time`,
@@ -146,11 +153,18 @@ export const useUserRenaStakeTime = ({
 export const useUserRenaStakePoint = ({
   accountAddress,
   tokenAddress,
+  isStaking
 }: {
   accountAddress?: string;
   tokenAddress: string;
+  isStaking?:boolean
 }) => {
   const getUserRENAStakePoint = async () => {
+    if (!isStaking || !tokenAddress || !accountAddress) {
+      return;
+    }
+
+    console.log("useUserRenaStakePoint", "running", isStaking)
     return (await APTOS.view({
       payload: {
         function: `${RENA_STAKING_MAINNET}::stake_points`,
@@ -173,6 +187,9 @@ export const useUserRenaTotalStakePoint = ({
   tokenAddress?: string[];
 }) => {
   const getUserRENATotalStakePoint = async () => {
+    if (!tokenAddress && !accountAddress) {
+      return;
+    }
     const stakePointPerRene = (await APTOS.view({
       payload: {
         function: `${RENA_STAKING_MAINNET}::stake_points_vector`,

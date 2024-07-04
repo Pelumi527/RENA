@@ -171,7 +171,7 @@ const Staking = () => {
                     setPageView(PAGE_VIEW.STAKED);
                     setSelectedItems([])
                   }}
-                  className="px-12 py-2 text-lg font-bold border-2 border-r-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
+                  className="px-12 py-2 text-lg font-bold border-2 border-r-0 border-secondary rounded-l-lg focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   STAKED
                 </Tab>
@@ -180,7 +180,7 @@ const Staking = () => {
                     setPageView(PAGE_VIEW.UNSTAKED);
                     setSelectedItems([])
                   }}
-                  className="px-12 py-2 -ml-2 text-lg font-bold border-2 border-l-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
+                  className="px-12 py-2 text-lg font-bold border-2 border-l-0 border-secondary rounded-r-lg focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   UNSTAKED
                 </Tab>
@@ -265,6 +265,7 @@ const Staking = () => {
                               : undefined
                           }
                           renaAddress={item?.token_data_id}
+                          isStaking={false}
                         />
                       ))}
                     </div>

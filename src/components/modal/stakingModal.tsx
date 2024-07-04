@@ -59,8 +59,10 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
   function close() {
     dispatch(toggleStakingModal(false));
     dispatch(updateIsSigningTransaction(false));
-    dispatch(toggleItemModal([]));
     dispatch(updateIsTransactionSuccess(false));
+    setTimeout(() => {
+      dispatch(toggleItemModal([]));
+    }, 5000);
   }
 
   const onStake = async () => {
@@ -191,17 +193,17 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                       onUnStake();
                     }
                   }}
-                  className="block sm:hidden !font-bold w-full sm:w-[253px] h-12"
+                  className="block sm:hidden !font-bold w-full sm:w-[176px] h-12"
                 >
                   {isStaking ? "Stake" : "Unstake"}
                 </PrimaryButton>
                 <SecondaryButton
                   onClick={() => {
                     dispatch(toggleStakingModal(false));
-                    dispatch(toggleItemModal([]));
                     dispatch(updateIsSigningTransaction(false));
+                    dispatch(toggleItemModal([]));
                   }}
-                  className="!font-bold w-full sm:w-[203px] h-12"
+                  className="!font-bold w-full sm:w-[176px] h-12"
                 >
                   Cancel
                 </SecondaryButton>
@@ -213,7 +215,7 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                       onUnStake();
                     }
                   }}
-                  className="hidden sm:block !font-bold w-full sm:w-[253px] !h-12"
+                  className="hidden sm:block !font-bold w-full sm:w-[176px] !h-12"
                 >
                   {isStaking ? "Stake" : "Unstake"}
                 </PrimaryButton>
@@ -257,65 +259,6 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                 </p>
               </div>
             </DialogPanel>
-            {isTransactionSuccess && (
-              <DialogPanel
-                transition
-                className="w-full relative sm:w-[566px] border-gray-light-3 rounded-[8px]  h-[95%] sm:h-[510px] bg-[#222] backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
-              >
-                <div className="absolute -z-10 top-[15%]">
-                  <img src="/staking/Background.svg" className="w-full" />
-                </div>
-                <DialogTitle
-                  as="h3"
-                  className="text-[26px] font-semibold text-[#FFF] p-4 leading-[30px]"
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="text-[26px] font-semibold text-[#FFF] leading-[30px]">
-                      Success
-                    </p>
-                    <div className="flex justify-center items-center bg-[#000] bg-opacity-0 hover:bg-opacity-50 rounded-full w-12 h-12">
-                      <Icon
-                        onClick={close}
-                        icon={"iconoir:cancel"}
-                        fontSize={34}
-                        className="cursor-pointer "
-                      />
-                    </div>
-                  </div>
-                </DialogTitle>
-                <div className="relative flex items-center justify-center my-8 sm:my-12">
-                  {data.length > 1 && (
-                    <div className="absolute right-[25%] -top-[16px] bg-primary border-2 border-[#FFF] w-[123px] h-[46px] rounded-[8px] flex items-center justify-center text-[22px] font-semibold">
-                      + {data.length - 1} more
-                    </div>
-                  )}
-                  <img
-                    src={data[0]?.token_uri}
-                    className="w-[150px] h-[150px] rounded-[8px]"
-                  />
-                </div>
-                <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
-                  {isStaking
-                    ? `Hooray! You’ve successfully staked your Renegades NFT!`
-                    : `If you want, you can liquify them to get $RENA back`}
-                </p>
-                <div className="flex flex-col items-center justify-center w-full gap-4 my-6 sm:gap-6 sm:flex-row">
-                  <SecondaryButton
-                    onClick={() => {
-                      dispatch(toggleStakingModal(false));
-                      dispatch(updateIsSigningTransaction(false));
-                      dispatch(updateIsTransactionSuccess(false));
-                      setTimeout(() => {
-                        dispatch(toggleItemModal([]));
-                      }, 5000);
-                    }}
-                    className="!font-bold w-full sm:w-[203px] h-12"
-                  >
-                    Great
-                  </SecondaryButton>
-                </div>
-              </DialogPanel>
-            )}
           </div>
         </div>
       </Dialog>
@@ -368,18 +311,39 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                   className="w-[150px] h-[150px] rounded-[8px]"
                 />
               </div>
-              <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
-                {isStaking
-                  ? `Hooray! You’ve successfully staked your Renegades NFT!`
-                  : `If you want, you can liquify them to get $RENA back`}
-              </p>
+
+              {isStaking ? (
+                <div>
+                  <p className="text-[22px] font-bold text-[#FFF] leading-[130%] text-center">
+                    Hooray! You’ve successfully staked your Renegades NFT!
+                  </p>
+                  <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
+                    Keep earning points every day.
+                  </p>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-[22px] font-bold text-[#FFF] leading-[130%] text-center">
+                    {`Hooray! You’ve got your Renegades NFT${
+                      data.length > 1 ? "s" : ""
+                    } back!`}
+                  </p>
+                  <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
+                    If you want, you can liquify them to get $RENA back
+                  </p>
+                </div>
+              )}
+
               <div className="flex flex-col items-center justify-center w-full gap-4 my-6 sm:gap-6 sm:flex-row">
                 <SecondaryButton
                   onClick={() => {
                     dispatch(toggleStakingModal(false));
-                    dispatch(toggleItemModal([]));
                     dispatch(updateIsSigningTransaction(false));
                     dispatch(updateIsTransactionSuccess(false));
+                    setTimeout(() => {
+                      dispatch(toggleItemModal([]));
+                      console.log("timeOut");
+                    }, 5000);
                   }}
                   className="!font-bold w-full sm:w-[203px] h-12"
                 >

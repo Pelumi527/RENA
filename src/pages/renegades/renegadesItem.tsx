@@ -42,18 +42,21 @@ const RenegadesItem = ({
   const stakeTime = useUserRenaStakeTime({
     accountAddress: account?.address,
     tokenAddress: renaAddress,
+    isStaking,
   });
 
   const stakePoint = useUserRenaStakePoint({
     accountAddress: account?.address,
-    tokenAddress: renaAddress
-  })
+    tokenAddress: renaAddress,
+    isStaking,
+  });
 
+  console.log(isStaking, "isStaking");
 
   return (
     <>
       {index <= displayAmount - 1 ? (
-        <div>
+        <div className="flex flex-col items-center justify-center">
           <div
             onClick={onClick}
             className="relative w-[153px] h-[216px] sm:w-[194px] sm:h-[261px] cursor-pointer flex flex-col items-center"
@@ -114,18 +117,24 @@ const RenegadesItem = ({
             </Tooltip>
           </div>
           {isStaking && (
-            <div className="px-2 py-2 mx-4 mt-8 border-2 rounded shadow-md border-gray/40">
+            <div className="mt-4 border-2 w-[154px] rounded lg:w-[194px] p-2 shadow-md border-gray/40">
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Staked</h1>
-                {stakeTime.data ? <p className="text-[16px] font-semibold text-primary">
-                 {Math.floor(stakeTime?.data[0] / 86400)} days
-                </p> : <p></p>}
+                {stakeTime.data ? (
+                  <p className="text-[16px] font-semibold text-primary">
+                    {Math.floor(stakeTime?.data[0] / 86400)} days
+                  </p>
+                ) : (
+                  <p></p>
+                )}
               </div>
               <div className="flex justify-between">
                 <h1 className="text-[16px] font-semibold">Earned</h1>
-                {stakePoint.data && <p className="text-[16px] font-semibold text-primary">
-                  {stakePoint.data[0]}
-                </p>}
+                {stakePoint.data && (
+                  <p className="text-[16px] font-semibold text-primary">
+                    {stakePoint.data[0]}
+                  </p>
+                )}
               </div>
               <p className="text-[13px] font-semibold text-gray-light">
                 Earning 10pts/day

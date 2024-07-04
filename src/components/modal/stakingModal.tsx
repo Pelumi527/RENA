@@ -45,12 +45,12 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
   );
 
   const renegadesRankData = useRenegadeRankData({
-    accountAddress: account?.address
-  })
+    accountAddress: account?.address,
+  });
 
   const renegadesRankStakedData = useRenegadesRankStakedToken({
-    accountAddress: account?.address
-  })
+    accountAddress: account?.address,
+  });
 
   function open() {
     dispatch(toggleStakingModal(true));
@@ -66,7 +66,7 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
   const onStake = async () => {
     if (account) {
       try {
-         dispatch(toggleStakingModal(false))
+        dispatch(toggleStakingModal(false));
         dispatch(updateIsSigningTransaction(true));
         const response = await stake(
           account?.address,
@@ -75,8 +75,8 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
         if (response?.success) {
           dispatch(updateIsSigningTransaction(false));
           dispatch(updateIsTransactionSuccess(true));
-          renegadesRankData.refetch()
-          renegadesRankStakedData.refetch()
+          renegadesRankData.refetch();
+          renegadesRankStakedData.refetch();
         }
       } catch (error) {
         dispatch(updateIsSigningTransaction(false));
@@ -88,7 +88,7 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
   const onUnStake = async () => {
     if (account) {
       try {
-        dispatch(toggleStakingModal(false))
+        dispatch(toggleStakingModal(false));
         dispatch(updateIsSigningTransaction(true));
         const response = await unStake(
           account.address,
@@ -97,8 +97,8 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
         if (response?.success) {
           dispatch(updateIsSigningTransaction(false));
           dispatch(updateIsTransactionSuccess(true));
-          renegadesRankData.refetch()
-          renegadesRankStakedData.refetch()
+          renegadesRankData.refetch();
+          renegadesRankStakedData.refetch();
         }
       } catch (error) {
         dispatch(updateIsSigningTransaction(false));
@@ -106,8 +106,6 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
       }
     }
   };
-
-  console.log("isTransactionSuccess:", isTransactionSuccess, "isSigningTransaction:" ,isSigningTransaction,"ffff")
 
   const toggleCheckbox = () => {
     const newIsChecked = !isChecked;
@@ -130,13 +128,6 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
 
   return (
     <>
-      {/* <Button
-        onClick={open}
-        className="rounded-md bg-black/20 py-2 px-4 text-sm font-medium text-white focus:outline-none data-[hover]:bg-black/30 data-[focus]:outline-1 data-[focus]:outline-white"
-      >
-        Open dialog
-      </Button> */}
-
       <Dialog
         open={openStakingModal}
         as="div"
@@ -312,9 +303,11 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                   <SecondaryButton
                     onClick={() => {
                       dispatch(toggleStakingModal(false));
-                      dispatch(toggleItemModal([]));
                       dispatch(updateIsSigningTransaction(false));
                       dispatch(updateIsTransactionSuccess(false));
+                      setTimeout(() => {
+                        dispatch(toggleItemModal([]));
+                      }, 5000);
                     }}
                     className="!font-bold w-full sm:w-[203px] h-12"
                   >

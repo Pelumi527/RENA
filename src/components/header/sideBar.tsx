@@ -13,22 +13,22 @@ const SideBar = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bSidebar);
   const [show, setShow] = useState(false);
   useEffect(() => {
-    if (isOpen == 2) {
+    if (isOpen === 2) {
       setTimeout(() => setShow(false), 1000);
-    } else if (isOpen == 1) {
+    } else if (isOpen === 1) {
       setShow(true);
     }
   }, [isOpen]);
 
-  if (isOpen == 0) return null;
+  if (isOpen === 0) return null;
   let animationClass =
-    isOpen == 1 ? "animate-slideDown" : isOpen == 2 ? "animate-slideUp" : "";
+    isOpen === 1 ? "animate-slideDown" : isOpen === 2 ? "animate-slideUp" : "";
 
   return (
     <>
       {show && (
         <div
-          className={`${animationClass} fixed inset-0 w-full bg-primary z-[300] flex flex-col px-5 pt-10 pb-12`}
+          className={`${animationClass} fixed inset-0 w-full bg-primary z-[300] flex flex-col justify-between px-5 pt-10 pb-12`}
         >
           <div className="flex flex-col w-full">
             <div className="flex items-center justify-between">
@@ -40,6 +40,7 @@ const SideBar = () => {
                   }}
                   src="/logo-white.svg"
                   className="h-[106px] md:h-[118px] cursor-pointer w-[182px] md:w-[205px]"
+                  alt="sidebar"
                 />
               </div>
               <Icon
@@ -80,11 +81,11 @@ const SideBar = () => {
               </Link>
             </div>
             <div className="flex flex-col items-center flex-shrink-0 w-full">
-              {/* <Link to={"/presale"}>
+              <Link to={"https://liquidswap.com/#/"} rel="noreferrer">
                 <button className="w-[176px] mb-6 h-12 bg-[#FFF] text-[#121221] font-bold text-[18px] rounded-[4px]">
                   Get $RENA
                 </button>
-              </Link> */}
+              </Link>
               <ConnectButton />
               <div className="mt-14">
                 <JoinUs />

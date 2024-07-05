@@ -15,7 +15,7 @@ interface Props {
 const Header: React.FC<Props> = ({ className, active }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { connected, account } = useWallet();
+  const { connected } = useWallet();
 
   return (
     <>
@@ -27,6 +27,7 @@ const Header: React.FC<Props> = ({ className, active }) => {
             onClick={() => navigate("/")}
             src="/logo.svg"
             className="h-[106px] md:h-[118px] cursor-pointer w-[182px] md:w-[205px]"
+            alt="renegade-logo"
           />
         </div>
         <div className="items-center justify-end hidden xl:flex">
@@ -36,14 +37,14 @@ const Header: React.FC<Props> = ({ className, active }) => {
                 ? navigate("/staking")
                 : dispatch(toggleWalletPanel(true));
             }}
-            className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active == 2 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
+            className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active === 2 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
             style={{ zIndex: 100 }}
           >
             Staking
           </p>
           <p
             onClick={() => navigate("/claim")}
-            className={` hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 text-[22px] font-white font-semibold cursor-pointer ${active == 0 && "text-primary"}`}
+            className={` hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 text-[22px] font-white font-semibold cursor-pointer ${active === 0 && "text-primary"}`}
             style={{ zIndex: 100 }}
           >
             Liquify or Claim
@@ -54,18 +55,18 @@ const Header: React.FC<Props> = ({ className, active }) => {
                 ? navigate("/renegades")
                 : dispatch(toggleWalletPanel(true));
             }}
-            className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active == 1 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
+            className={`hover:text-primary w-[166px] h-12 flex items-center bg-[#000] justify-center rounded-[4px] bg-opacity-0 hover:bg-opacity-40 ${active === 1 && "text-primary"} text-[22px] font-white font-semibold cursor-pointer ml-2`}
             style={{ zIndex: 100 }}
           >
             My Renegades
           </p>
           <div className="flex h-12 ml-12 mr-6">
             <ConnectButton />
-            {/* <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">
-              <Link to={"/presale"}>
+            <SecondaryButton className="z-20 relative w-[176px] h-12 ml-4">
+              <Link to={"https://liquidswap.com/#/"} target="_blank" rel="noreferrer">
                 <p className="text-[18px] h-6 font-bold">Get $RENA</p>
               </Link>
-            </SecondaryButton> */}
+            </SecondaryButton>
           </div>
           <div style={{ zIndex: 100 }} className="flex">
             <JoinUs />

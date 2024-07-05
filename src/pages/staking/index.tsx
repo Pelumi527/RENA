@@ -132,7 +132,7 @@ const Staking = () => {
 
   return (
     <main className="relative parallax" id="cred-point">
-      <img src="/renegades/vector.png" className="absolute sm:left-20" alt="background-image" />
+      <img src="/renegades/vector.png" className="absolute sm:left-20" alt="background" />
       <Header className="" active={2} />
       <div className="relative px-[9px] md:px-10 lg:px-40 lg:mt-[50px]">
         <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
@@ -171,7 +171,7 @@ const Staking = () => {
                     setPageView(PAGE_VIEW.STAKED);
                     setSelectedItems([])
                   }}
-                  className="px-12 py-2 text-lg font-bold border-2 border-r-0 border-secondary rounded-l-lg focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
+                  className="px-12 py-2 text-lg font-bold border-[1px] border-r-0 border-secondary rounded-l-[4px] focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   STAKED
                 </Tab>
@@ -180,7 +180,7 @@ const Staking = () => {
                     setPageView(PAGE_VIEW.UNSTAKED);
                     setSelectedItems([])
                   }}
-                  className="px-12 py-2 text-lg font-bold border-2 border-l-0 border-secondary rounded-r-lg focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
+                  className="px-12 py-2 text-lg font-bold border-[1px] border-l-0 border-secondary rounded-r-[4px] focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   UNSTAKED
                 </Tab>
@@ -229,9 +229,9 @@ const Staking = () => {
                           <p className="text-[26px] my-[24px] text-center">
                             You don’t have any staked Renegades
                           </p>
-                          <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                           <a rel="noreferrer" href="https://liquidswap.com/#/" target="_blank" className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                             Get $RENA to get NFTs
-                          </p>
+                          </a>
                           <p className="text-[26px]">or</p>
                           <p className="text-[26px]">
                             Get them on marketplaces
@@ -280,12 +280,12 @@ const Staking = () => {
                             className="w-[140px] h-[140px] rounded-lg"
                              alt="default-avatar"
                           />
-                          <p className="text-[26px] my-[24px] text-center">
+                          <p className="text-[26px] my-[24px]  text-center">
                             You don’t have any Renegades in your wallet
                           </p>
-                          <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                          <a rel="noreferrer" href="https://liquidswap.com/#/" target="_blank" className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                             Get $RENA to get NFTs
-                          </p>
+                          </a>
                           <p className="text-[26px]">or</p>
                           <p className="text-[26px]">
                             Get them on marketplaces

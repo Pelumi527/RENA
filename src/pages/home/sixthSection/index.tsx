@@ -1,13 +1,14 @@
-import SecondaryButton from "../../../components/secondaryButton";
+// import SecondaryButton from "../../../components/secondaryButton";
 
 const SixthSection = () => {
   return (
-    <div className="w-full h-fit z-20 relative">
-      <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="relative z-20 w-full h-fit">
+      <div className="flex flex-col items-center justify-center w-full h-full">
         <div className="mb-[255px] sm:mb-[119px] flex flex-col w-[95%] md:w-[781px] items-center">
           <img
             src="/logo-white.svg"
             className="w-[301px] h-[174px] md:w-[431px] md:h-[248px] cursor-pointer mb-4"
+            alt="remegade white logo"
           />
           <p className=" text-[22px] sm:text-[26px] font-semibold text-center w-[95%] md:w-[899px] leading-7 mt-8 mb-7 sm:mb-1">
             Be apart of the first Liquid NFT collection on Aptos!

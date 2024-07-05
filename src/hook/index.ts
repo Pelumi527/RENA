@@ -2,7 +2,6 @@ import {
   APTOS,
   COLLECTION_ADDRESS_MAINNET,
   RENA_STAKING_MAINNET,
-  RENA_STAKING_TESTNET,
 } from "../util/module-endpoints";
 import { getRaritiesForRenegadeItem } from "../util/renegadeUtils";
 import { calculateRankings } from "../util/renegadeUtils";

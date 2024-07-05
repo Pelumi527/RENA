@@ -1,5 +1,4 @@
 import {
-  Button,
   Dialog,
   DialogPanel,
   DialogTitle,
@@ -21,7 +20,6 @@ import Cookies from "js-cookie";
 import { updateMultistate } from "../../state/renegades";
 import useStaking from "../../hook/useStaking";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
-import { constants } from "fs/promises";
 import useUnStaking from "../../hook/useUnStaking";
 import { useRenegadeRankData, useRenegadesRankStakedToken } from "../../hook";
 
@@ -52,9 +50,6 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
     accountAddress: account?.address,
   });
 
-  function open() {
-    dispatch(toggleStakingModal(true));
-  }
 
   function close() {
     dispatch(toggleStakingModal(false));
@@ -176,6 +171,7 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                 <img
                   src={data[0]?.token_uri}
                   className="w-[150px] h-[150px] rounded-[8px]"
+                  alt="rena uri"
                 />
               </div>
               <p className="text-[18px] font-semibold text-[#FFF] leading-[130%] text-center">
@@ -280,7 +276,8 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
               className="w-full relative sm:w-[566px] border-gray-light-3 rounded-[8px]  h-[95%] sm:h-[510px] bg-[#222] backdrop-blur-2xl duration-300 ease-out data-[closed]:transform-[scale(95%)] data-[closed]:opacity-0"
             >
               <div className="absolute -z-10 top-[15%]">
-                <img src="/staking/Background.svg" className="w-full" />
+                <img src="/staking/Background.svg" className="w-full" alt="" />
+
               </div>
               <DialogTitle
                 as="h3"
@@ -309,6 +306,7 @@ export default function StakingModal({ isStaking }: { isStaking: boolean }) {
                 <img
                   src={data[0]?.token_uri}
                   className="w-[150px] h-[150px] rounded-[8px]"
+                  alt="rena uri"
                 />
               </div>
 

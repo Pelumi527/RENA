@@ -1,13 +1,11 @@
 import { toggleWalletPanel } from "../../state/dialog";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import WalletButtons from "../../wallet-adapter/WalletButtons";
-import { useNavigate } from "react-router-dom";
 
 const WalletModal = () => {
   const isOpen = useAppSelector((state) => state.dialogState.bWalletPanel);
   const sentRequest = useAppSelector((state) => state.dialogState.bWalletHold);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   return (
     <div
@@ -30,7 +28,7 @@ const WalletModal = () => {
         {sentRequest && (
           <div
             role="status"
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
           >
             <img src="/loader.svg" className="w-12 h-12" alt="" />
           </div>

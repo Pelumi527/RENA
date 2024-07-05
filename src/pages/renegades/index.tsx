@@ -7,7 +7,7 @@ import RenegadesItem from "./renegadesItem";
 import { useDispatch } from "react-redux";
 import { toggleClaimModal, toggleItemModal } from "../../state/dialog";
 import { useAppSelector } from "../../state/hooks";
-import { useTokenList, useUserRenegadesData } from "../../hook/useTokenList";
+import { useTokenList } from "../../hook/useTokenList";
 import useTokenBalance from "../../hook/useTokenBalance";
 import {
   RenegadeItemWithRarity,
@@ -21,7 +21,6 @@ import {
   updateRenegadesData,
   updateRenegadesRankData,
 } from "../../state/renegades";
-import { Link } from "react-router-dom";
 import PrimaryButton from "../../components/primaryButton";
 import { NFTtype } from "../../type/renegades";
 import { updateRefresh } from "../../state/global";
@@ -42,9 +41,6 @@ const Renegades = () => {
   const renegadesRankData = useAppSelector(
     (state) => state.renegadesState.renegadesRankData,
   );
-  const isRenaListLoading = useAppSelector(
-    (state) => state.renegadesState.isRenaListLoading,
-  );
   const refresh = useAppSelector((state) => state.globalState.refresh);
   const [renegadesWithRarity, setRenegadesWithRarity] = useState<
     RenegadeItemWithRarity[]
@@ -56,7 +52,6 @@ const Renegades = () => {
   const isBalanceLoading = useAppSelector(
     (state) => state.renegadesState.isBalanceLoading,
   );
-  const isLoading = useAppSelector((state) => state.renegadesState.isLoading);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   useEffect(() => {
     const handleResize = () => {
@@ -92,7 +87,7 @@ const Renegades = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [dispatch]);
 
   const updateCookie = () => {
     const dontShowAgain = Cookies.get("dontShowAgain");
@@ -129,7 +124,7 @@ const Renegades = () => {
       setRenegadesWithRarity(rankedItems);
     };
     calculateAndSetRaritiesAndRankings();
-  }, [renegadesJsonData]);
+  }, []);
 
   useEffect(() => {
     if (renegadesWithRarity.length > 0) {
@@ -153,7 +148,7 @@ const Renegades = () => {
         dispatch(updateRenegadesRankData(updatedRenegadesData));
       }
     }
-  }, [renegadesData, renegadesWithRarity, refresh]);
+  }, [renegadesData, renegadesWithRarity, refresh, dispatch]);
 
   const renaBalance = useAppSelector(
     (state) => state.renegadesState.renaBalance,
@@ -162,7 +157,7 @@ const Renegades = () => {
   useEffect(() => {
     setSelectedItems([]);
     dispatch(updateRefresh(false));
-  }, [refresh]);
+  }, [refresh, dispatch]);
 
   useEffect(() => {
     updateCookie();
@@ -202,7 +197,7 @@ const Renegades = () => {
 
   return (
     <div className="relative parallax" id="cred-point">
-      <img src="/renegades/vector.png" className="absolute sm:left-20" />
+      <img src="/renegades/vector.png" className="absolute sm:left-20" alt=""/>
       <Header className="" active={1} />
       <div className="relative z-20 flex flex-col items-center w-full">
         <div className="flex flex-col w-[90%] sm:w-[1100px]">
@@ -214,9 +209,9 @@ const Renegades = () => {
               <div className="flex items-center">
                 <p className="text-[26px] font-semibold">$RENA Balance:</p>
                 <p className="text-[26px] text-primary font-bold ml-3 mr-2">
-                  {renaBalance != 0 ? renaBalance.toFixed(4) : 0}
+                  {renaBalance !== 0 ? renaBalance.toFixed(4) : 0}
                 </p>
-                <img src="/renegades/rena.svg" className="mr-1" />
+                <img src="/renegades/rena.svg" className="mr-1" alt="rena-loading" />
               </div>
             )}
           </div>
@@ -225,11 +220,11 @@ const Renegades = () => {
           ) : (
             <div
               onClick={() => {
-                Math.floor(renaBalance) != 0 &&
+                Math.floor(renaBalance) !== 0 &&
                   dispatch(toggleClaimModal(true));
               }}
               className={`flex w-full h-[113px] items-center cursor-pointer justify-center ${
-                Math.floor(renaBalance) != 0
+                Math.floor(renaBalance) !== 0
                   ? "bg-primary hover:bg-primary-hover"
                   : "bg-[#222]"
               } border-2 rounded-[8px] mt-10`}
@@ -243,7 +238,7 @@ const Renegades = () => {
               }}
             >
               <div className="flex items-center">
-                {Math.floor(renaBalance) != 0 ? (
+                {Math.floor(renaBalance) !== 0 ? (
                   <>
                     <p className="font-medium text-[22px] sm:text-[26px]">
                       You can claim{" "}
@@ -296,6 +291,7 @@ const Renegades = () => {
                   <img
                     src="/renegades/avatar-default.png"
                     className="w-[140px] h-[140px] rounded-lg"
+                    alt="default avatar"
                   />
                   <p className="text-[26px] my-[24px] text-center">
                     You don’t have any Renegades in your wallet
@@ -320,7 +316,7 @@ const Renegades = () => {
             Deselect all
           </button>
           <button
-            className={`${renegadesRankData.length == selectedItems.length && "cursor-not-allowed text-[#c1c1c1]"} text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
+            className={`${renegadesRankData.length === selectedItems.length && "cursor-not-allowed text-[#c1c1c1]"} text-white font-bold py-2 pl-4 pr-6 sm:pr-0 sm:pl-0 sm:px-4 rounded`}
             onClick={() => setSelectedItems(renegadesRankData)}
           >
             Select all

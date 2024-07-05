@@ -3,7 +3,6 @@ import {
   APTOS,
   ONE_RENEGADES,
   RENA_COIN_TYPE_MAINNET,
-  RENA_COIN_TYPE_TESTNET,
 } from "../util/module-endpoints";
 import { updateRenaBalance } from "../state/renegades";
 import { InputViewFunctionData } from "@aptos-labs/ts-sdk";

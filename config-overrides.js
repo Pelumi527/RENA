@@ -1,6 +1,6 @@
 module.exports = {
   // The Webpack config to use when compiling your react app for development or production.
-  webpack: function (config, env) {
+  webpack: function override(config, env) {
     config.resolve.fallback = {
       url: false,
       assert: false,
@@ -11,6 +11,13 @@ module.exports = {
       buffer: false,
       stream: false,
     };
-    return config;
+    return {
+      ...config,
+      ignoreWarnings: [
+        {
+          module: /node_modules\/aptos/,
+        },
+      ],
+    };
   },
 };

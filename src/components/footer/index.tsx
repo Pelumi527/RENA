@@ -19,9 +19,9 @@ const Footer = () => {
                 </p>
               </div>
               <div className="flex flex-col gap-4">
-                {/* <Link to={"/presale"}>
+                <Link to={"https://liquidswap.com/#/"} target="_blank" rel="">
                   <p className="text-[18px] font-semibold">Get $RENA</p>
-                </Link> */}
+                </Link>
                 <Link to={"/claim"}>
                   {" "}
                   <p className="text-[18px] font-semibold">

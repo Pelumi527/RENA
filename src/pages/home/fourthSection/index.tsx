@@ -14,11 +14,11 @@ const comparisonData: ComparisonFeature[] = [
 
 const FourthSection = () => {
   return (
-    <div className="w-full h-fit z-20 relative">
-      <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="relative z-20 w-full h-fit">
+      <div className="flex flex-col items-center justify-center w-full h-full">
         <div className="flex flex-col mt-[236px] sm:mt-[352px] w-[90%] lg:w-[921px] items-center">
           <p className="text-[32px] sm:text-[42px] font-bold z-20 relative text-center leading-[130%]">
-            How does <span className="text-primary mx-2">Liquid NFT</span>{" "}
+            How does <span className="mx-2 text-primary">Liquid NFT</span>{" "}
             standard compare to ERC-404?
           </p>
           <p className=" text-[22px] sm:text-[26px] font-semibold text-gray-light text-center">
@@ -35,6 +35,7 @@ const FourthSection = () => {
               <img
                 src="/home/fourth/logo.svg"
                 className="w-[70px] sm:w-[80px] h-[30px] sm:h-[50px] cursor-pointer"
+                alt=""
               />
             </div>
             <div className="w-[88px] sm:w-[260px] flex-shrink-0 flex flex-col items-center justify-center">
@@ -44,6 +45,7 @@ const FourthSection = () => {
               <img
                 src="/home/fourth/pandora.svg"
                 className="w-[75px] h-[26px] sm:w-[125px] sm:h-[40px] cursor-pointer"
+                alt=""
               />
             </div>
           </div>
@@ -61,12 +63,14 @@ const FourthSection = () => {
                 <img
                   src={`/home/fourth/${liquidNFT ? "check" : "x"}-icon.svg`}
                   className="w-8 h-8 cursor-pointer"
+                  alt=""
                 />
               </div>
               <div className="w-[88px] sm:w-[259px] sm:mr-[1px] flex-shrink-0 flex flex-col items-center justify-center">
                 <img
                   src={`/home/fourth/${erc404 ? "check" : "x"}-icon.svg`}
                   className="w-8 h-8 cursor-pointer"
+                  alt=""
                 />
               </div>
             </div>

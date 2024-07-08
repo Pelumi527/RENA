@@ -1,11 +1,7 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   APTOS,
-  LIQUID_COIN_OBJECT_MAINNET,
-  LIQUIFY_WITH_ADDRESS,
-  RENA_COIN_TYPE_MAINNET,
-  RENA_MODULE_MAINNET,
-  RENA_STAKING_TESTNET,
+  RENA_STAKING_MAINNET,
   STAKE,
 } from "../util/module-endpoints";
 import { updateRefresh } from "../state/global";
@@ -18,17 +14,16 @@ const useStaking = () => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
-        function: `${RENA_STAKING_TESTNET}::${STAKE}`,
+        function: `${RENA_STAKING_MAINNET}::${STAKE}`,
         typeArguments: [],
         functionArguments: [tokens],
       },
     });
-    console.log(res);
     if (res.hash) {
       const result = await APTOS.waitForTransaction({
         transactionHash: res.hash,
       });
-      //dispatch(updateRefresh(true));
+      dispatch(updateRefresh(true));
       return result;
     }
   };

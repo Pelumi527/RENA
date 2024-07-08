@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
 
+
 import "./App.css";
 import Home from "./pages/home";
 import Claim from "./pages/claim";
 import WalletModal from "./components/modal/walletModal";
 import Renegades from "./pages/renegades";
-import LiquifyModal from "./components/modal/liquifyModal";
 import ClaimModal from "./components/modal/claimModal";
 import SideBar from "./components/header/sideBar";
 import Staking from "./pages/staking";

@@ -1,8 +1,7 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import {
   APTOS,
-  RENA_STAKING_TESTNET,
-  STAKE,
+  RENA_STAKING_MAINNET,
   UNSTAKE,
 } from "../util/module-endpoints";
 import { updateRefresh } from "../state/global";
@@ -15,7 +14,7 @@ const useUnStaking = () => {
     const res = await signAndSubmitTransaction({
       sender: accountAddress,
       data: {
-        function: `${RENA_STAKING_TESTNET}::${UNSTAKE}`,
+        function: `${RENA_STAKING_MAINNET}::${UNSTAKE}`,
         typeArguments: [],
         functionArguments: [tokens],
       },
@@ -25,6 +24,7 @@ const useUnStaking = () => {
       const result = await APTOS.waitForTransaction({
         transactionHash: res.hash,
       });
+      dispatch(updateRefresh(true));
       return result;
     }
   };

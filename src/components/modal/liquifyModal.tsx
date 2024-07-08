@@ -151,8 +151,8 @@ const LiquifyModal = () => {
         data.length > 0 && "block"
       } ${animationClass} fixed z-[100] inset-0 h-full flex justify-center items-end sm:items-center bg-gray-dark-1`}
     >
-      {proceed == 1 || data.length > 1
-        ? proceed != 2 && (
+      {proceed === 1 || data.length > 1
+        ? proceed !== 2 && (
             <div className="overflow-y-scroll relative w-full sm:w-[566px] h-[95%] sm:h-[510px] bg-[#222] border-gray-light-3 rounded-[8px] p-4">
               <div className="flex flex-col w-full">
                 <div className="flex items-center justify-between">

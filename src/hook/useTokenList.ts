@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { APTOS, COLLECTION_ADDRESS } from "../util/module-endpoints";
+import { APTOS,COLLECTION_ADDRESS_MAINNET } from "../util/module-endpoints";
 import {
   updateRenegadesData,
   updateRenegadesRankData,
@@ -12,11 +12,9 @@ export const useTokenList = () => {
   const updateTokenList = async (accountAddress: string) => {
     const res = await APTOS.getAccountOwnedTokensFromCollectionAddress({
       accountAddress: accountAddress,
-      collectionAddress: COLLECTION_ADDRESS,
+      collectionAddress: COLLECTION_ADDRESS_MAINNET,
     });
-    console.log("token list => ", res);
     if (res.length < 1) {
-      console.log("empty", res.length);
       dispatch(updateRenegadesData([]));
       dispatch(updateRenegadesRankData([]));
     } else {
@@ -39,7 +37,7 @@ export const useUserRenegadesData = ({
     }
     return await APTOS.getAccountOwnedTokensFromCollectionAddress({
       accountAddress,
-      collectionAddress: COLLECTION_ADDRESS,
+      collectionAddress: COLLECTION_ADDRESS_MAINNET,
     });
   };
   return useQuery({

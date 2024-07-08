@@ -3,7 +3,6 @@ import {
   APTOS,
   LIQUID_COIN_OBJECT_MAINNET,
   LIQUIFY_WITH_ADDRESS,
-  RENA_COIN_TYPE_MAINNET,
   RENA_MODULE_MAINNET,
 } from "../util/module-endpoints";
 import { updateRefresh } from "../state/global";

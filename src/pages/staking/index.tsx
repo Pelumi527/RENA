@@ -15,7 +15,11 @@ import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import PrimaryButton from "../../components/primaryButton";
 import Cookies from "js-cookie";
 import StakingModal from "../../components/modal/stakingModal";
-import { useRenegadeRankData, useRenegadesRankStakedToken } from "../../hook";
+import {
+  useRenegadeRankData,
+  useRenegadesRankStakedToken,
+  useUserRenaTotalStakePoint,
+} from "../../hook";
 import useStaking from "../../hook/useStaking";
 import useUnStaking from "../../hook/useUnStaking";
 
@@ -109,6 +113,13 @@ const Staking = () => {
     }
   };
 
+  const totalRenaStakePoint = useUserRenaTotalStakePoint({
+    accountAddress: account?.address,
+    tokenAddress: renegadesRankStakedData.data
+      ? renegadesRankStakedData.data.map((data) => data.token_data_id)
+      : [],
+  });
+
   const openStakingModal = () => {
     dispatch(toggleStakingModal(true));
     dispatch(toggleItemModal(selectedItems));
@@ -121,27 +132,33 @@ const Staking = () => {
 
   return (
     <main className="relative parallax" id="cred-point">
-      <img src="/renegades/vector.png" className="absolute sm:left-20" />
+      <img src="/renegades/vector.png" className="absolute sm:left-20" alt="background" />
       <Header className="" active={2} />
-      <div className="relative px-[9px] md:px-40">
-        <div className="flex flex-col items-start justify-between md:flex-row">
+      <div className="relative px-[9px] md:px-10 lg:px-40 lg:mt-[50px]">
+        <div className="flex flex-col items-start justify-between lg:flex-row lg:items-center">
           <h1 className="text-[42px] font-bold">Staking</h1>
-          <div className="md:flex-row md:justify-evenly md:items-center md:w-[60%] flex flex-col items-start justify-start">
-            <div className="flex items-center justify-start md:justify-center md:item-center">
+          <div className="lg:flex-row lg:justify-evenly lg:items-center lg:w-[60%] flex flex-col items-start justify-start">
+            <div className="flex items-center justify-start lg:justify-center lg:item-center">
               <h1 className="text-[26px] font-semibold mr-4">Total Staked:</h1>
               <span className="text-[26px] text-primary font-bold">
                 {renegadesRankStakedData.data?.length}
               </span>
             </div>
-            <div className="flex items-center justify-start md:justify-center">
+            <div className="flex items-center justify-start lg:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Earning:</h1>
-              <span className="text-[26px] text-primary font-bold">
-                0 pts/day
-              </span>
+              {renegadesRankStakedData.data?.length ? (
+                <span className="text-[26px] text-primary font-bold">
+                  {renegadesRankStakedData.data.length * 10}
+                </span> 
+              ) : <span className="text-[26px] text-primary font-bold">
+                  0
+                </span>}
             </div>
-            <div className="flex items-center justify-start md:justify-center">
+            <div className="flex items-center justify-start lg:justify-center">
               <h1 className="text-[26px] font-semibold mr-4">Total earned:</h1>
-              <span className="text-[26px] text-primary font-bold">0 pts</span>
+              <span className="text-[26px] text-primary font-bold">
+                {totalRenaStakePoint.data} pts
+              </span>
             </div>
           </div>
         </div>
@@ -152,16 +169,18 @@ const Staking = () => {
                 <Tab
                   onClick={() => {
                     setPageView(PAGE_VIEW.STAKED);
+                    setSelectedItems([])
                   }}
-                  className="px-12 py-2 text-lg font-bold border-2 border-r-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-gray-dark-1"
+                  className="px-12 py-2 text-lg font-bold border-[1px] border-r-0 border-secondary rounded-l-[4px] focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   STAKED
                 </Tab>
                 <Tab
                   onClick={() => {
                     setPageView(PAGE_VIEW.UNSTAKED);
+                    setSelectedItems([])
                   }}
-                  className="px-12 py-2 -ml-2 text-lg font-bold border-2 border-l-0 border-secondary rounded-s focus:outline-none data-[selected]:bg-primary data-[selected]:text-gray-dark-1"
+                  className="px-12 py-2 text-lg font-bold border-[1px] border-l-0 border-secondary rounded-r-[4px] focus:outline-none data-[selected]:bg-primary data-[selected]:text-[#121221]"
                 >
                   UNSTAKED
                 </Tab>
@@ -170,7 +189,7 @@ const Staking = () => {
                 <TabPanel>
                   {renegadesRankStakedData.data &&
                   renegadesRankStakedData.data?.length > 0 ? (
-                    <div className="flex mt-[48px] sm:mt-[58px] z-10 gap-2 md:gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
+                    <div className="grid grid-cols-2 mx-2 gap-y-8 mt-[58px] mb-[297px] md:gap-x-2 md:grid-cols-4 lg:mt-[48px] lg:grid-cols-5 lg:mb-[104px] lg:gap-8">
                       {renegadesRankStakedData.data.map((item, index) => (
                         <RenegadesItem
                           onClick={() => {}}
@@ -205,13 +224,14 @@ const Staking = () => {
                           <img
                             src="/renegades/avatar-default.png"
                             className="w-[140px] h-[140px] rounded-lg"
+                            alt="default-avatar"
                           />
                           <p className="text-[26px] my-[24px] text-center">
                             You don’t have any staked Renegades
                           </p>
-                          <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                           <a rel="noreferrer" href="https://liquidswap.com/#/" target="_blank" className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                             Get $RENA to get NFTs
-                          </p>
+                          </a>
                           <p className="text-[26px]">or</p>
                           <p className="text-[26px]">
                             Get them on marketplaces
@@ -224,7 +244,7 @@ const Staking = () => {
                 <TabPanel>
                   {renegadesRankData.data &&
                   renegadesRankData.data.length > 0 ? (
-                    <div className="flex mt-[48px] sm:mt-[58px] z-10 gap-4 sm:gap-8 flex-wrap mb-[104px] sm:mb-[297px]">
+                    <div className="grid grid-cols-2 mx-2 gap-y-8 mt-[58px] mb-[297px] md:gap-x-2 md:grid-cols-4 lg:mt-[48px] lg:grid-cols-5 lg:mb-[104px] lg:gap-8">
                       {renegadesRankData.data.map((item, index) => (
                         <RenegadesItem
                           onClick={() => dispatch(toggleItemModal([item]))}
@@ -244,7 +264,8 @@ const Staking = () => {
                               ? toggleItemSelection(item)
                               : undefined
                           }
-                          renaAddress={item.token_data_id}
+                          renaAddress={item?.token_data_id}
+                          isStaking={false}
                         />
                       ))}
                     </div>
@@ -257,13 +278,14 @@ const Staking = () => {
                           <img
                             src="/renegades/avatar-default.png"
                             className="w-[140px] h-[140px] rounded-lg"
+                             alt="default-avatar"
                           />
-                          <p className="text-[26px] my-[24px] text-center">
+                          <p className="text-[26px] my-[24px]  text-center">
                             You don’t have any Renegades in your wallet
                           </p>
-                          <p className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
+                          <a rel="noreferrer" href="https://liquidswap.com/#/" target="_blank" className="text-[26px] font-semibold text-primary hover:text-primary-hover active:text-primary-active">
                             Get $RENA to get NFTs
-                          </p>
+                          </a>
                           <p className="text-[26px]">or</p>
                           <p className="text-[26px]">
                             Get them on marketplaces
@@ -279,7 +301,7 @@ const Staking = () => {
         </div>
       </div>
       {selectedItems.length > 0 && (
-        <div className="fixed inset-x-0 bottom-0 bg-[#222] h-20 text-white p-4 sm:gap-10 flex justify-center items-center shadow-md z-50">
+        <div className="fixed inset-x-0 bottom-0 bg-[#222] h-20 text-white p-4 sm:gap-10 flex justify-center items-center shadow-md z-[250]">
           <button
             className="py-2 pr-2 font-bold text-white bg-red-500 rounded hover:bg-red-700 sm:pr-0 sm:px-4"
             onClick={() => setSelectedItems([])}
